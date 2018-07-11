@@ -9,7 +9,7 @@ export default Object.assign(
     tokenEndpoint: "/protocol/openid-connect/token",
     logoutEndpoint: "/protocol/openid-connect/logout",
     refreshLeeway: 1000 * 30,
-    tokenProperty: "access_token",
+    tokenPropertyName: "access_token",
     authHeaderName: "Authorization",
     authPrefix: "Bearer"
   },
