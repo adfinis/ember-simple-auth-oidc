@@ -1,6 +1,6 @@
 {
   "name": "ember-simple-auth-oidc",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "description": "The default blueprint for ember-cli addons.",
   "keywords": [
     "ember-addon"
@@ -29,6 +29,7 @@
   "dependencies": {
     "ember-auto-import": "^1.0.1",
     "ember-cli-babel": "^6.6.0",
+    "ember-cli-release": "^1.0.0-beta.2",
     "ember-fetch": "^5.0.0",
     "ember-get-config": "^0.2.4",
     "ember-simple-auth": "^1.6.0",
