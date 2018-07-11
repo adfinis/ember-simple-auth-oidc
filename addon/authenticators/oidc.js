@@ -5,7 +5,6 @@ import { inject as service } from "@ember/service";
 import Configuration from "ember-simple-auth/configuration";
 import { assert } from "@ember/debug";
 import config from "ember-simple-auth-oidc/config";
-import fetch from "fetch";
 
 const {
   host,
@@ -19,6 +18,7 @@ const {
 const getUrl = endpoint => `${host}/realms/${realm}${endpoint}`;
 
 export default BaseAuthenticator.extend({
+  ajax: service(),
   router: service(),
 
   redirectUri: computed(function() {
@@ -37,12 +37,9 @@ export default BaseAuthenticator.extend({
    * @returns {Object} The parsed response data
    */
   async authenticate({ code }) {
-    let data = await fetch(getUrl(tokenEndpoint), {
-      method: "POST",
-      headers: {
-        accept: "application/json",
-        "content-type": "application/x-www-form-urlencoded"
-      },
+    let data = await this.ajax.post(getUrl(tokenEndpoint), {
+      responseType: "application/json",
+      contentType: "application/x-www-form-urlencoded",
       data: {
         code,
         client_id: clientId,
@@ -51,7 +48,7 @@ export default BaseAuthenticator.extend({
       }
     });
 
-    return this._handleAuthResponse(await data.json());
+    return this._handleAuthResponse(data);
   },
 
   /**
@@ -62,12 +59,9 @@ export default BaseAuthenticator.extend({
    * @return {Promise} The logout request
    */
   async invalidate({ refresh_token }) {
-    return await fetch(getUrl(logoutEndpoint), {
-      method: "post",
-      headers: {
-        accept: "application/json",
-        "content-type": "application/x-www-form-urlencoded"
-      },
+    return await this.ajax.post(getUrl(logoutEndpoint), {
+      responseType: "application/json",
+      contentType: "application/x-www-form-urlencoded",
       data: {
         refresh_token,
         client_id: clientId
@@ -101,12 +95,9 @@ export default BaseAuthenticator.extend({
    * @returns {Object} The parsed response data
    */
   async _refresh(refresh_token) {
-    let data = await fetch(getUrl(tokenEndpoint), {
-      method: "post",
-      headers: {
-        accept: "application/json",
-        "content-type": "application/x-www-form-urlencoded"
-      },
+    let data = await this.ajax.post(getUrl(tokenEndpoint), {
+      responseType: "application/json",
+      contentType: "application/x-www-form-urlencoded",
       data: {
         refresh_token,
         client_id: clientId,
