@@ -21,10 +21,18 @@
     "precommit": "lint-staged"
   },
   "lint-staged": {
-    "*.{js,json,css,md}": ["prettier --write", "git add"]
+    "*.{js,json,css,md}": [
+      "prettier --write",
+      "git add"
+    ]
   },
   "dependencies": {
-    "ember-cli-babel": "^6.6.0"
+    "ember-auto-import": "^1.0.1",
+    "ember-cli-babel": "^6.6.0",
+    "ember-fetch": "^5.0.0",
+    "ember-get-config": "^0.2.4",
+    "ember-simple-auth": "^1.6.0",
+    "uuid": "^3.3.2"
   },
   "devDependencies": {
     "broccoli-asset-rev": "^2.7.0",
@@ -34,6 +42,7 @@
     "ember-cli-htmlbars": "^2.0.1",
     "ember-cli-htmlbars-inline-precompile": "^1.0.0",
     "ember-cli-inject-live-reload": "^1.4.1",
+    "ember-cli-mirage": "^0.4.7",
     "ember-cli-qunit": "^4.3.2",
     "ember-cli-shims": "^1.2.0",
     "ember-cli-sri": "^2.1.0",
@@ -49,7 +58,7 @@
     "eslint-config-prettier": "^2.9.0",
     "eslint-plugin-ember": "^5.0.0",
     "eslint-plugin-node": "^6.0.1",
-    "eslint-plugin-prettier": "^2.6.1",
+    "eslint-plugin-prettier": "2.6.0",
     "husky": "^0.14.3",
     "lint-staged": "^7.2.0",
     "loader.js": "^4.2.3",

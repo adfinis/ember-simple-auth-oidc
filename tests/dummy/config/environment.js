@@ -6,6 +6,12 @@ module.exports = function(environment) {
     environment,
     rootURL: "/",
     locationType: "auto",
+
+    "ember-simple-auth-oidc": {
+      realm: "test-realm",
+      clientId: "test-client"
+    },
+
     EmberENV: {
       FEATURES: {
         // Here you can enable experimental features on an ember canary build
