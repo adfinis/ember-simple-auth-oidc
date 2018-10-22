@@ -85,7 +85,14 @@ export default BaseAuthenticator.extend({
       assert("Token is missing");
     }
 
-    return await this._refresh(refresh_token);
+    // Prevent a token refresh loop with multiple tabs.
+    if (
+      this._timestampToDate(this._parseToken(access_token).exp) < new Date()
+    ) {
+      return await this._refresh(refresh_token);
+    } else {
+      return arguments[0];
+    }
   },
 
   /**
