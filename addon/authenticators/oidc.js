@@ -80,12 +80,21 @@ export default BaseAuthenticator.extend({
    * @param {String} sessionData.refresh_token The raw refresh token
    * @returns {Object} The parsed response data
    */
-  async restore({ access_token, refresh_token }) {
+  async restore(sessionData) {
+    const { access_token, refresh_token } = sessionData;
+
     if (!access_token) {
       assert("Token is missing");
     }
 
-    return await this._refresh(refresh_token);
+    // Prevent a token refresh if the token is not expired.
+    if (
+      this._timestampToDate(this._parseToken(access_token).exp) < new Date()
+    ) {
+      return await this._refresh(refresh_token);
+    }
+
+    return sessionData;
   },
 
   /**
