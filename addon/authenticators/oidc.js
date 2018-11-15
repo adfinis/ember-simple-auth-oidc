@@ -92,6 +92,16 @@ export default BaseAuthenticator.extend({
       this._timestampToDate(this._parseToken(access_token).exp) < new Date()
     ) {
       return await this._refresh(refresh_token);
+    } else {
+      // If the above expression returns false, the restore is not called again and the token is left to die.
+      // To prevent this, we schedule another restore when the token is expired.
+      later(
+        this,
+        async () => {
+          this.restore(sessionData);
+        },
+        this._timestampToDate(this._parseToken(access_token).exp) - new Date()
+      );
     }
 
     return sessionData;
