@@ -98,9 +98,8 @@ export default BaseAuthenticator.extend({
     // To prevent this, we schedule another restore when the token is expired.
     later(
       this,
-      () => {
-        this.restore(sessionData);
-      },
+      async () =>
+        this.trigger("sessionDataUpdated", await this.restore(sessionData)),
       this._timestampToDate(this._parseToken(access_token).exp) - new Date()
     );
 
