@@ -1,5 +1,5 @@
 export default function() {
-  this.urlPrefix = "";
+  this.urlPrefix = "http://localhost:4200";
   this.namespace = "";
   this.timing = 0;
 

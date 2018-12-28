@@ -2,6 +2,15 @@ import { module, test } from "qunit";
 import { setupTest } from "ember-qunit";
 import setupMirage from "ember-cli-mirage/test-support/setup-mirage";
 
+const getTokenBody = expired => {
+  const time = expired ? -30 : 120;
+  return btoa(
+    JSON.stringify({
+      exp: Date.now() + time
+    })
+  );
+};
+
 module("Unit | Authenticator | OIDC", function(hooks) {
   setupTest(hooks);
   setupMirage(hooks);
@@ -34,8 +43,9 @@ module("Unit | Authenticator | OIDC", function(hooks) {
     };
 
     let data = await subject.restore({
-      access_token: "a.b.c",
-      refresh_token: "x.y.z"
+      access_token: `access.${getTokenBody(true)}.token`,
+      refresh_token: `refresh.${getTokenBody(false)}.token`,
+      data: { exp: Date.now() - 30 }
     });
 
     assert.ok(data.access_token, "Returns an access token");
@@ -94,11 +104,11 @@ module("Unit | Authenticator | OIDC", function(hooks) {
 
     let subject = this.owner.lookup("authenticator:oidc");
 
-    let timestamp = new Date().getTime() / 1000;
+    let timestamp = Date.now();
 
     assert.equal(
       subject._timestampToDate(timestamp).toString(),
-      new Date(timestamp * 1000).toString(),
+      new Date(timestamp).toString(),
       "Datetime is the correct representation of the timestamp"
     );
   });

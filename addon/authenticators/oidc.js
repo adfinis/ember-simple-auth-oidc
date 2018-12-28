@@ -153,7 +153,7 @@ export default BaseAuthenticator.extend({
    * @returns {Date} The date which results out of the timestamp
    */
   _timestampToDate(ts) {
-    return new Date(ts * 1000);
+    return new Date(ts);
   },
 
   /**
