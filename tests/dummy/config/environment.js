@@ -8,7 +8,7 @@ module.exports = function(environment) {
     locationType: "auto",
 
     "ember-simple-auth-oidc": {
-      realm: "test-realm",
+      host: "http://localhost:4200/realms/test-realm",
       clientId: "test-client"
     },
 

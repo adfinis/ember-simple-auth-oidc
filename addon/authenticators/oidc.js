@@ -6,16 +6,9 @@ import Configuration from "ember-simple-auth/configuration";
 import { assert } from "@ember/debug";
 import config from "ember-simple-auth-oidc/config";
 
-const {
-  host,
-  realm,
-  tokenEndpoint,
-  logoutEndpoint,
-  clientId,
-  refreshLeeway
-} = config;
+const { host, tokenEndpoint, logoutEndpoint, clientId, refreshLeeway } = config;
 
-const getUrl = endpoint => `${host}/realms/${realm}${endpoint}`;
+const getUrl = endpoint => `${host}${endpoint}`;
 
 export default BaseAuthenticator.extend({
   ajax: service(),

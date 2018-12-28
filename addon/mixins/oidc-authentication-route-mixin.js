@@ -7,7 +7,7 @@ import config from "ember-simple-auth-oidc/config";
 import v4 from "uuid/v4";
 import { assert } from "@ember/debug";
 
-const { host, realm, clientId, authEndpoint } = config;
+const { host, clientId, authEndpoint } = config;
 
 export default Mixin.create(UnauthenticatedRouteMixin, {
   session: service(),
@@ -33,14 +33,14 @@ export default Mixin.create(UnauthenticatedRouteMixin, {
    *    client will try to authenticate with the given parameters.
    *
    * 2. The URL does not contain an authentication. In this case the client
-   *    will be redirected to the configured keycloak login mask, which will
+   *    will be redirected to the configured identity provider login mask, which will
    *    then redirect to this route after a successful login.
    *
    * @param {*} model The model of the route
    * @param {Ember.Transition} transition The current transition
    * @param {Object} transition.queryParams The query params of the transition
-   * @param {String} transition.queryParams.code The authentication code given by keycloak
-   * @param {String} transition.queryParams.state The state given by keycloak
+   * @param {String} transition.queryParams.code The authentication code given by the identity provider
+   * @param {String} transition.queryParams.state The state given by the identity provider
    */
   async afterModel(
     _,
@@ -56,7 +56,7 @@ export default Mixin.create(UnauthenticatedRouteMixin, {
   },
 
   /**
-   * Authenticate with the authentication code given by keycloak in the redirect.
+   * Authenticate with the authentication code given by the identity provider in the redirect.
    *
    * This will check if the passed state equals the state in the application to
    * prevent from CSRF attacks.
@@ -68,8 +68,8 @@ export default Mixin.create(UnauthenticatedRouteMixin, {
    * will apply and redirect to the entry point of the authenticated part of
    * the application.
    *
-   * @param {String} code The authentication code passed by keycloak
-   * @param {String} state The state (uuid4) passed by keycloak
+   * @param {String} code The authentication code passed by the identity provider
+   * @param {String} state The state (uuid4) passed by the identity provider
    */
   async _handleCallbackRequest(code, state) {
     if (state !== this.get("session.data.state")) {
@@ -94,10 +94,10 @@ export default Mixin.create(UnauthenticatedRouteMixin, {
   },
 
   /**
-   * Redirect the client to the configured keycloak to login.
+   * Redirect the client to the configured identity provider login.
    *
    * This will also generate a uuid4 state which the application stores to the
-   * local storage. When authenticating, the state passed by keycloak needs to
+   * local storage. When authenticating, the state passed by the identity provider needs to
    * match this state, otherwise the authentication will fail to prevent from
    * CSRF attacks.
    */
@@ -117,7 +117,7 @@ export default Mixin.create(UnauthenticatedRouteMixin, {
     }
 
     this._redirectToUrl(
-      `${host}/realms/${realm}${authEndpoint}?` +
+      `${host}${authEndpoint}?` +
         `client_id=${clientId}&` +
         `redirect_uri=${this.redirectUri}&` +
         `response_type=code&` +
