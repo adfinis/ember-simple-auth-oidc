@@ -30,7 +30,7 @@ export default BaseAuthenticator.extend({
    * @returns {Object} The parsed response data
    */
   async authenticate({ code }) {
-    let data = await this.ajax.post(getUrl(tokenEndpoint), {
+    let data = await this.get("ajax").post(getUrl(tokenEndpoint), {
       responseType: "application/json",
       contentType: "application/x-www-form-urlencoded",
       data: {
@@ -52,7 +52,7 @@ export default BaseAuthenticator.extend({
    * @return {Promise} The logout request
    */
   async invalidate({ refresh_token }) {
-    return await this.ajax.post(getUrl(logoutEndpoint), {
+    return await this.get("ajax").post(getUrl(logoutEndpoint), {
       responseType: "application/json",
       contentType: "application/x-www-form-urlencoded",
       data: {
@@ -106,7 +106,7 @@ export default BaseAuthenticator.extend({
    * @returns {Object} The parsed response data
    */
   async _refresh(refresh_token) {
-    let data = await this.ajax.post(getUrl(tokenEndpoint), {
+    let data = await this.get("ajax").post(getUrl(tokenEndpoint), {
       responseType: "application/json",
       contentType: "application/x-www-form-urlencoded",
       data: {
