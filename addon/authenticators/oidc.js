@@ -6,16 +6,9 @@ import Configuration from "ember-simple-auth/configuration";
 import { assert } from "@ember/debug";
 import config from "ember-simple-auth-oidc/config";
 
-const {
-  host,
-  realm,
-  tokenEndpoint,
-  logoutEndpoint,
-  clientId,
-  refreshLeeway
-} = config;
+const { host, tokenEndpoint, logoutEndpoint, clientId, refreshLeeway } = config;
 
-const getUrl = endpoint => `${host}/realms/${realm}${endpoint}`;
+const getUrl = endpoint => `${host}${endpoint}`;
 
 export default BaseAuthenticator.extend({
   ajax: service(),
@@ -37,7 +30,7 @@ export default BaseAuthenticator.extend({
    * @returns {Object} The parsed response data
    */
   async authenticate({ code }) {
-    let data = await this.ajax.post(getUrl(tokenEndpoint), {
+    let data = await this.get("ajax").post(getUrl(tokenEndpoint), {
       responseType: "application/json",
       contentType: "application/x-www-form-urlencoded",
       data: {
@@ -59,7 +52,7 @@ export default BaseAuthenticator.extend({
    * @return {Promise} The logout request
    */
   async invalidate({ refresh_token }) {
-    return await this.ajax.post(getUrl(logoutEndpoint), {
+    return await this.get("ajax").post(getUrl(logoutEndpoint), {
       responseType: "application/json",
       contentType: "application/x-www-form-urlencoded",
       data: {
@@ -113,7 +106,7 @@ export default BaseAuthenticator.extend({
    * @returns {Object} The parsed response data
    */
   async _refresh(refresh_token) {
-    let data = await this.ajax.post(getUrl(tokenEndpoint), {
+    let data = await this.get("ajax").post(getUrl(tokenEndpoint), {
       responseType: "application/json",
       contentType: "application/x-www-form-urlencoded",
       data: {
@@ -153,7 +146,7 @@ export default BaseAuthenticator.extend({
    * @returns {Date} The date which results out of the timestamp
    */
   _timestampToDate(ts) {
-    return new Date(ts * 1000);
+    return new Date(ts);
   },
 
   /**

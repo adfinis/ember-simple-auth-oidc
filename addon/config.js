@@ -4,7 +4,6 @@ export default Object.assign(
   {
     host: "http://localhost:4200",
     clientId: "client",
-    realm: "realm",
     authEndpoint: "/protocol/openid-connect/auth",
     tokenEndpoint: "/protocol/openid-connect/token",
     logoutEndpoint: "/protocol/openid-connect/logout",
