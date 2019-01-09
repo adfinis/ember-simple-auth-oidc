@@ -10,7 +10,7 @@ export default Object.assign(
     userinfoEndpoint: "/protocol/openid-connect/userinfo",
     scope: "openid",
     // expiresIn is the fallback expire time if none is given
-    expiresIn: 3600,
+    expiresIn: 3600 * 1000,
     refreshLeeway: 1000 * 30,
     tokenPropertyName: "access_token",
     authHeaderName: "Authorization",
