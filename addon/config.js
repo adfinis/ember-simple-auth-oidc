@@ -7,6 +7,10 @@ export default Object.assign(
     authEndpoint: "/protocol/openid-connect/auth",
     tokenEndpoint: "/protocol/openid-connect/token",
     logoutEndpoint: "/protocol/openid-connect/logout",
+    userinfoEndpoint: "/protocol/openid-connect/userinfo",
+    scope: "openid",
+    // expiresIn is the fallback expire time if none is given
+    expiresIn: 3600,
     refreshLeeway: 1000 * 30,
     tokenPropertyName: "access_token",
     authHeaderName: "Authorization",

@@ -7,7 +7,7 @@ import config from "ember-simple-auth-oidc/config";
 import v4 from "uuid/v4";
 import { assert } from "@ember/debug";
 
-const { host, clientId, authEndpoint } = config;
+const { host, clientId, authEndpoint, scope } = config;
 
 export default Mixin.create(UnauthenticatedRouteMixin, {
   session: service(),
@@ -121,7 +121,8 @@ export default Mixin.create(UnauthenticatedRouteMixin, {
         `client_id=${clientId}&` +
         `redirect_uri=${this.redirectUri}&` +
         `response_type=code&` +
-        `state=${state}`
+        `state=${state}&` +
+        `scope=${scope}`
     );
   }
 });
