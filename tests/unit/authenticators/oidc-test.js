@@ -29,7 +29,7 @@ module("Unit | Authenticator | OIDC", function(hooks) {
 
     assert.ok(data.access_token, "Returns an access token");
     assert.ok(data.refresh_token, "Returns a refresh token");
-    assert.ok(data.data.exp, "Parses the access token correctly");
+    assert.ok(data.userinfo, "Returns the user info");
   });
 
   test("it can restore a session", async function(assert) {
@@ -44,13 +44,12 @@ module("Unit | Authenticator | OIDC", function(hooks) {
 
     let data = await subject.restore({
       access_token: `access.${getTokenBody(true)}.token`,
-      refresh_token: `refresh.${getTokenBody(false)}.token`,
-      data: { exp: Date.now() - 30 }
+      refresh_token: `refresh.${getTokenBody(false)}.token`
     });
 
     assert.ok(data.access_token, "Returns an access token");
     assert.ok(data.refresh_token, "Returns a refresh token");
-    assert.ok(data.data.exp, "Parses the access token correctly");
+    assert.ok(data.userinfo, "Returns the user info");
   });
 
   test("it can invalidate a session", async function(assert) {
@@ -84,7 +83,7 @@ module("Unit | Authenticator | OIDC", function(hooks) {
 
     assert.ok(data.access_token, "Returns an access token");
     assert.ok(data.refresh_token, "Returns a refresh token");
-    assert.ok(data.data.exp, "Parses the access token correctly");
+    assert.ok(data.userinfo, "Returns the user info");
   });
 
   test("it can schedule a refresh", async function(assert) {
@@ -97,19 +96,5 @@ module("Unit | Authenticator | OIDC", function(hooks) {
     };
 
     subject._scheduleRefresh(new Date() + 30, "testtoken");
-  });
-
-  test("it can convert a unix timestamp to a date", async function(assert) {
-    assert.expect(1);
-
-    let subject = this.owner.lookup("authenticator:oidc");
-
-    let timestamp = Date.now();
-
-    assert.equal(
-      subject._timestampToDate(timestamp).toString(),
-      new Date(timestamp).toString(),
-      "Datetime is the correct representation of the timestamp"
-    );
   });
 });

@@ -6,7 +6,7 @@ export default function() {
   this.post("/realms/test-realm/protocol/openid-connect/token", function() {
     let tokenBody = btoa(
       JSON.stringify({
-        exp: Math.round(new Date().getTime() + (30 * 60 * 1000) / 1000)
+        exp: Math.round(new Date().getTime() + 30 * 60)
       })
     );
 
@@ -21,4 +21,8 @@ export default function() {
     () => null,
     200
   );
+
+  this.get("/realms/test-realm/protocol/openid-connect/userinfo", function() {
+    return { sub: 1 };
+  });
 }

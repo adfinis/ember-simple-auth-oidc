@@ -80,12 +80,11 @@ module("Unit | Mixin | oidc-authentication-route-mixin", function(hooks) {
     };
 
     // fails because of the error in authenticate
-    subject
-      .afterModel(null, {
+    assert.rejects(
+      subject.afterModel(null, {
         queryParams: { code: "sometestcode", state: "state2" }
-      })
-      .catch(e => {
-        assert.ok(/Authentication failed/.test(e.message));
-      });
+      }),
+      Error
+    );
   });
 });
