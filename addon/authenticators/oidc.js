@@ -39,6 +39,12 @@ export default BaseAuthenticator.extend({
    * @returns {Object} The parsed response data
    */
   async authenticate({ code }) {
+    if (!tokenEndpoint || !logoutEndpoint || !userinfoEndpoint) {
+      throw new Error(
+        "Please define all OIDC endpoints (auth, token, logout, userinfo)"
+      );
+    }
+
     let data = await this.get("ajax").post(getUrl(tokenEndpoint), {
       responseType: "application/json",
       contentType: "application/x-www-form-urlencoded",

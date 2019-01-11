@@ -4,10 +4,10 @@ export default Object.assign(
   {
     host: "http://localhost:4200",
     clientId: "client",
-    authEndpoint: "/protocol/openid-connect/auth",
-    tokenEndpoint: "/protocol/openid-connect/token",
-    logoutEndpoint: "/protocol/openid-connect/logout",
-    userinfoEndpoint: "/protocol/openid-connect/userinfo",
+    authEndpoint: null,
+    tokenEndpoint: null,
+    logoutEndpoint: null,
+    userinfoEndpoint: null,
     scope: "openid",
     // expiresIn is the fallback expire time if none is given
     expiresIn: 3600 * 1000,

@@ -48,6 +48,12 @@ export default Mixin.create(UnauthenticatedRouteMixin, {
       queryParams: { code, state }
     }
   ) {
+    if (!authEndpoint) {
+      throw new Error(
+        "Please define all OIDC endpoints (auth, token, logout, userinfo)"
+      );
+    }
+
     if (code) {
       return await this._handleCallbackRequest(code, state);
     }

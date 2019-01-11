@@ -9,7 +9,11 @@ module.exports = function(environment) {
 
     "ember-simple-auth-oidc": {
       host: "http://localhost:4200/realms/test-realm",
-      clientId: "test-client"
+      clientId: "test-client",
+      authEndpoint: "/protocol/openid-connect/auth",
+      tokenEndpoint: "/protocol/openid-connect/token",
+      logoutEndpoint: "/protocol/openid-connect/logout",
+      userinfoEndpoint: "/protocol/openid-connect/userinfo"
     },
 
     EmberENV: {
