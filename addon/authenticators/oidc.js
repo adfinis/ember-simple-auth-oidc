@@ -153,13 +153,18 @@ export default BaseAuthenticator.extend({
    * @param {Number} response.expires_in Seconds until access_token expires
    * @returns {Object} The authentication data
    */
-  async _handleAuthResponse({ access_token, refresh_token, expires_in }) {
+  async _handleAuthResponse({
+    access_token,
+    refresh_token,
+    expires_in,
+    id_token
+  }) {
     const userinfo = await this._getUserinfo(access_token);
 
     const expireTime = expires_in ? expires_in * 1000 : expiresIn;
 
     this._scheduleRefresh(expireTime, refresh_token);
 
-    return { access_token, refresh_token, userinfo };
+    return { access_token, refresh_token, userinfo, id_token };
   }
 });

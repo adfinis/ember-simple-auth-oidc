@@ -25,10 +25,12 @@ export default Mixin.create(AuthenticatedRouteMixin, {
     this.session.set("data.state", state);
 
     const redirectUri = `${location.protocol}//${location.host}${logoutRoute}`;
+    const idToken = this.session.get("data.authenticated.id_token");
 
     location.replace(
       `${host}${endSessionEndpoint}?` +
-        `post_logout_redirect_uri=${redirectUri}` +
+        `id_token_hint=${idToken}&` +
+        `post_logout_redirect_uri=${redirectUri}&` +
         `state=${state}`
     );
   }
