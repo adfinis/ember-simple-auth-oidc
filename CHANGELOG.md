@@ -18,7 +18,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 - Add required config option `userinfoEndpoint`
 - Add optional config option `expiresIn`
 - Remove default values for all endpoint config options. They need to be set
-  specific in the project config file.
+  specifically in the project config file.
 - No longer parse the `access_token` for user information instead request the
   user information from the userinfo endpoint. Make sure the userinfo endpoint
   is available and correctly configured!
