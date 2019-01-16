@@ -9,7 +9,6 @@ import config from "ember-simple-auth-oidc/config";
 const {
   host,
   tokenEndpoint,
-  logoutEndpoint,
   userinfoEndpoint,
   clientId,
   refreshLeeway,
@@ -39,9 +38,9 @@ export default BaseAuthenticator.extend({
    * @returns {Object} The parsed response data
    */
   async authenticate({ code }) {
-    if (!tokenEndpoint || !logoutEndpoint || !userinfoEndpoint) {
+    if (!tokenEndpoint || !userinfoEndpoint) {
       throw new Error(
-        "Please define all OIDC endpoints (auth, token, logout, userinfo)"
+        "Please define all OIDC endpoints (auth, token, userinfo)"
       );
     }
 
@@ -66,16 +65,7 @@ export default BaseAuthenticator.extend({
    * @param {String} data.refresh_token The refresh token
    * @return {Promise} The logout request
    */
-  async invalidate({ refresh_token }) {
-    return await this.get("ajax").post(getUrl(logoutEndpoint), {
-      responseType: "application/json",
-      contentType: "application/x-www-form-urlencoded",
-      data: {
-        refresh_token,
-        client_id: clientId
-      }
-    });
-  },
+  async invalidate() {},
 
   /**
    * Restore the session after a page refresh. This will check if an access
