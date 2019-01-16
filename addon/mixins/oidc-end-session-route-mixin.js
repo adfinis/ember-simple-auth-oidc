@@ -1,11 +1,11 @@
 import Mixin from "@ember/object/mixin";
-import UnauthenticatedRouteMixin from "ember-simple-auth/mixins/unauthenticated-route-mixin";
+import AuthenticatedRouteMixin from "ember-simple-auth/mixins/authenticated-route-mixin";
 import config from "ember-simple-auth-oidc/config";
 import v4 from "uuid/v4";
 
 const { host, endSessionEndpoint, logoutRoute } = config;
 
-export default Mixin.create(UnauthenticatedRouteMixin, {
+export default Mixin.create(AuthenticatedRouteMixin, {
   async afterModel(
     _,
     {
