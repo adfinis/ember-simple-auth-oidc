@@ -7,7 +7,7 @@ import config from "ember-simple-auth-oidc/config";
 import v4 from "uuid/v4";
 import { assert } from "@ember/debug";
 
-const { host, clientId, authEndpoint } = config;
+const { host, clientId, authEndpoint, scope } = config;
 
 export default Mixin.create(UnauthenticatedRouteMixin, {
   session: service(),
@@ -48,6 +48,12 @@ export default Mixin.create(UnauthenticatedRouteMixin, {
       queryParams: { code, state }
     }
   ) {
+    if (!authEndpoint) {
+      throw new Error(
+        "Please define all OIDC endpoints (auth, token, logout, userinfo)"
+      );
+    }
+
     if (code) {
       return await this._handleCallbackRequest(code, state);
     }
@@ -78,18 +84,14 @@ export default Mixin.create(UnauthenticatedRouteMixin, {
 
     this.session.set("data.state", undefined);
 
-    try {
-      await this.session.authenticate("authenticator:oidc", {
-        code
-      });
+    await this.session.authenticate("authenticator:oidc", {
+      code
+    });
 
-      let next = this.session.get("data.next");
+    let next = this.session.get("data.next");
 
-      if (next) {
-        this.replaceWith(next);
-      }
-    } catch (e) {
-      assert("Authentication failed");
+    if (next) {
+      this.replaceWith(next);
     }
   },
 
@@ -121,7 +123,8 @@ export default Mixin.create(UnauthenticatedRouteMixin, {
         `client_id=${clientId}&` +
         `redirect_uri=${this.redirectUri}&` +
         `response_type=code&` +
-        `state=${state}`
+        `state=${state}&` +
+        `scope=${scope}`
     );
   }
 });

@@ -6,7 +6,16 @@ import Configuration from "ember-simple-auth/configuration";
 import { assert } from "@ember/debug";
 import config from "ember-simple-auth-oidc/config";
 
-const { host, tokenEndpoint, logoutEndpoint, clientId, refreshLeeway } = config;
+const {
+  host,
+  tokenEndpoint,
+  logoutEndpoint,
+  userinfoEndpoint,
+  clientId,
+  refreshLeeway,
+  authPrefix,
+  expiresIn
+} = config;
 
 const getUrl = endpoint => `${host}${endpoint}`;
 
@@ -30,6 +39,12 @@ export default BaseAuthenticator.extend({
    * @returns {Object} The parsed response data
    */
   async authenticate({ code }) {
+    if (!tokenEndpoint || !logoutEndpoint || !userinfoEndpoint) {
+      throw new Error(
+        "Please define all OIDC endpoints (auth, token, logout, userinfo)"
+      );
+    }
+
     let data = await this.get("ajax").post(getUrl(tokenEndpoint), {
       responseType: "application/json",
       contentType: "application/x-www-form-urlencoded",
@@ -80,23 +95,7 @@ export default BaseAuthenticator.extend({
       assert("Token is missing");
     }
 
-    // Prevent a token refresh if the token is not expired.
-    if (
-      this._timestampToDate(this._parseToken(access_token).exp) < new Date()
-    ) {
-      return await this._refresh(refresh_token);
-    }
-
-    // If the above expression returns false, the restore is not called again and the token is left to die.
-    // To prevent this, we schedule another restore when the token is expired.
-    later(
-      this,
-      async () =>
-        this.trigger("sessionDataUpdated", await this.restore(sessionData)),
-      this._timestampToDate(this._parseToken(access_token).exp) - new Date()
-    );
-
-    return sessionData;
+    return await this._refresh(refresh_token);
   },
 
   /**
@@ -125,40 +124,33 @@ export default BaseAuthenticator.extend({
    *
    * This refresh needs to happen before the access token actually expires.
    *
-   * @param {*} datetime The datetime at which the access token expires
-   * @param {*} token The refresh token
+   * @param {Number} milliseconds Millilseconds before the access token expires
+   * @param {String} token The refresh token
    */
-  _scheduleRefresh(datetime, token) {
+  _scheduleRefresh(milliseconds, token) {
     later(
       this,
       async token => {
         this.trigger("sessionDataUpdated", await this._refresh(token));
       },
       token,
-      datetime - refreshLeeway - new Date()
+      milliseconds - refreshLeeway
     );
   },
 
   /**
-   * Convert a unix timestamp to a date object
+   * Request user information from the openid userinfo endpoint
    *
-   * @param {Number} exp The unix timestamp
-   * @returns {Date} The date which results out of the timestamp
+   * @param {String} accessToken The raw access token
+   * @returns {Object} Object containing the user information
    */
-  _timestampToDate(ts) {
-    return new Date(ts);
-  },
+  async _getUserinfo(accessToken) {
+    const userinfo = await this.get("ajax").request(getUrl(userinfoEndpoint), {
+      headers: { Authorization: `${authPrefix} ${accessToken}` },
+      responseType: "application/json"
+    });
 
-  /**
-   * Parse the body of a bearer token
-   *
-   * @param {String} token The raw bearer token
-   * @returns {Object} The parsed token data
-   */
-  _parseToken(token) {
-    let [, body] = token.split(".");
-
-    return JSON.parse(decodeURIComponent(escape(atob(body))));
+    return userinfo;
   },
 
   /**
@@ -168,13 +160,16 @@ export default BaseAuthenticator.extend({
    * @param {Object} response The raw response data
    * @param {String} response.access_token The raw access token
    * @param {String} response.refresh_token The raw refresh token
+   * @param {Number} response.expires_in Seconds until access_token expires
    * @returns {Object} The authentication data
    */
-  _handleAuthResponse({ access_token, refresh_token }) {
-    let data = this._parseToken(access_token);
+  async _handleAuthResponse({ access_token, refresh_token, expires_in }) {
+    const userinfo = await this._getUserinfo(access_token);
 
-    this._scheduleRefresh(this._timestampToDate(data.exp), refresh_token);
+    const expireTime = expires_in ? expires_in * 1000 : expiresIn;
 
-    return { access_token, refresh_token, data };
+    this._scheduleRefresh(expireTime, refresh_token);
+
+    return { access_token, refresh_token, userinfo };
   }
 });
