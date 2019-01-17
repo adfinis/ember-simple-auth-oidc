@@ -61,11 +61,15 @@ export default BaseAuthenticator.extend({
   /**
    * Invalidate the current session with the refresh token
    *
-   * @param {Object} data The authenticated data
-   * @param {String} data.refresh_token The refresh token
-   * @return {Promise} The logout request
+   * @return {Promise} The invalidate promise
    */
-  async invalidate() {},
+  async invalidate() {
+    // eslint-disable-next-line no-unused-vars
+    return new Promise(function(resolve, reject) {
+      resolve(true);
+      // We never reject here
+    });
+  },
 
   /**
    * Restore the session after a page refresh. This will check if an access

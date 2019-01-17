@@ -18,7 +18,11 @@ export default Mixin.create({
       this.session.invalidate();
     }
 
-    this._handleRedirect();
+    if (state) {
+      return this._handleCallback(state);
+    }
+
+    return this._handleRedirect();
   },
 
   _handleRedirect() {
@@ -35,5 +39,15 @@ export default Mixin.create({
         `post_logout_redirect_uri=${redirectUri}&` +
         `state=${state}`
     );
+  },
+
+  _handleCallback(state) {
+    if (state !== this.session.get("data.state")) {
+      throw new Error("End session state did not match");
+    }
+
+    this.session.set("data.state", undefined);
+
+    this.session.invalidate();
   }
 });
