@@ -33,6 +33,8 @@ export default Mixin.create({
     const redirectUri = `${location.protocol}//${location.host}${logoutRoute}`;
     const idToken = this.session.get("data.authenticated.id_token");
 
+    this.session.invalidate();
+
     location.replace(
       `${host}${endSessionEndpoint}?` +
         `id_token_hint=${idToken}&` +
@@ -47,7 +49,5 @@ export default Mixin.create({
     }
 
     this.session.set("data.state", undefined);
-
-    this.session.invalidate();
   }
 });

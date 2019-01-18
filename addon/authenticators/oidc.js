@@ -2,6 +2,7 @@ import BaseAuthenticator from "ember-simple-auth/authenticators/base";
 import { computed } from "@ember/object";
 import { later } from "@ember/runloop";
 import { inject as service } from "@ember/service";
+import RSVP from "rsvp";
 import Configuration from "ember-simple-auth/configuration";
 import { assert } from "@ember/debug";
 import config from "ember-simple-auth-oidc/config";
@@ -64,11 +65,7 @@ export default BaseAuthenticator.extend({
    * @return {Promise} The invalidate promise
    */
   async invalidate() {
-    // eslint-disable-next-line no-unused-vars
-    return new Promise(function(resolve, reject) {
-      resolve(true);
-      // We never reject here
-    });
+    return RSVP.resolve(true);
   },
 
   /**
