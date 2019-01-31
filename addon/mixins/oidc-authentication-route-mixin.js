@@ -87,12 +87,6 @@ export default Mixin.create(UnauthenticatedRouteMixin, {
     await this.session.authenticate("authenticator:oidc", {
       code
     });
-
-    let next = this.session.get("data.next");
-
-    if (next) {
-      this.replaceWith(next);
-    }
   },
 
   /**
@@ -107,16 +101,6 @@ export default Mixin.create(UnauthenticatedRouteMixin, {
     let state = v4();
 
     this.session.set("data.state", state);
-
-    let attemptedTransition = this.get("session.attemptedTransition");
-
-    if (attemptedTransition) {
-      let {
-        intent: { url }
-      } = attemptedTransition;
-
-      this.session.set("data.next", url);
-    }
 
     this._redirectToUrl(
       `${host}${authEndpoint}?` +

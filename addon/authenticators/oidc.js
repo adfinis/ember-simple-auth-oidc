@@ -2,6 +2,7 @@ import BaseAuthenticator from "ember-simple-auth/authenticators/base";
 import { computed } from "@ember/object";
 import { later } from "@ember/runloop";
 import { inject as service } from "@ember/service";
+import RSVP from "rsvp";
 import Configuration from "ember-simple-auth/configuration";
 import { assert } from "@ember/debug";
 import config from "ember-simple-auth-oidc/config";
@@ -9,7 +10,6 @@ import config from "ember-simple-auth-oidc/config";
 const {
   host,
   tokenEndpoint,
-  logoutEndpoint,
   userinfoEndpoint,
   clientId,
   refreshLeeway,
@@ -39,9 +39,9 @@ export default BaseAuthenticator.extend({
    * @returns {Object} The parsed response data
    */
   async authenticate({ code }) {
-    if (!tokenEndpoint || !logoutEndpoint || !userinfoEndpoint) {
+    if (!tokenEndpoint || !userinfoEndpoint) {
       throw new Error(
-        "Please define all OIDC endpoints (auth, token, logout, userinfo)"
+        "Please define all OIDC endpoints (auth, token, userinfo)"
       );
     }
 
@@ -62,19 +62,10 @@ export default BaseAuthenticator.extend({
   /**
    * Invalidate the current session with the refresh token
    *
-   * @param {Object} data The authenticated data
-   * @param {String} data.refresh_token The refresh token
-   * @return {Promise} The logout request
+   * @return {Promise} The invalidate promise
    */
-  async invalidate({ refresh_token }) {
-    return await this.get("ajax").post(getUrl(logoutEndpoint), {
-      responseType: "application/json",
-      contentType: "application/x-www-form-urlencoded",
-      data: {
-        refresh_token,
-        client_id: clientId
-      }
-    });
+  async invalidate() {
+    return RSVP.resolve(true);
   },
 
   /**
@@ -163,13 +154,18 @@ export default BaseAuthenticator.extend({
    * @param {Number} response.expires_in Seconds until access_token expires
    * @returns {Object} The authentication data
    */
-  async _handleAuthResponse({ access_token, refresh_token, expires_in }) {
+  async _handleAuthResponse({
+    access_token,
+    refresh_token,
+    expires_in,
+    id_token
+  }) {
     const userinfo = await this._getUserinfo(access_token);
 
     const expireTime = expires_in ? expires_in * 1000 : expiresIn;
 
     this._scheduleRefresh(expireTime, refresh_token);
 
-    return { access_token, refresh_token, userinfo };
+    return { access_token, refresh_token, userinfo, id_token };
   }
 });

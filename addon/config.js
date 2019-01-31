@@ -6,7 +6,8 @@ export default Object.assign(
     clientId: "client",
     authEndpoint: null,
     tokenEndpoint: null,
-    logoutEndpoint: null,
+    endSessionEndpoint: null,
+    afterLogoutUri: null,
     userinfoEndpoint: null,
     scope: "openid",
     // expiresIn is the fallback expire time if none is given
