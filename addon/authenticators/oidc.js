@@ -1,6 +1,6 @@
 import BaseAuthenticator from "ember-simple-auth/authenticators/base";
 import { computed } from "@ember/object";
-import { later } from "@ember/runloop";
+import { run } from "@ember/runloop";
 import { inject as service } from "@ember/service";
 import RSVP from "rsvp";
 import Configuration from "ember-simple-auth/configuration";
@@ -22,6 +22,8 @@ const getUrl = endpoint => `${host}${endpoint}`;
 export default BaseAuthenticator.extend({
   ajax: service(),
   router: service(),
+
+  _upcomingRefresh: null,
 
   redirectUri: computed(function() {
     let { protocol, host } = location;
@@ -80,13 +82,18 @@ export default BaseAuthenticator.extend({
    * @returns {Object} The parsed response data
    */
   async restore(sessionData) {
-    const { access_token, refresh_token } = sessionData;
+    const { access_token, refresh_token, expireTime } = sessionData;
 
     if (!access_token) {
       assert("Token is missing");
     }
 
-    return await this._refresh(refresh_token);
+    if (expireTime && expireTime <= new Date().getTime()) {
+      return await this._refresh(refresh_token);
+    } else {
+      this._scheduleRefresh(expireTime, refresh_token);
+      return RSVP.resolve(true);
+    }
   },
 
   /**
@@ -115,17 +122,26 @@ export default BaseAuthenticator.extend({
    *
    * This refresh needs to happen before the access token actually expires.
    *
-   * @param {Number} milliseconds Millilseconds before the access token expires
+   * @param {Number} expireTime Timestamp in milliseconds at which the access token expires
    * @param {String} token The refresh token
    */
-  _scheduleRefresh(milliseconds, token) {
-    later(
+  _scheduleRefresh(expireTime, token) {
+    if (expireTime <= new Date().getTime()) {
+      return;
+    }
+
+    if (this._upcomingRefresh) {
+      run.cancel(this._upcomingRefresh);
+      this._upcomingRefresh = null;
+    }
+
+    this._upcomingRefresh = run.later(
       this,
       async token => {
         this.trigger("sessionDataUpdated", await this._refresh(token));
       },
       token,
-      milliseconds - refreshLeeway
+      expireTime - new Date().getTime()
     );
   },
 
@@ -162,10 +178,12 @@ export default BaseAuthenticator.extend({
   }) {
     const userinfo = await this._getUserinfo(access_token);
 
-    const expireTime = expires_in ? expires_in * 1000 : expiresIn;
+    const expireInMilliseconds = expires_in ? expires_in * 1000 : expiresIn;
+    const expireTime =
+      new Date().getTime() + expireInMilliseconds - refreshLeeway;
 
     this._scheduleRefresh(expireTime, refresh_token);
 
-    return { access_token, refresh_token, userinfo, id_token };
+    return { access_token, refresh_token, userinfo, id_token, expireTime };
   }
 });
