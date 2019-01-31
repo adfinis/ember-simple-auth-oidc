@@ -40,6 +40,10 @@ export default Mixin.create({
       endSessionUri = `${endSessionUri}?${params.join("&")}`;
     }
 
-    location.replace(endSessionUri);
+    this._redirectToUrl(endSessionUri);
+  },
+
+  _redirectToUrl(url) {
+    location.replace(url);
   }
 });
