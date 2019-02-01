@@ -4,7 +4,6 @@ import { run } from "@ember/runloop";
 import { inject as service } from "@ember/service";
 import RSVP from "rsvp";
 import Configuration from "ember-simple-auth/configuration";
-import { assert } from "@ember/debug";
 import config from "ember-simple-auth-oidc/config";
 
 const {
@@ -79,20 +78,20 @@ export default BaseAuthenticator.extend({
    * @param {Object} sessionData The current session data
    * @param {String} sessionData.access_token The raw access token
    * @param {String} sessionData.refresh_token The raw refresh token
-   * @returns {Object} The parsed response data
+   * @returns {Promise} A promise which resolves with the session data
    */
   async restore(sessionData) {
-    const { access_token, refresh_token, expireTime } = sessionData;
+    const { refresh_token, expireTime } = sessionData;
 
-    if (!access_token) {
-      assert("Token is missing");
+    if (!refresh_token) {
+      return RSVP.reject("Refresh token is missing");
     }
 
     if (expireTime && expireTime <= new Date().getTime()) {
-      return await this._refresh(refresh_token);
+      return RSVP.resolve(await this._refresh(refresh_token));
     } else {
       this._scheduleRefresh(expireTime, refresh_token);
-      return RSVP.resolve(true);
+      return RSVP.resolve(sessionData);
     }
   },
 
@@ -134,7 +133,6 @@ export default BaseAuthenticator.extend({
       run.cancel(this._upcomingRefresh);
       this._upcomingRefresh = null;
     }
-
     this._upcomingRefresh = run.later(
       this,
       async token => {
