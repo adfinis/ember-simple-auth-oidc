@@ -65,7 +65,7 @@ export default BaseAuthenticator.extend({
    *
    * @return {Promise} The invalidate promise
    */
-  async invalidate() {
+  invalidate() {
     return RSVP.resolve(true);
   },
 
@@ -84,14 +84,14 @@ export default BaseAuthenticator.extend({
     const { refresh_token, expireTime } = sessionData;
 
     if (!refresh_token) {
-      return RSVP.reject("Refresh token is missing");
+      throw new Error("Refresh token is missing");
     }
 
     if (expireTime && expireTime <= new Date().getTime()) {
-      return RSVP.resolve(await this._refresh(refresh_token));
+      return await this._refresh(refresh_token);
     } else {
       this._scheduleRefresh(expireTime, refresh_token);
-      return RSVP.resolve(sessionData);
+      return sessionData;
     }
   },
 
