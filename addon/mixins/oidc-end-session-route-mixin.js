@@ -1,6 +1,7 @@
 import Mixin from "@ember/object/mixin";
 import { inject as service } from "@ember/service";
 import config from "ember-simple-auth-oidc/config";
+import getAbsoluteUrl from "ember-simple-auth-oidc/utils/absoluteUrl";
 
 const { host, endSessionEndpoint, afterLogoutUri } = config;
 
@@ -20,12 +21,7 @@ export default Mixin.create({
     const params = [];
 
     if (afterLogoutUri) {
-      const redirectUri =
-        afterLogoutUri.indexOf("http") === 0
-          ? afterLogoutUri
-          : `${location.protocol}//${location.host}${afterLogoutUri}`;
-
-      params.push(`post_logout_redirect_uri=${redirectUri}`);
+      params.push(`post_logout_redirect_uri=${getAbsoluteUrl(afterLogoutUri)}`);
     }
 
     const idToken = this.session.get("data.authenticated.id_token");
@@ -35,7 +31,7 @@ export default Mixin.create({
 
     this.session.invalidate();
 
-    let endSessionUri = `${host}${endSessionEndpoint}`;
+    let endSessionUri = `${getAbsoluteUrl(host)}${endSessionEndpoint}`;
     if (params.length > 0) {
       endSessionUri = `${endSessionUri}?${params.join("&")}`;
     }
