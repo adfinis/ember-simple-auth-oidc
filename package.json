@@ -1,7 +1,7 @@
 {
   "name": "ember-simple-auth-oidc",
-  "version": "0.1.5",
-  "description": "The default blueprint for ember-cli addons.",
+  "version": "0.2.0",
+  "description": "A Ember Simple Auth addon which implements the OpenID Connect Authorization Code Flow.",
   "keywords": [
     "ember-addon"
   ],
