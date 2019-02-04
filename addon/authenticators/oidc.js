@@ -5,6 +5,7 @@ import { inject as service } from "@ember/service";
 import RSVP from "rsvp";
 import Configuration from "ember-simple-auth/configuration";
 import config from "ember-simple-auth-oidc/config";
+import getAbsoluteUrl from "ember-simple-auth-oidc/utils/absoluteUrl";
 
 const {
   host,
@@ -16,7 +17,7 @@ const {
   expiresIn
 } = config;
 
-const getUrl = endpoint => `${host}${endpoint}`;
+const getUrl = endpoint => `${getAbsoluteUrl(host)}${endpoint}`;
 
 export default BaseAuthenticator.extend({
   ajax: service(),

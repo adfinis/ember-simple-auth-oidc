@@ -4,6 +4,7 @@ import { computed } from "@ember/object";
 import { inject as service } from "@ember/service";
 import Configuration from "ember-simple-auth/configuration";
 import config from "ember-simple-auth-oidc/config";
+import getAbsoluteUrl from "ember-simple-auth-oidc/utils/absoluteUrl";
 import v4 from "uuid/v4";
 import { assert } from "@ember/debug";
 
@@ -103,7 +104,7 @@ export default Mixin.create(UnauthenticatedRouteMixin, {
     this.session.set("data.state", state);
 
     this._redirectToUrl(
-      `${host}${authEndpoint}?` +
+      `${getAbsoluteUrl(host)}${authEndpoint}?` +
         `client_id=${clientId}&` +
         `redirect_uri=${this.redirectUri}&` +
         `response_type=code&` +
