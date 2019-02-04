@@ -59,16 +59,14 @@ export default DS.JSONAPIAdapter.extend(OIDCAdapterMixin, {});
 
 ## Configuration
 
-The addon can be configured in the ember config with the key `ember-simple-auth-oidc`.
+The addon can be configured in the project's `environment.js` file with the key `ember-simple-auth-oidc`.
 
-At least the following config options need to be added to the ember config:
+A minimal configuration includes the following options:
 
 ```
 module.exports = function(environment) {
   let ENV = {
-    modulePrefix: "oidc",
-    environment,
-    rootURL: "/",
+    // ...
     "ember-simple-auth-oidc": {
       host: "http://authorization.server/openid",
       clientId: "test",
@@ -76,12 +74,13 @@ module.exports = function(environment) {
       tokenEndpoint: "/token",
       userinfoEndpoint: "/userinfo",
     }
+    // ...
   }
   return ENV;
 }
 ```
 
-A complete list of all possible config options can be found below:
+Here is a complete list of all possible config options:
 
 **host** \<String\>  
 A relative or absolute URI of the authorization server.
