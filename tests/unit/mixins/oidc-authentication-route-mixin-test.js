@@ -25,7 +25,7 @@ module("Unit | Mixin | oidc-authentication-route-mixin", function(hooks) {
       }
     });
 
-    subject.afterModel(null, { queryParams: {} });
+    subject.afterModel(null, { to: { queryParams: {} } });
   });
 
   test("it can handle a request with an authentication code", function(assert) {
@@ -45,7 +45,7 @@ module("Unit | Mixin | oidc-authentication-route-mixin", function(hooks) {
       })
     });
 
-    subject.afterModel(null, { queryParams: { code: "sometestcode" } });
+    subject.afterModel(null, { to: { queryParams: { code: "sometestcode" } } });
   });
 
   test("it can handle a failing authentication", function(assert) {
@@ -69,7 +69,9 @@ module("Unit | Mixin | oidc-authentication-route-mixin", function(hooks) {
     // fails because the state is not correct (CSRF)
     subject
       .afterModel(null, {
-        queryParams: { code: "sometestcode", state: "state1" }
+        to: {
+          queryParams: { code: "sometestcode", state: "state1" }
+        }
       })
       .catch(e => {
         assert.ok(/State did not match/.test(e.message));
@@ -82,7 +84,9 @@ module("Unit | Mixin | oidc-authentication-route-mixin", function(hooks) {
     // fails because of the error in authenticate
     assert.rejects(
       subject.afterModel(null, {
-        queryParams: { code: "sometestcode", state: "state2" }
+        to: {
+          queryParams: { code: "sometestcode", state: "state2" }
+        }
       }),
       Error
     );

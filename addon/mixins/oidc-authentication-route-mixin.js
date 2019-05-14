@@ -14,6 +14,11 @@ export default Mixin.create(UnauthenticatedRouteMixin, {
   session: service(),
   router: service(),
 
+  queryParams: {
+    code: { refreshModel: false },
+    state: { refreshModel: false }
+  },
+
   redirectUri: computed(function() {
     let { protocol, host } = location;
     let path = this.router.urlFor(Configuration.authenticationRoute);
@@ -39,14 +44,17 @@ export default Mixin.create(UnauthenticatedRouteMixin, {
    *
    * @param {*} model The model of the route
    * @param {Ember.Transition} transition The current transition
-   * @param {Object} transition.queryParams The query params of the transition
-   * @param {String} transition.queryParams.code The authentication code given by the identity provider
-   * @param {String} transition.queryParams.state The state given by the identity provider
+   * @param {Object} transition.to The destination of the transition
+   * @param {Object} transition.to.queryParams The query params of the transition
+   * @param {String} transition.to.queryParams.code The authentication code given by the identity provider
+   * @param {String} transition.to.queryParams.state The state given by the identity provider
    */
   async afterModel(
     _,
     {
-      queryParams: { code, state }
+      to: {
+        queryParams: { code, state }
+      }
     }
   ) {
     if (!authEndpoint) {
