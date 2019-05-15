@@ -48,6 +48,26 @@ module("Unit | Mixin | oidc-authentication-route-mixin", function(hooks) {
     subject.afterModel(null, { to: { queryParams: { code: "sometestcode" } } });
   });
 
+  test("it can handle older version of router_js", function(assert) {
+    assert.expect(1);
+
+    let Route = EmberObject.extend(OIDCAuthenticationRouteMixin);
+
+    let subject = Route.create({
+      redirectUri: "test",
+      session: EmberObject.create({
+        data: {
+          authenticated: {}
+        },
+        async authenticate(_, { code }) {
+          assert.equal(code, "sometestcode");
+        }
+      })
+    });
+
+    subject.afterModel(null, { queryParams: { code: "sometestcode" } });
+  });
+
   test("it can handle a failing authentication", function(assert) {
     assert.expect(2);
 
