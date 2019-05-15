@@ -5,8 +5,8 @@ OpenID Connect [Authorization Code Flow](https://openid.net/specs/openid-connect
 
 ## Installation
 
-```
-ember install ember-simple-auth-oidc
+```bash
+$ ember install ember-simple-auth-oidc
 ```
 
 ## Usage
@@ -16,8 +16,9 @@ their respective routes:
 
 The `oidc-application-route-mixin` replaces the Ember Simple Auth `application-route-mixin`.
 
-```
+```js
 // app/routes/application.js
+
 import Route from "@ember/routing/route";
 import OIDCApplicationRouteMixin from "ember-simple-auth-oidc/mixins/oidc-application-route-mixin";
 
@@ -27,8 +28,9 @@ export default Route.extend(OIDCApplicationRouteMixin, {});
 The `oidc-authentication-route-mixin` must cover the login / authentication route
 (for example the Ember Simple Auth default `/login`).
 
-```
+```js
 // app/routes/login.js
+
 import Route from "@ember/routing/route";
 import OIDCAuthenticationRouteMixin from "ember-simple-auth-oidc/mixins/oidc-authentication-route-mixin";
 
@@ -38,8 +40,9 @@ export default Route.extend(OIDCAuthenticationRouteMixin, {});
 The `oidc-end-session-route-mixin` must cover the logout / end session route
 (for example `/logout`).
 
-```
+```js
 // app/routes/logout.js
+
 import Route from "@ember/routing/route";
 import OIDCEndSessionRouteMixin from "ember-simple-auth-oidc/mixins/oidc-end-session-route-mixin";
 
@@ -49,8 +52,9 @@ export default Route.extend(OIDCEndSessionRouteMixin, {});
 To include authorization info in all Ember Data requests add the `oidc-adapter-mixin`
 into the application adapter.
 
-```
+```js
 // app/adapters/application.js
+
 import DS from "ember-data";
 import OIDCAdapterMixin from "ember-simple-auth-oidc/mixins/oidc-adapter-mixin";
 
@@ -63,7 +67,9 @@ The addon can be configured in the project's `environment.js` file with the key 
 
 A minimal configuration includes the following options:
 
-```
+```js
+// config/environment.js
+
 module.exports = function(environment) {
   let ENV = {
     // ...
