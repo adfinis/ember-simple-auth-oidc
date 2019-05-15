@@ -57,6 +57,15 @@ jobs:
     - env: EMBER_TRY_SCENARIO=ember-canary
     - env: EMBER_TRY_SCENARIO=ember-default-with-jquery
 
+    - stage: release
+      if: branch = release and type = push
+      node_js: lts/*
+      deploy:
+        provider: script
+        skip_cleanup: true
+        script:
+          - yarn semantic-release --branch release
+
 before_install:
   - curl -o- -L https://yarnpkg.com/install.sh | bash
   - export PATH=$HOME/.yarn/bin:$PATH

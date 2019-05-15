@@ -19,13 +19,19 @@
     "start": "ember serve",
     "test": "ember test",
     "test:all": "ember try:each",
-    "precommit": "lint-staged"
+    "precommit": "lint-staged",
+    "semantic-release": "semantic-release"
   },
   "lint-staged": {
     "*.{js,json,css,md}": [
       "prettier --write",
       "git add"
     ]
+  },
+  "husky": {
+    "hooks": {
+      "commit-msg": "commitlint -E HUSKY_GIT_PARAMS"
+    }
   },
   "dependencies": {
     "ember-ajax": "^5.0.0",
@@ -74,5 +80,13 @@
   },
   "ember-addon": {
     "configPath": "tests/dummy/config"
+  },
+  "release": {
+    "extends": "@adfinis-sygroup/semantic-release-config"
+  },
+  "commitlint": {
+    "extends": [
+      "@commitlint/config-conventional"
+    ]
   }
 }
