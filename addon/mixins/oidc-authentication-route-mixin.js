@@ -49,19 +49,16 @@ export default Mixin.create(UnauthenticatedRouteMixin, {
    * @param {String} transition.to.queryParams.code The authentication code given by the identity provider
    * @param {String} transition.to.queryParams.state The state given by the identity provider
    */
-  async afterModel(
-    _,
-    {
-      to: {
-        queryParams: { code, state }
-      }
-    }
-  ) {
+  async afterModel(_, transition) {
     if (!authEndpoint) {
       throw new Error(
         "Please define all OIDC endpoints (auth, token, logout, userinfo)"
       );
     }
+
+    const { code, state } = transition.to
+      ? transition.to.queryParams
+      : transition.queryParams;
 
     if (code) {
       return await this._handleCallbackRequest(code, state);
