@@ -59,12 +59,14 @@ jobs:
 
     - stage: release
       if: branch = release and type = push
-      node_js: lts/*
+      script: skip
       deploy:
         provider: script
         skip_cleanup: true
+        on:
+          branch: release
         script:
-          - yarn semantic-release --branch release
+          - yarn semantic-release
 
 before_install:
   - curl -o- -L https://yarnpkg.com/install.sh | bash
