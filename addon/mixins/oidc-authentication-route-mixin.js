@@ -89,6 +89,16 @@ export default Mixin.create(UnauthenticatedRouteMixin, {
     }
 
     this.session.set("data.state", undefined);
+    /**
+     * If there is a stored `continueTransition` URL, create a new transition
+     * object and store it in the `ember-simple-auth` `attemptedTransition`
+     * property. This will trigger the transition after a successful authentication.
+     */
+    this.session.set(
+      "attemptedTransition",
+      this.transitionTo(this.session.get("data.continueTransition")).abort()
+    );
+    this.session.set("data.continueTransition", undefined);
 
     await this.session.authenticate("authenticator:oidc", {
       code
@@ -107,6 +117,14 @@ export default Mixin.create(UnauthenticatedRouteMixin, {
     let state = v4();
 
     this.session.set("data.state", state);
+    /**
+     * Store the attemptedTransition URL in the localstorage so when the user returns after
+     * the login he can be sent to the initial destination.
+     */
+    this.session.set(
+      "data.continueTransition",
+      this.session.get("attemptedTransition.intent.url")
+    );
 
     this._redirectToUrl(
       `${getAbsoluteUrl(host)}${authEndpoint}?` +
