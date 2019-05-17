@@ -42,7 +42,10 @@ module("Unit | Mixin | oidc-authentication-route-mixin", function(hooks) {
         async authenticate(_, { code }) {
           assert.equal(code, "sometestcode");
         }
-      })
+      }),
+      transitionTo() {
+        return { abort() {} };
+      }
     });
 
     subject.afterModel(null, { to: { queryParams: { code: "sometestcode" } } });
@@ -62,7 +65,10 @@ module("Unit | Mixin | oidc-authentication-route-mixin", function(hooks) {
         async authenticate(_, { code }) {
           assert.equal(code, "sometestcode");
         }
-      })
+      }),
+      transitionTo() {
+        return { abort() {} };
+      }
     });
 
     subject.afterModel(null, { queryParams: { code: "sometestcode" } });
