@@ -14,7 +14,8 @@ module.exports = function(environment) {
       tokenEndpoint: "/protocol/openid-connect/token",
       endSessionEndpoint: "/protocol/openid-connect/logout",
       userinfoEndpoint: "/protocol/openid-connect/userinfo",
-      afterLogoutUri: "http://localhost:4200"
+      afterLogoutUri: "http://localhost:4200",
+      loginHintName: "custom_login_hint"
     },
 
     EmberENV: {

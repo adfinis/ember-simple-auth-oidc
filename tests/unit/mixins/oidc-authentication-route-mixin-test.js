@@ -18,10 +18,10 @@ module("Unit | Mixin | oidc-authentication-route-mixin", function(hooks) {
       redirectUri: "test",
       session: EmberObject.create({ data: { authenticated: {} } }),
       _redirectToUrl(url) {
-        assert.ok(new RegExp(authEndpoint).test(url));
+        assert.ok(url.includes(authEndpoint));
 
-        assert.ok(new RegExp(`client_id=${clientId}`).test(url));
-        assert.ok(new RegExp("redirect_uri=test").test(url));
+        assert.ok(url.includes(`client_id=${clientId}`));
+        assert.ok(url.includes("redirect_uri=test"));
       }
     });
 
@@ -116,5 +116,27 @@ module("Unit | Mixin | oidc-authentication-route-mixin", function(hooks) {
       }),
       Error
     );
+  });
+
+  test("it forwards customized login_hint param", function(assert) {
+    assert.expect(4);
+
+    let Route = EmberObject.extend(OIDCAuthenticationRouteMixin);
+
+    let subject = Route.create({
+      redirectUri: "test",
+      session: EmberObject.create({ data: { authenticated: {} } }),
+      _redirectToUrl(url) {
+        assert.ok(url.includes(authEndpoint));
+
+        assert.ok(url.includes(`client_id=${clientId}`));
+        assert.ok(url.includes("redirect_uri=test"));
+        assert.ok(url.includes("custom_login_hint=my-idp"));
+      }
+    });
+
+    subject.afterModel(null, {
+      to: { queryParams: { custom_login_hint: "my-idp" } }
+    });
   });
 });
