@@ -8,7 +8,7 @@ import getAbsoluteUrl from "ember-simple-auth-oidc/utils/absoluteUrl";
 import v4 from "uuid/v4";
 import { assert } from "@ember/debug";
 
-const { host, clientId, authEndpoint, scope } = config;
+const { host, clientId, authEndpoint, scope, loginHintName } = config;
 
 export default Mixin.create(UnauthenticatedRouteMixin, {
   session: service(),
@@ -56,15 +56,18 @@ export default Mixin.create(UnauthenticatedRouteMixin, {
       );
     }
 
-    const { code, state } = transition.to
+    const queryParams = transition.to
       ? transition.to.queryParams
       : transition.queryParams;
 
-    if (code) {
-      return await this._handleCallbackRequest(code, state);
+    if (queryParams.code) {
+      return await this._handleCallbackRequest(
+        queryParams.code,
+        queryParams.state
+      );
     }
 
-    return this._handleRedirectRequest();
+    return this._handleRedirectRequest(queryParams);
   },
 
   /**
@@ -113,7 +116,7 @@ export default Mixin.create(UnauthenticatedRouteMixin, {
    * match this state, otherwise the authentication will fail to prevent from
    * CSRF attacks.
    */
-  _handleRedirectRequest() {
+  _handleRedirectRequest(queryParams) {
     let state = v4();
 
     this.session.set("data.state", state);
@@ -126,13 +129,18 @@ export default Mixin.create(UnauthenticatedRouteMixin, {
       this.session.get("attemptedTransition.intent.url")
     );
 
+    // forward `login_hint` query param if present
+    const key = loginHintName || "login_hint";
+    const forwarded = queryParams[key] ? `&${key}=${queryParams[key]}` : "";
+
     this._redirectToUrl(
       `${getAbsoluteUrl(host)}${authEndpoint}?` +
         `client_id=${clientId}&` +
         `redirect_uri=${this.redirectUri}&` +
         `response_type=code&` +
         `state=${state}&` +
-        `scope=${scope}`
+        `scope=${scope}` +
+        forwarded
     );
   }
 });
