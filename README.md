@@ -1,8 +1,8 @@
 # ember-simple-auth-oidc
+
 [![npm version](https://badge.fury.io/js/ember-simple-auth-oidc.svg)](https://www.npmjs.com/package/ember-simple-auth-oidc)
 [![Build Status](https://travis-ci.com/adfinis-sygroup/ember-simple-auth-oidc.svg?branch=master)](https://travis-ci.com/adfinis-sygroup/ember-simple-auth-oidc)
 [![semantic-release](https://img.shields.io/badge/%20%20%F0%9F%93%A6%F0%9F%9A%80-semantic--release-e10079.svg)](https://github.com/semantic-release/semantic-release)
-
 
 A [Ember Simple Auth](http://ember-simple-auth.com) addon which implements the
 OpenID Connect [Authorization Code Flow](https://openid.net/specs/openid-connect-core-1_0.html#CodeFlowAuth).
@@ -82,12 +82,12 @@ module.exports = function(environment) {
       clientId: "test",
       authEndpoint: "/authorize",
       tokenEndpoint: "/token",
-      userinfoEndpoint: "/userinfo",
+      userinfoEndpoint: "/userinfo"
     }
     // ...
-  }
+  };
   return ENV;
-}
+};
 ```
 
 Here is a complete list of all possible config options:
@@ -134,6 +134,10 @@ Default is `Authorization`.
 
 **authPrefix** \<String\> (optional)  
 Prefix of the authentication token. Default is `Bearer`.
+
+**loginHintName** \<String\> (optional)  
+Name of the `login_hint` query paramter which is being forwarded to the authorization server if it is present.
+This option allows overriding the default name `login_hint`.
 
 ## Contributing
 
