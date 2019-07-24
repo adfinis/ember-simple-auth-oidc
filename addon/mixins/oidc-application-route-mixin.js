@@ -12,7 +12,7 @@ export default Mixin.create(ApplicationRouteMixin, {
     this.set("session.data.continueTransition", undefined);
 
     if (continueTransition) {
-      this.transitionTo(continueTransition);
+      this.replaceWith(continueTransition);
     } else {
       this._super();
     }

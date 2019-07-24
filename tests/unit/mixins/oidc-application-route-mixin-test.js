@@ -16,7 +16,7 @@ module("Unit | Mixin | oidc-application-route-mixin", function(hooks) {
 
     let subject = Route.create({
       session,
-      transitionTo(url) {
+      replaceWith(url) {
         assert.equal(url, "protected/profile");
       }
     });
