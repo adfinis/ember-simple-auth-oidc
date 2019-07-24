@@ -2,6 +2,22 @@ import ApplicationRouteMixin from "ember-simple-auth/mixins/application-route-mi
 import Mixin from "@ember/object/mixin";
 
 export default Mixin.create(ApplicationRouteMixin, {
+  sessionAuthenticated() {
+    /**
+     * If there is a stored `continueTransition` URL in the localstorage
+     * transition to it otherwise call the parent/super to invoke the normal
+     * behavior of the `sessionAuthenticated` hook.
+     */
+    const continueTransition = this.get("session.data.continueTransition");
+    this.set("session.data.continueTransition", undefined);
+
+    if (continueTransition) {
+      this.transitionTo(continueTransition);
+    } else {
+      this._super();
+    }
+  },
+
   sessionInvalidated() {
     /**
      * Overwrite the standard behavior of the
