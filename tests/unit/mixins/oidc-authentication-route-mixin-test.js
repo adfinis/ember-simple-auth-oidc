@@ -139,4 +139,26 @@ module("Unit | Mixin | oidc-authentication-route-mixin", function(hooks) {
       to: { queryParams: { custom_login_hint: "my-idp" } }
     });
   });
+
+  test("it stores an intercepted transition", function(assert) {
+    assert.expect(1);
+
+    let Route = EmberObject.extend(OIDCAuthenticationRouteMixin);
+
+    let subject = Route.create({
+      redirectUri: "test",
+      session: EmberObject.create({
+        data: { authenticated: {} },
+        attemptedTransition: { intent: { url: "protected/profile" } }
+      }),
+      _redirectToUrl() {
+        assert.equal(
+          this.get("session.data.continueTransition"),
+          "protected/profile"
+        );
+      }
+    });
+
+    subject.afterModel(null, { to: { queryParams: {} } });
+  });
 });
