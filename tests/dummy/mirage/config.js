@@ -10,12 +10,6 @@ export default function() {
     };
   });
 
-  this.post(
-    "/realms/test-realm/protocol/openid-connect/logout",
-    () => null,
-    200
-  );
-
   this.get("/realms/test-realm/protocol/openid-connect/userinfo", function() {
     return { sub: 1 };
   });
