@@ -8,9 +8,15 @@ const Router = EmberRouter.extend({
 
 Router.map(function() {
   this.route("login");
-  this.route("protected");
+  this.route("logout");
+  this.route("protected", function() {
+    this.route("profile");
+  });
   this.route("oidc", {
     path: "realms/test-realm/protocol/openid-connect/auth"
+  });
+  this.route("oidcend", {
+    path: "realms/test-realm/protocol/openid-connect/logout"
   });
 });
 
