@@ -1,3 +1,16 @@
+# [0.4.0](https://github.com/adfinis-sygroup/ember-simple-auth-oidc/compare/v0.3.0...v0.4.0) (2019-07-25)
+
+
+### Bug Fixes
+
+* **continue-transition:** do not trigger intercepted transition twice ([1fafa76](https://github.com/adfinis-sygroup/ember-simple-auth-oidc/commit/1fafa76))
+* **dummy-app:** fix queryParams handling in dummy ([76ab8ef](https://github.com/adfinis-sygroup/ember-simple-auth-oidc/commit/76ab8ef))
+
+
+### Features
+
+* **redirect:** add support for login_hint ([9074063](https://github.com/adfinis-sygroup/ember-simple-auth-oidc/commit/9074063))
+
 # Change Log
 
 All notable changes to this project will be documented in this file.
