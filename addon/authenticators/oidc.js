@@ -1,11 +1,12 @@
 import BaseAuthenticator from "ember-simple-auth/authenticators/base";
 import { computed } from "@ember/object";
-import { run } from "@ember/runloop";
+import { later, cancel } from "@ember/runloop";
 import { inject as service } from "@ember/service";
 import RSVP from "rsvp";
 import Configuration from "ember-simple-auth/configuration";
 import config from "ember-simple-auth-oidc/config";
 import getAbsoluteUrl from "ember-simple-auth-oidc/utils/absoluteUrl";
+import { isServerError, isAbortError, isTimeoutError } from "ember-ajax/errors";
 
 const {
   host,
@@ -14,7 +15,9 @@ const {
   clientId,
   refreshLeeway,
   authPrefix,
-  expiresIn
+  expiresIn,
+  amountOfRetries,
+  retryTimeout
 } = config;
 
 const getUrl = endpoint => `${getAbsoluteUrl(host)}${endpoint}`;
@@ -102,19 +105,29 @@ export default BaseAuthenticator.extend({
    * @param {String} refresh_token The refresh token
    * @returns {Object} The parsed response data
    */
-  async _refresh(refresh_token) {
-    let data = await this.get("ajax").post(getUrl(tokenEndpoint), {
-      responseType: "application/json",
-      contentType: "application/x-www-form-urlencoded",
-      data: {
-        refresh_token,
-        client_id: clientId,
-        grant_type: "refresh_token",
-        redirect_uri: this.redirectUri
+  async _refresh(refresh_token, retryCount = 0) {
+    try {
+      let data = await this.get("ajax").post(getUrl(tokenEndpoint), {
+        responseType: "application/json",
+        contentType: "application/x-www-form-urlencoded",
+        data: {
+          refresh_token,
+          client_id: clientId,
+          grant_type: "refresh_token",
+          redirect_uri: this.redirectUri
+        }
+      });
+      return this._handleAuthResponse(data);
+    } catch (e) {
+      if (
+        (isServerError(e) || isAbortError(e) || isTimeoutError(e)) &&
+        retryCount < amountOfRetries - 1
+      ) {
+        later(this, this._refresh, refresh_token, retryCount + 1, retryTimeout);
+      } else {
+        throw e;
       }
-    });
-
-    return this._handleAuthResponse(data);
+    }
   },
 
   /**
@@ -131,10 +144,10 @@ export default BaseAuthenticator.extend({
     }
 
     if (this._upcomingRefresh) {
-      run.cancel(this._upcomingRefresh);
+      cancel(this._upcomingRefresh);
       this._upcomingRefresh = null;
     }
-    this._upcomingRefresh = run.later(
+    this._upcomingRefresh = later(
       this,
       async token => {
         this.trigger("sessionDataUpdated", await this._refresh(token));
