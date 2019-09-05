@@ -15,7 +15,9 @@ export default Object.assign(
     refreshLeeway: 1000 * 30,
     tokenPropertyName: "access_token",
     authHeaderName: "Authorization",
-    authPrefix: "Bearer"
+    authPrefix: "Bearer",
+    amountOfRetries: 3,
+    retryTimeout: 3000
   },
   config["ember-simple-auth-oidc"] || {}
 );
