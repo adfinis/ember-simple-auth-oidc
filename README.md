@@ -139,6 +139,12 @@ Prefix of the authentication token. Default is `Bearer`.
 Name of the `login_hint` query paramter which is being forwarded to the authorization server if it is present.
 This option allows overriding the default name `login_hint`.
 
+**amountOfRetries** \<Number\> (optional)  
+Amount of retries should be made if the request to fetch a new token fails. Default is `3`.
+
+**retryTimeout** \<Number\> (optional)  
+Timeout in milliseconds between each retry if a token refresh should fail. Default is `3000`.
+
 ## Contributing
 
 ### Installation
