@@ -1,3 +1,10 @@
+## [0.4.1](https://github.com/adfinis-sygroup/ember-simple-auth-oidc/compare/v0.4.0...v0.4.1) (2019-09-06)
+
+
+### Bug Fixes
+
+* **authenticator:** retry token refresh on error ([63cd8d3](https://github.com/adfinis-sygroup/ember-simple-auth-oidc/commit/63cd8d3))
+
 # [0.4.0](https://github.com/adfinis-sygroup/ember-simple-auth-oidc/compare/v0.3.0...v0.4.0) (2019-07-25)
 
 
