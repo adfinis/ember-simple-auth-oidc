@@ -123,7 +123,13 @@ export default BaseAuthenticator.extend({
         (isServerError(e) || isAbortError(e) || isTimeoutError(e)) &&
         retryCount < amountOfRetries - 1
       ) {
-        later(this, this._refresh, refresh_token, retryCount + 1, retryTimeout);
+        return new Promise(resolve => {
+          later(
+            this,
+            () => resolve(this._refresh(refresh_token, retryCount + 1)),
+            retryTimeout
+          );
+        });
       } else {
         throw e;
       }
