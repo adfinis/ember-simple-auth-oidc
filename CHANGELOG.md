@@ -1,3 +1,10 @@
+## [0.4.2](https://github.com/adfinis-sygroup/ember-simple-auth-oidc/compare/v0.4.1...v0.4.2) (2019-09-09)
+
+
+### Bug Fixes
+
+* **authenticator:** await successful retry before setting the session ([18b9c1f](https://github.com/adfinis-sygroup/ember-simple-auth-oidc/commit/18b9c1f))
+
 ## [0.4.1](https://github.com/adfinis-sygroup/ember-simple-auth-oidc/compare/v0.4.0...v0.4.1) (2019-09-06)
 
 
