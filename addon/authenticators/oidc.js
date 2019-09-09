@@ -27,6 +27,8 @@ export default BaseAuthenticator.extend({
   router: service(),
 
   _upcomingRefresh: null,
+  _currentTokenData: null,
+  _retryCount: 0,
 
   redirectUri: computed(function() {
     let { protocol, host } = location;
@@ -105,7 +107,7 @@ export default BaseAuthenticator.extend({
    * @param {String} refresh_token The refresh token
    * @returns {Object} The parsed response data
    */
-  async _refresh(refresh_token, retryCount = 0) {
+  async _refresh(refresh_token) {
     try {
       let data = await this.get("ajax").post(getUrl(tokenEndpoint), {
         responseType: "application/json",
@@ -121,9 +123,15 @@ export default BaseAuthenticator.extend({
     } catch (e) {
       if (
         (isServerError(e) || isAbortError(e) || isTimeoutError(e)) &&
-        retryCount < amountOfRetries - 1
+        this._retryCount < amountOfRetries - 1
       ) {
-        later(this, this._refresh, refresh_token, retryCount + 1, retryTimeout);
+        this._retryCount += 1;
+
+        let expireTime = new Date().getTime() + retryTimeout;
+        this._scheduleRefresh(expireTime, refresh_token);
+
+        // Return old token as we couldn't refresh yet
+        return this._currentTokenData;
       } else {
         throw e;
       }
@@ -196,6 +204,17 @@ export default BaseAuthenticator.extend({
 
     this._scheduleRefresh(expireTime, refresh_token);
 
-    return { access_token, refresh_token, userinfo, id_token, expireTime };
+    this._currentTokenData = {
+      access_token,
+      refresh_token,
+      userinfo,
+      id_token,
+      expireTime
+    };
+
+    // reset retry count on successful refresh/auth
+    this._retryCount = 0;
+
+    return this._currentTokenData;
   }
 });
