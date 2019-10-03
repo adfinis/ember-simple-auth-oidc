@@ -13,7 +13,9 @@ module.exports = {
   env: {
     browser: true
   },
-  rules: {},
+  rules: {
+    "ember/no-new-mixins": "warn"
+  },
   overrides: [
     // node files
     {
@@ -34,8 +36,7 @@ module.exports = {
         "tests/dummy/app/**"
       ],
       parserOptions: {
-        sourceType: "script",
-        ecmaVersion: 2015
+        sourceType: "script"
       },
       env: {
         browser: false,
