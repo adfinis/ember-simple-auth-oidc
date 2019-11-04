@@ -1,5 +1,11 @@
-## [0.4.2](https://github.com/adfinis-sygroup/ember-simple-auth-oidc/compare/v0.4.1...v0.4.2) (2019-09-09)
+## [0.4.3](https://github.com/adfinis-sygroup/ember-simple-auth-oidc/compare/v0.4.2...v0.4.3) (2019-10-04)
 
+
+### Changes
+
+* **dependencies:** update dependencies
+
+## [0.4.2](https://github.com/adfinis-sygroup/ember-simple-auth-oidc/compare/v0.4.1...v0.4.2) (2019-09-09)
 
 ### Bug Fixes
 
