@@ -24,7 +24,7 @@ export default Mixin.create(UnauthenticatedRouteMixin, {
     let route = this.authenticationRoute;
     if (!route)
       route = Configuration.authenticationRoute;
-    let path = this.router.urlFor(Configuration.authenticationRoute);
+    let path = this.router.urlFor(route);
 
     return `${protocol}//${host}${path}`;
   }),
