@@ -21,7 +21,9 @@ export default Mixin.create(UnauthenticatedRouteMixin, {
 
   redirectUri: computed(function() {
     let { protocol, host } = location;
-    let path = this.router.urlFor(this.authenticationRoute || Configuration.authenticationRoute);
+    let path = this.router.urlFor(
+      this.authenticationRoute || Configuration.authenticationRoute
+    );
     return `${protocol}//${host}${path}`;
   }),
 
