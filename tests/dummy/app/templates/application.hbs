@@ -1,7 +1,7 @@
 <LinkTo @route="index">Index</LinkTo>
 <LinkTo @route="protected">Protected</LinkTo>
 {{#if this.session.isAuthenticated}}
-  <LinkTo @route="logout">Logout</LinkTo>
+  <a href="#" {{on "click" this.logout}}>Logout</a>
 {{else}}
   <LinkTo @route="login">Login</LinkTo>
 {{/if}}

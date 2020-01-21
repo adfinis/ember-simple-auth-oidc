@@ -10,7 +10,6 @@ export default class Router extends EmberRouter {
 // eslint-disable-next-line array-callback-return
 Router.map(function() {
   this.route("login");
-  this.route("logout");
   this.route("protected", function() {
     this.route("profile");
   });
