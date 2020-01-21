@@ -1,9 +1,9 @@
-{{#link-to "index"}}Index{{/link-to}}
-{{#link-to "protected"}}Protected{{/link-to}}
-{{#if session.isAuthenticated}}
-  {{#link-to "logout"}}Logout{{/link-to}}
+<LinkTo @route="index">Index</LinkTo>
+<LinkTo @route="protected">Protected</LinkTo>
+{{#if this.session.isAuthenticated}}
+  <LinkTo @route="logout">Logout</LinkTo>
 {{else}}
-  {{#link-to "login"}}Login{{/link-to}}
+  <LinkTo @route="login">Login</LinkTo>
 {{/if}}
 
 {{outlet}}
