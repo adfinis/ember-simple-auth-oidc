@@ -1,12 +1,12 @@
-import BaseAuthenticator from "ember-simple-auth/authenticators/base";
 import { computed } from "@ember/object";
 import { later, cancel } from "@ember/runloop";
 import { inject as service } from "@ember/service";
-import RSVP from "rsvp";
-import Configuration from "ember-simple-auth/configuration";
+import { isServerError, isAbortError, isTimeoutError } from "ember-ajax/errors";
 import config from "ember-simple-auth-oidc/config";
 import getAbsoluteUrl from "ember-simple-auth-oidc/utils/absoluteUrl";
-import { isServerError, isAbortError, isTimeoutError } from "ember-ajax/errors";
+import BaseAuthenticator from "ember-simple-auth/authenticators/base";
+import Configuration from "ember-simple-auth/configuration";
+import { resolve } from "rsvp";
 
 const {
   host,
@@ -29,8 +29,8 @@ export default BaseAuthenticator.extend({
   _upcomingRefresh: null,
 
   redirectUri: computed(function() {
-    let { protocol, host } = location;
-    let path = this.router.urlFor(Configuration.authenticationRoute);
+    const { protocol, host } = location;
+    const path = this.router.urlFor(Configuration.authenticationRoute);
     return `${protocol}//${host}${path}`;
   }),
 
@@ -50,7 +50,7 @@ export default BaseAuthenticator.extend({
       );
     }
 
-    let data = await this.get("ajax").post(getUrl(tokenEndpoint), {
+    const data = await this.get("ajax").post(getUrl(tokenEndpoint), {
       responseType: "application/json",
       contentType: "application/x-www-form-urlencoded",
       data: {
@@ -70,7 +70,7 @@ export default BaseAuthenticator.extend({
    * @return {Promise} The invalidate promise
    */
   invalidate() {
-    return RSVP.resolve(true);
+    return resolve(true);
   },
 
   /**
@@ -93,10 +93,9 @@ export default BaseAuthenticator.extend({
 
     if (expireTime && expireTime <= new Date().getTime()) {
       return await this._refresh(refresh_token);
-    } else {
-      this._scheduleRefresh(expireTime, refresh_token);
-      return sessionData;
     }
+    this._scheduleRefresh(expireTime, refresh_token);
+    return sessionData;
   },
 
   /**
@@ -107,7 +106,7 @@ export default BaseAuthenticator.extend({
    */
   async _refresh(refresh_token, retryCount = 0) {
     try {
-      let data = await this.get("ajax").post(getUrl(tokenEndpoint), {
+      const data = await this.get("ajax").post(getUrl(tokenEndpoint), {
         responseType: "application/json",
         contentType: "application/x-www-form-urlencoded",
         data: {
@@ -130,9 +129,8 @@ export default BaseAuthenticator.extend({
             retryTimeout
           );
         });
-      } else {
-        throw e;
       }
+      throw e;
     }
   },
 

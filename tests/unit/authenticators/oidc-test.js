@@ -1,6 +1,6 @@
-import { module, test } from "qunit";
-import { setupTest } from "ember-qunit";
 import setupMirage from "ember-cli-mirage/test-support/setup-mirage";
+import { setupTest } from "ember-qunit";
+import { module, test } from "qunit";
 
 const getTokenBody = expired => {
   const time = expired ? -30 : 120;
@@ -18,7 +18,7 @@ module("Unit | Authenticator | OIDC", function(hooks) {
   test("it can authenticate", async function(assert) {
     assert.expect(6);
 
-    let subject = this.owner.lookup("authenticator:oidc");
+    const subject = this.owner.lookup("authenticator:oidc");
 
     subject.set("redirectUri", "test");
     subject._scheduleRefresh = (expireTime, refreshToken) => {
@@ -26,7 +26,7 @@ module("Unit | Authenticator | OIDC", function(hooks) {
       assert.ok(refreshToken);
     };
 
-    let data = await subject.authenticate({ code: "test" });
+    const data = await subject.authenticate({ code: "test" });
 
     assert.ok(data.access_token, "Returns an access token");
     assert.ok(data.refresh_token, "Returns a refresh token");
@@ -37,7 +37,7 @@ module("Unit | Authenticator | OIDC", function(hooks) {
   test("it can restore a session", async function(assert) {
     assert.expect(6);
 
-    let subject = this.owner.lookup("authenticator:oidc");
+    const subject = this.owner.lookup("authenticator:oidc");
 
     subject.set("redirectUri", "test");
     subject._scheduleRefresh = (expireTime, refreshToken) => {
@@ -45,7 +45,7 @@ module("Unit | Authenticator | OIDC", function(hooks) {
       assert.ok(refreshToken);
     };
 
-    let data = await subject.restore({
+    const data = await subject.restore({
       refresh_token: `refresh.${getTokenBody(false)}.token`,
       expireTime: new Date().getTime()
     });
@@ -59,7 +59,7 @@ module("Unit | Authenticator | OIDC", function(hooks) {
   test("it can invalidate a session", async function(assert) {
     assert.expect(1);
 
-    let subject = this.owner.lookup("authenticator:oidc");
+    const subject = this.owner.lookup("authenticator:oidc");
 
     subject.set("redirectUri", "test");
 
@@ -73,7 +73,7 @@ module("Unit | Authenticator | OIDC", function(hooks) {
   test("it can refresh a session", async function(assert) {
     assert.expect(6);
 
-    let subject = this.owner.lookup("authenticator:oidc");
+    const subject = this.owner.lookup("authenticator:oidc");
 
     subject.set("redirectUri", "test");
     subject._scheduleRefresh = (expireTime, refreshToken) => {
@@ -81,7 +81,7 @@ module("Unit | Authenticator | OIDC", function(hooks) {
       assert.ok(refreshToken);
     };
 
-    let data = await subject._refresh("x.y.z");
+    const data = await subject._refresh("x.y.z");
 
     assert.ok(data.access_token, "Returns an access token");
     assert.ok(data.refresh_token, "Returns a refresh token");
@@ -92,7 +92,7 @@ module("Unit | Authenticator | OIDC", function(hooks) {
   test("it can schedule a refresh", async function(assert) {
     assert.expect(1);
 
-    let subject = this.owner.lookup("authenticator:oidc");
+    const subject = this.owner.lookup("authenticator:oidc");
 
     subject._refresh = token => {
       assert.equal(token, "testtoken");

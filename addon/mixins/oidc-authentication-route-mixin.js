@@ -1,12 +1,12 @@
-import UnauthenticatedRouteMixin from "ember-simple-auth/mixins/unauthenticated-route-mixin";
-import Mixin from "@ember/object/mixin";
+import { assert } from "@ember/debug";
 import { computed } from "@ember/object";
+import Mixin from "@ember/object/mixin";
 import { inject as service } from "@ember/service";
-import Configuration from "ember-simple-auth/configuration";
 import config from "ember-simple-auth-oidc/config";
 import getAbsoluteUrl from "ember-simple-auth-oidc/utils/absoluteUrl";
+import Configuration from "ember-simple-auth/configuration";
+import UnauthenticatedRouteMixin from "ember-simple-auth/mixins/unauthenticated-route-mixin";
 import v4 from "uuid/v4";
-import { assert } from "@ember/debug";
 
 const { host, clientId, authEndpoint, scope, loginHintName } = config;
 
@@ -20,8 +20,8 @@ export default Mixin.create(UnauthenticatedRouteMixin, {
   },
 
   redirectUri: computed(function() {
-    let { protocol, host } = location;
-    let path = this.router.urlFor(
+    const { protocol, host } = location;
+    const path = this.router.urlFor(
       this.authenticationRoute || Configuration.authenticationRoute
     );
     return `${protocol}//${host}${path}`;
@@ -108,7 +108,7 @@ export default Mixin.create(UnauthenticatedRouteMixin, {
    * CSRF attacks.
    */
   _handleRedirectRequest(queryParams) {
-    let state = v4();
+    const state = v4();
 
     this.session.set("data.state", state);
     /**
@@ -122,16 +122,18 @@ export default Mixin.create(UnauthenticatedRouteMixin, {
 
     // forward `login_hint` query param if present
     const key = loginHintName || "login_hint";
-    const forwarded = queryParams[key] ? `&${key}=${queryParams[key]}` : "";
 
-    this._redirectToUrl(
-      `${getAbsoluteUrl(host)}${authEndpoint}?` +
-        `client_id=${clientId}&` +
-        `redirect_uri=${this.redirectUri}&` +
-        `response_type=code&` +
-        `state=${state}&` +
-        `scope=${scope}` +
-        forwarded
-    );
+    const search = [
+      `client_id=${clientId}`,
+      `redirect_uri=${this.redirectUri}`,
+      `response_type=code`,
+      `state=${state}`,
+      `scope=${scope}`,
+      queryParams[key] ? `${key}=${queryParams[key]}` : null
+    ]
+      .filter(Boolean)
+      .join("&");
+
+    this._redirectToUrl(`${getAbsoluteUrl(host)}${authEndpoint}?${search}`);
   }
 });

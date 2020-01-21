@@ -1,5 +1,5 @@
-import ApplicationRouteMixin from "ember-simple-auth/mixins/application-route-mixin";
 import Mixin from "@ember/object/mixin";
+import ApplicationRouteMixin from "ember-simple-auth/mixins/application-route-mixin";
 
 export default Mixin.create(ApplicationRouteMixin, {
   /**
