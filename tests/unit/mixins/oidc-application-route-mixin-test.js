@@ -1,7 +1,10 @@
 import EmberObject from "@ember/object";
+import config from "ember-get-config";
 import { setupTest } from "ember-qunit";
 import OidcApplicationRouteMixin from "ember-simple-auth-oidc/mixins/oidc-application-route-mixin";
 import { module, test } from "qunit";
+
+const { endSessionEndpoint, afterLogoutUri } = config["ember-simple-auth-oidc"];
 
 module("Unit | Mixin | oidc-application-route-mixin", function(hooks) {
   setupTest(hooks);
@@ -22,5 +25,32 @@ module("Unit | Mixin | oidc-application-route-mixin", function(hooks) {
     });
 
     subject.sessionAuthenticated();
+  });
+
+  test("it can make an invalidate request", function(assert) {
+    assert.expect(4);
+
+    const Route = EmberObject.extend(OidcApplicationRouteMixin);
+
+    const subject = Route.create({
+      session: EmberObject.create({
+        data: { authenticated: { id_token: "myIdToken" } },
+        on() {}
+      }),
+      _redirectToUrl(url) {
+        assert.ok(new RegExp(endSessionEndpoint).test(url));
+        assert.ok(
+          new RegExp(`post_logout_redirect_uri=${afterLogoutUri}`).test(url)
+        );
+        assert.ok(new RegExp("id_token_hint=myIdToken").test(url));
+      }
+    });
+
+    subject.sessionInvalidated(null, { queryParams: {} });
+
+    assert.equal(
+      subject.get("session.data.continueTransition"),
+      location.href.replace(location.origin, "")
+    );
   });
 });

@@ -41,18 +41,6 @@ import OIDCAuthenticationRouteMixin from "ember-simple-auth-oidc/mixins/oidc-aut
 export default Route.extend(OIDCAuthenticationRouteMixin, {});
 ```
 
-The `oidc-end-session-route-mixin` must cover the logout / end session route
-(for example `/logout`).
-
-```js
-// app/routes/logout.js
-
-import Route from "@ember/routing/route";
-import OIDCEndSessionRouteMixin from "ember-simple-auth-oidc/mixins/oidc-end-session-route-mixin";
-
-export default Route.extend(OIDCEndSessionRouteMixin, {});
-```
-
 To include authorization info in all Ember Data requests add the `oidc-adapter-mixin`
 into the application adapter.
 

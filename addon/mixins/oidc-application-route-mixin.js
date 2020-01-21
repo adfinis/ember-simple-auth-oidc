@@ -1,7 +1,15 @@
 import Mixin from "@ember/object/mixin";
+import { inject as service } from "@ember/service";
+import config from "ember-simple-auth-oidc/config";
+import getAbsoluteUrl from "ember-simple-auth-oidc/utils/absoluteUrl";
 import ApplicationRouteMixin from "ember-simple-auth/mixins/application-route-mixin";
 
+const { host, endSessionEndpoint, afterLogoutUri } = config;
+
 export default Mixin.create(ApplicationRouteMixin, {
+  session: service(),
+  router: service(),
+
   /**
    * This method is called after a successful authentication and continues an
    * intercepted transition if a URL is stored in `continueTransition` in the
@@ -22,14 +30,33 @@ export default Mixin.create(ApplicationRouteMixin, {
     }
   },
 
+  _redirectToUrl(url) {
+    location.replace(url);
+  },
+
   sessionInvalidated() {
-    /**
-     * Overwrite the standard behavior of the
-     * sessionInvalidated event, which is redirecting
-     * to the rootUrl of the app. Since the OIDC addon
-     * redirects to the end-session endpoint after
-     * invalidating, this event should do nothing
-     * (or at least no redirecting!).
-     */
+    if (!endSessionEndpoint) {
+      return;
+    }
+
+    const params = [];
+
+    this.session.set(
+      "data.continueTransition",
+      location.href.replace(location.origin, "")
+    );
+
+    if (afterLogoutUri) {
+      params.push(`post_logout_redirect_uri=${getAbsoluteUrl(afterLogoutUri)}`);
+    }
+
+    const idToken = this.session.get("data.authenticated.id_token");
+    if (idToken) {
+      params.push(`id_token_hint=${idToken}`);
+    }
+
+    return this._redirectToUrl(
+      `${getAbsoluteUrl(host)}${endSessionEndpoint}?${params.join("&")}`
+    );
   }
 });
