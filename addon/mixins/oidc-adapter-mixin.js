@@ -1,7 +1,7 @@
 import Mixin from "@ember/object/mixin";
 import { inject } from "@ember/service";
-import DataAdapterMixin from "ember-simple-auth/mixins/data-adapter-mixin";
 import config from "ember-simple-auth-oidc/config";
+import DataAdapterMixin from "ember-simple-auth/mixins/data-adapter-mixin";
 
 const { authHeaderName, authPrefix, tokenPropertyName } = config;
 

@@ -1,8 +1,8 @@
 import EmberObject from "@ember/object";
+import config from "ember-get-config";
+import { setupTest } from "ember-qunit";
 import OIDCEndSessionRouteMixin from "ember-simple-auth-oidc/mixins/oidc-end-session-route-mixin";
 import { module, test } from "qunit";
-import { setupTest } from "ember-qunit";
-import config from "ember-get-config";
 
 const { endSessionEndpoint, afterLogoutUri } = config["ember-simple-auth-oidc"];
 

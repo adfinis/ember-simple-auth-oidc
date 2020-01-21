@@ -1,8 +1,8 @@
 import EmberObject from "@ember/object";
+import config from "ember-get-config";
+import { setupTest } from "ember-qunit";
 import OIDCAuthenticationRouteMixin from "ember-simple-auth-oidc/mixins/oidc-authentication-route-mixin";
 import { module, test } from "qunit";
-import { setupTest } from "ember-qunit";
-import config from "ember-get-config";
 
 const { authEndpoint, clientId } = config["ember-simple-auth-oidc"];
 
@@ -12,9 +12,9 @@ module("Unit | Mixin | oidc-authentication-route-mixin", function(hooks) {
   test("it can handle an unauthenticated request", function(assert) {
     assert.expect(3);
 
-    let Route = EmberObject.extend(OIDCAuthenticationRouteMixin);
+    const Route = EmberObject.extend(OIDCAuthenticationRouteMixin);
 
-    let subject = Route.create({
+    const subject = Route.create({
       redirectUri: "test",
       session: EmberObject.create({ data: { authenticated: {} } }),
       _redirectToUrl(url) {
@@ -31,9 +31,9 @@ module("Unit | Mixin | oidc-authentication-route-mixin", function(hooks) {
   test("it can handle a request with an authentication code", function(assert) {
     assert.expect(1);
 
-    let Route = EmberObject.extend(OIDCAuthenticationRouteMixin);
+    const Route = EmberObject.extend(OIDCAuthenticationRouteMixin);
 
-    let subject = Route.create({
+    const subject = Route.create({
       redirectUri: "test",
       session: EmberObject.create({
         data: {
@@ -54,9 +54,9 @@ module("Unit | Mixin | oidc-authentication-route-mixin", function(hooks) {
   test("it can handle older version of router_js", function(assert) {
     assert.expect(1);
 
-    let Route = EmberObject.extend(OIDCAuthenticationRouteMixin);
+    const Route = EmberObject.extend(OIDCAuthenticationRouteMixin);
 
-    let subject = Route.create({
+    const subject = Route.create({
       redirectUri: "test",
       session: EmberObject.create({
         data: {
@@ -77,9 +77,9 @@ module("Unit | Mixin | oidc-authentication-route-mixin", function(hooks) {
   test("it can handle a failing authentication", function(assert) {
     assert.expect(2);
 
-    let Route = EmberObject.extend(OIDCAuthenticationRouteMixin);
+    const Route = EmberObject.extend(OIDCAuthenticationRouteMixin);
 
-    let subject = Route.create({
+    const subject = Route.create({
       redirectUri: "test",
       session: EmberObject.create({
         data: {
@@ -121,9 +121,9 @@ module("Unit | Mixin | oidc-authentication-route-mixin", function(hooks) {
   test("it forwards customized login_hint param", function(assert) {
     assert.expect(4);
 
-    let Route = EmberObject.extend(OIDCAuthenticationRouteMixin);
+    const Route = EmberObject.extend(OIDCAuthenticationRouteMixin);
 
-    let subject = Route.create({
+    const subject = Route.create({
       redirectUri: "test",
       session: EmberObject.create({ data: { authenticated: {} } }),
       _redirectToUrl(url) {
@@ -143,9 +143,9 @@ module("Unit | Mixin | oidc-authentication-route-mixin", function(hooks) {
   test("it stores an intercepted transition", function(assert) {
     assert.expect(1);
 
-    let Route = EmberObject.extend(OIDCAuthenticationRouteMixin);
+    const Route = EmberObject.extend(OIDCAuthenticationRouteMixin);
 
-    let subject = Route.create({
+    const subject = Route.create({
       redirectUri: "test",
       session: EmberObject.create({
         data: { authenticated: {} },
