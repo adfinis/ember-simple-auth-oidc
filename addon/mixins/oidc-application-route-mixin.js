@@ -21,7 +21,7 @@ export default Mixin.create(ApplicationRouteMixin, {
    */
   sessionAuthenticated() {
     const continueTransition = this.get("session.data.continueTransition");
-    this.set("session.data.continueTransition", undefined);
+    this.session.set("data.continueTransition", undefined);
 
     if (continueTransition) {
       this.replaceWith(continueTransition);
@@ -40,11 +40,6 @@ export default Mixin.create(ApplicationRouteMixin, {
     }
 
     const params = [];
-
-    this.session.set(
-      "data.continueTransition",
-      location.href.replace(location.origin, "")
-    );
 
     if (afterLogoutUri) {
       params.push(`post_logout_redirect_uri=${getAbsoluteUrl(afterLogoutUri)}`);

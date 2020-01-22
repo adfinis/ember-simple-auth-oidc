@@ -19,5 +19,15 @@ export default Mixin.create(DataAdapterMixin, {
     }
 
     return headers;
-  })
+  }),
+
+  ensureResponseAuthorized(status) {
+    if (status === 401 && this.session.isAuthenticated) {
+      this.session.set(
+        "data.continueTransition",
+        location.href.replace(location.origin, "")
+      );
+      this.session.invalidate();
+    }
+  }
 });

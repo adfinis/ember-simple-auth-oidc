@@ -115,10 +115,12 @@ export default Mixin.create(UnauthenticatedRouteMixin, {
      * Store the attemptedTransition URL in the localstorage so when the user returns after
      * the login he can be sent to the initial destination.
      */
-    this.session.set(
-      "data.continueTransition",
-      this.session.get("attemptedTransition.intent.url")
-    );
+    if (!this.session.get("data.continueTransition")) {
+      this.session.set(
+        "data.continueTransition",
+        this.session.get("attemptedTransition.intent.url")
+      );
+    }
 
     // forward `login_hint` query param if present
     const key = loginHintName || "login_hint";
