@@ -1,3 +1,4 @@
+import { computed } from "@ember/object";
 import Mixin from "@ember/object/mixin";
 import { inject } from "@ember/service";
 import config from "ember-simple-auth-oidc/config";
@@ -8,11 +9,15 @@ const { authHeaderName, authPrefix, tokenPropertyName } = config;
 export default Mixin.create(DataAdapterMixin, {
   session: inject(),
 
-  authorize(xhr) {
-    const token = this.get(`session.data.authenticated.${tokenPropertyName}`);
+  headers: computed("session.{isAuthenticated}", function() {
+    const headers = {};
 
-    if (this.get("session.isAuthenticated") && token) {
-      xhr.setRequestHeader(authHeaderName, `${authPrefix} ${token}`);
+    if (this.session.isAuthenticated) {
+      const token = this.get(`session.data.authenticated.${tokenPropertyName}`);
+
+      Object.assign(headers, { [authHeaderName]: `${authPrefix} ${token}` });
     }
-  }
+
+    return headers;
+  })
 });
