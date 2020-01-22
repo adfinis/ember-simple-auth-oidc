@@ -54,6 +54,39 @@ import OIDCAdapterMixin from "ember-simple-auth-oidc/mixins/oidc-adapter-mixin";
 export default DS.JSONAPIAdapter.extend(OIDCAdapterMixin, {});
 ```
 
+This mixin already handles unauthorized requests and performs an invalidation
+of the session which also remembers your visited URL. If you want this
+behaviour for other request services as well, you can use the
+`handleUnauthorized` function. The following snippet shows an example
+`ember-apollo-client` afterware (error handling) implementation:
+
+```js
+// app/services/apollo.js
+
+import { inject as service } from "@ember/service";
+import { onError } from "apollo-link-error";
+import ApolloService from "ember-apollo-client/services/apollo";
+import { handleUnauthorized } from "ember-simple-auth-oidc";
+
+export default ApolloService {
+  session: service(),
+
+  link() {
+    const httpLink = this._super(...arguments);
+
+    const afterware = onError(error => {
+      const { networkError } = error;
+
+      if (networkError.statusCode === 401) {
+        handleUnauthorized(this.session);
+      }
+    });
+
+    return afterware.concat(httpLink);
+  }
+});
+```
+
 ## Configuration
 
 The addon can be configured in the project's `environment.js` file with the key `ember-simple-auth-oidc`.

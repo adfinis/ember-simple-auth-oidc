@@ -44,7 +44,7 @@ module("Unit | Mixin | oidc-adapter-mixin", function() {
     subject.ensureResponseAuthorized(401);
 
     assert.equal(
-      subject.get("session.data.continueTransition"),
+      subject.get("session.data.nextURL"),
       location.href.replace(location.origin, "")
     );
 

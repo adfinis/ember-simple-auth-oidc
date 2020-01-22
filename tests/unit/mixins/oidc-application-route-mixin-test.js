@@ -13,7 +13,7 @@ module("Unit | Mixin | oidc-application-route-mixin", function(hooks) {
     assert.expect(1);
 
     const session = this.owner.lookup("service:session");
-    session.set("data.continueTransition", "protected/profile");
+    session.set("data.nextURL", "protected/profile");
 
     const Route = EmberObject.extend(OidcApplicationRouteMixin);
 
