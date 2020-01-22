@@ -2,10 +2,10 @@
 # yarn lockfile v1
 
 
-"@adfinis-sygroup/eslint-config@1.1.0":
-  version "1.1.0"
-  resolved "https://registry.yarnpkg.com/@adfinis-sygroup/eslint-config/-/eslint-config-1.1.0.tgz#adc1407ea423d05124d19756655fe72ededff102"
-  integrity sha512-ZyKLGMmBoZC/mUaBrZZCkzHOUQJAC/8po8VhcCC/vqZLn4b5pnCC3BVkGX+wmRaCXyEtvGJytfecWqriWh9vPw==
+"@adfinis-sygroup/eslint-config@1.2.0":
+  version "1.2.0"
+  resolved "https://registry.yarnpkg.com/@adfinis-sygroup/eslint-config/-/eslint-config-1.2.0.tgz#2e0b8329324125c25c0e49b7e682d9c7a30b7e56"
+  integrity sha512-7GlRy2piStpEi8rJrcV6V2ugnUzgqI32zlJsOzhFQD0iJoxKlRcFDYkEM8mpSNvt6Gc1xdVfkvVNNAow1o9f4A==
   dependencies:
     babel-eslint "^10.0.3"
     eslint-config-prettier "^6.9.0"
