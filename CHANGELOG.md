@@ -1,3 +1,13 @@
+# [1.1.0](https://github.com/adfinis-sygroup/ember-simple-auth-oidc/compare/v1.0.0...v1.1.0) (2020-01-22)
+
+### Bug Fixes
+
+- **logout:** prevent overriding continueTransition if it's already set ([5080a03](https://github.com/adfinis-sygroup/ember-simple-auth-oidc/commit/5080a03bb0f9a124905b9fbefe58ba6a6e72256a))
+
+### Features
+
+- add function to handle unauthorized responses ([5d131c3](https://github.com/adfinis-sygroup/ember-simple-auth-oidc/commit/5d131c37b9ce9abdc31641dc6d9dd43e7e30b931))
+
 # [1.0.0](https://github.com/adfinis-sygroup/ember-simple-auth-oidc/compare/v0.4.3...v1.0.0) (2020-01-22)
 
 ### Bug Fixes
