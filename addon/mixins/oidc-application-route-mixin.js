@@ -12,7 +12,7 @@ export default Mixin.create(ApplicationRouteMixin, {
 
   /**
    * This method is called after a successful authentication and continues an
-   * intercepted transition if a URL is stored in `continueTransition` in the
+   * intercepted transition if a URL is stored in `nextURL` in the
    * localstorage. Otherwise call the parent/super to invoke the normal
    * behavior of the `sessionAuthenticated` method.
    *
@@ -20,11 +20,11 @@ export default Mixin.create(ApplicationRouteMixin, {
    * @public
    */
   sessionAuthenticated() {
-    const continueTransition = this.get("session.data.continueTransition");
-    this.session.set("data.continueTransition", undefined);
+    const nextURL = this.get("session.data.nextURL");
+    this.session.set("data.nextURL", undefined);
 
-    if (continueTransition) {
-      this.replaceWith(continueTransition);
+    if (nextURL) {
+      this.replaceWith(nextURL);
     } else {
       this._super();
     }

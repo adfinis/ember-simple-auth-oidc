@@ -1,6 +1,7 @@
 import { computed } from "@ember/object";
 import Mixin from "@ember/object/mixin";
 import { inject } from "@ember/service";
+import { handleUnauthorized } from "ember-simple-auth-oidc";
 import config from "ember-simple-auth-oidc/config";
 import DataAdapterMixin from "ember-simple-auth/mixins/data-adapter-mixin";
 
@@ -22,12 +23,8 @@ export default Mixin.create(DataAdapterMixin, {
   }),
 
   ensureResponseAuthorized(status) {
-    if (status === 401 && this.session.isAuthenticated) {
-      this.session.set(
-        "data.continueTransition",
-        location.href.replace(location.origin, "")
-      );
-      this.session.invalidate();
+    if (status === 401) {
+      handleUnauthorized(this.session);
     }
   }
 });

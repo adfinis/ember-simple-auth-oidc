@@ -111,13 +111,14 @@ export default Mixin.create(UnauthenticatedRouteMixin, {
     const state = v4();
 
     this.session.set("data.state", state);
+
     /**
-     * Store the attemptedTransition URL in the localstorage so when the user returns after
+     * Store the `nextURL` in the localstorage so when the user returns after
      * the login he can be sent to the initial destination.
      */
-    if (!this.session.get("data.continueTransition")) {
+    if (!this.session.get("data.nextURL")) {
       this.session.set(
-        "data.continueTransition",
+        "data.nextURL",
         this.session.get("attemptedTransition.intent.url")
       );
     }

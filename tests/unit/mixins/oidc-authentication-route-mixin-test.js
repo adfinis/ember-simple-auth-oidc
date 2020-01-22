@@ -152,10 +152,7 @@ module("Unit | Mixin | oidc-authentication-route-mixin", function(hooks) {
         attemptedTransition: { intent: { url: "protected/profile" } }
       }),
       _redirectToUrl() {
-        assert.equal(
-          this.get("session.data.continueTransition"),
-          "protected/profile"
-        );
+        assert.equal(this.get("session.data.nextURL"), "protected/profile");
       }
     });
 
