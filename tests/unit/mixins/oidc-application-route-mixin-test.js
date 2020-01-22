@@ -28,7 +28,7 @@ module("Unit | Mixin | oidc-application-route-mixin", function(hooks) {
   });
 
   test("it can make an invalidate request", function(assert) {
-    assert.expect(4);
+    assert.expect(3);
 
     const Route = EmberObject.extend(OidcApplicationRouteMixin);
 
@@ -47,10 +47,5 @@ module("Unit | Mixin | oidc-application-route-mixin", function(hooks) {
     });
 
     subject.sessionInvalidated(null, { queryParams: {} });
-
-    assert.equal(
-      subject.get("session.data.continueTransition"),
-      location.href.replace(location.origin, "")
-    );
   });
 });
