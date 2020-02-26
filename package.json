@@ -33,7 +33,7 @@
     "ember-cli-htmlbars": "^4.2.2",
     "ember-get-config": "^0.2.4",
     "ember-simple-auth": "^2.1.1",
-    "uuid": "^3.4.0"
+    "uuid": "^7.0.1"
   },
   "devDependencies": {
     "@adfinis-sygroup/eslint-config": "1.2.0",
