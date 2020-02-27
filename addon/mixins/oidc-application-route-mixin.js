@@ -22,6 +22,8 @@ export default Mixin.create(ApplicationRouteMixin, {
   sessionAuthenticated() {
     const nextURL = this.get("session.data.nextURL");
     this.session.set("data.nextURL", undefined);
+    const idToken = this.get("session.data.authenticated.id_token");
+    this.session.set("data.id_token_prev", idToken);
 
     if (nextURL) {
       this.replaceWith(nextURL);
@@ -45,7 +47,7 @@ export default Mixin.create(ApplicationRouteMixin, {
       params.push(`post_logout_redirect_uri=${getAbsoluteUrl(afterLogoutUri)}`);
     }
 
-    const idToken = this.session.get("data.authenticated.id_token");
+    const idToken = this.session.get("data.id_token_prev");
     if (idToken) {
       params.push(`id_token_hint=${idToken}`);
     }
