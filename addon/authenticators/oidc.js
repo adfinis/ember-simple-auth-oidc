@@ -168,7 +168,11 @@ export default BaseAuthenticator.extend({
    * @returns {Object} Object containing the user information
    */
   async _getUserinfo(accessToken) {
-    const userinfo = await this.get("ajax").request(getUrl(userinfoEndpoint), {
+    const endpointIsUrl = userinfoEndpoint.includes("https://");
+    const userinfoUrl = endpointIsUrl
+      ? userinfoEndpoint
+      : getUrl(userinfoEndpoint);
+    const userinfo = await this.get("ajax").request(userinfoUrl, {
       headers: { Authorization: `${authPrefix} ${accessToken}` },
       responseType: "application/json"
     });
