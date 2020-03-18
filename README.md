@@ -131,6 +131,7 @@ End session endpoint at the authorization server.
 
 **userinfoEndpoint** `<String>`  
 Userinfo endpoint at the authorization server.
+Can be a URL (SSL required) or a path of the `host`.
 
 **afterLogoutUri** `<String>` (optional)  
 A relative or absolute URI to which will be redirected after logout / end session.
