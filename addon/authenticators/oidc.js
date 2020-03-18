@@ -115,7 +115,8 @@ export default BaseAuthenticator.extend({
           refresh_token,
           client_id: clientId,
           grant_type: "refresh_token",
-          redirect_uri: this.redirectUri
+          redirect_uri: this.redirectUri,
+          client_secret: clientSecret
         }
       });
       return this._handleAuthResponse(data);
