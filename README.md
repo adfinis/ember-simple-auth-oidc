@@ -162,6 +162,9 @@ Amount of retries should be made if the request to fetch a new token fails. Defa
 **retryTimeout** `<Number>` (optional)  
 Timeout in milliseconds between each retry if a token refresh should fail. Default is `3000`.
 
+**clientSecret** `<String>` (optional)
+Specifies the `client_secret` key when obtaining authorization token.
+
 ## Contributing
 
 ### Installation
