@@ -17,7 +17,8 @@ const {
   authPrefix,
   expiresIn,
   amountOfRetries,
-  retryTimeout
+  retryTimeout,
+  clientSecret
 } = config;
 
 const getUrl = endpoint => `${getAbsoluteUrl(host)}${endpoint}`;
@@ -57,7 +58,8 @@ export default BaseAuthenticator.extend({
         code,
         client_id: clientId,
         grant_type: "authorization_code",
-        redirect_uri: this.redirectUri
+        redirect_uri: this.redirectUri,
+        client_secret: clientSecret
       }
     });
 
