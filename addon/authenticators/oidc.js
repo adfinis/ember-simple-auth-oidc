@@ -59,7 +59,8 @@ export default BaseAuthenticator.extend({
         client_id: clientId,
         grant_type: "authorization_code",
         redirect_uri: this.redirectUri,
-        client_secret: clientSecret
+        client_secret: clientSecret,
+        scope: "openid profile email offline_access"
       }
     });
 
