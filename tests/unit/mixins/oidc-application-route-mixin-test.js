@@ -34,7 +34,7 @@ module("Unit | Mixin | oidc-application-route-mixin", function(hooks) {
 
     const subject = Route.create({
       session: EmberObject.create({
-        data: { authenticated: { id_token: "myIdToken" } },
+        data: { id_token_prev: "myIdToken" },
         on() {}
       }),
       _redirectToUrl(url) {
