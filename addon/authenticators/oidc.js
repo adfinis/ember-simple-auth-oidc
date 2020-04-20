@@ -50,11 +50,15 @@ export default BaseAuthenticator.extend({
       );
     }
 
-    const body = new URLSearchParams();
-    body.append("code", code);
-    body.append("client_id", clientId);
-    body.append("grant_type", "authorization_code");
-    body.append("redirect_uri", this.redirectUri);
+    const bodyObject = {
+      code,
+      client_id: clientId,
+      grant_type: "authorization_code",
+      redirect_uri: this.redirectUri
+    };
+    const body = Object.keys(bodyObject)
+      .map(k => `${k}=${encodeURIComponent(bodyObject[k])}`)
+      .join("&");
 
     const response = await fetch(getUrl(tokenEndpoint), {
       method: "POST",
@@ -112,11 +116,15 @@ export default BaseAuthenticator.extend({
    */
   async _refresh(refresh_token, retryCount = 0) {
     try {
-      const body = new URLSearchParams();
-      body.append("refresh_token", refresh_token);
-      body.append("client_id", clientId);
-      body.append("grant_type", "refresh_token");
-      body.append("redirect_uri", this.redirectUri);
+      const bodyObject = {
+        refresh_token,
+        client_id: clientId,
+        grant_type: "refresh_token",
+        redirect_uri: this.redirectUri
+      };
+      const body = Object.keys(bodyObject)
+        .map(k => `${k}=${encodeURIComponent(bodyObject[k])}`)
+        .join("&");
 
       const response = await fetch(getUrl(tokenEndpoint), {
         method: "POST",
