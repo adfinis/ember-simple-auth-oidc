@@ -58,6 +58,10 @@ export default BaseAuthenticator.extend({
 
     const response = await fetch(getUrl(tokenEndpoint), {
       method: "POST",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/x-www-form-urlencoded"
+      },
       body
     });
 
@@ -116,6 +120,10 @@ export default BaseAuthenticator.extend({
 
       const response = await fetch(getUrl(tokenEndpoint), {
         method: "POST",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/x-www-form-urlencoded"
+        },
         body
       });
       if (isServerErrorResponse(response)) throw new Error(response.message);
@@ -173,7 +181,8 @@ export default BaseAuthenticator.extend({
   async _getUserinfo(accessToken) {
     const response = await fetch(getUrl(userinfoEndpoint), {
       headers: {
-        Authorization: `${authPrefix} ${accessToken}`
+        Authorization: `${authPrefix} ${accessToken}`,
+        Accept: "application/json"
       }
     });
 
