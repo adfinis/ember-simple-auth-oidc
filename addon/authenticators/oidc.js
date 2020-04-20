@@ -56,7 +56,7 @@ export default BaseAuthenticator.extend({
     body.append("grant_type", "authorization_code");
     body.append("redirect_uri", this.redirectUri);
 
-    const response = await await fetch(getUrl(tokenEndpoint), {
+    const response = await fetch(getUrl(tokenEndpoint), {
       method: "POST",
       body
     });
