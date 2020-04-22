@@ -1,3 +1,10 @@
+## [1.1.1](https://github.com/adfinis-sygroup/ember-simple-auth-oidc/compare/v1.1.0...v1.1.1) (2020-04-22)
+
+
+### Bug Fixes
+
+* **mixin:** store id_token for use as id_token_hint on logout ([f6adf36](https://github.com/adfinis-sygroup/ember-simple-auth-oidc/commit/f6adf36deca6bf66e5cd8e780f3d193eab83175a))
+
 # [1.1.0](https://github.com/adfinis-sygroup/ember-simple-auth-oidc/compare/v1.0.0...v1.1.0) (2020-01-22)
 
 ### Bug Fixes
