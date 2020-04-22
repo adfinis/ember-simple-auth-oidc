@@ -1,11 +1,12 @@
 import { computed } from "@ember/object";
 import { later, cancel } from "@ember/runloop";
 import { inject as service } from "@ember/service";
-import { isServerError, isAbortError, isTimeoutError } from "ember-ajax/errors";
+import { isServerErrorResponse, isAbortError } from "ember-fetch/errors";
 import config from "ember-simple-auth-oidc/config";
 import getAbsoluteUrl from "ember-simple-auth-oidc/utils/absoluteUrl";
 import BaseAuthenticator from "ember-simple-auth/authenticators/base";
 import Configuration from "ember-simple-auth/configuration";
+import fetch from "fetch";
 import { resolve } from "rsvp";
 
 const {
@@ -23,7 +24,6 @@ const {
 const getUrl = endpoint => `${getAbsoluteUrl(host)}${endpoint}`;
 
 export default BaseAuthenticator.extend({
-  ajax: service(),
   router: service(),
 
   _upcomingRefresh: null,
@@ -50,16 +50,26 @@ export default BaseAuthenticator.extend({
       );
     }
 
-    const data = await this.get("ajax").post(getUrl(tokenEndpoint), {
-      responseType: "application/json",
-      contentType: "application/x-www-form-urlencoded",
-      data: {
-        code,
-        client_id: clientId,
-        grant_type: "authorization_code",
-        redirect_uri: this.redirectUri
-      }
+    const bodyObject = {
+      code,
+      client_id: clientId,
+      grant_type: "authorization_code",
+      redirect_uri: this.redirectUri
+    };
+    const body = Object.keys(bodyObject)
+      .map(k => `${k}=${encodeURIComponent(bodyObject[k])}`)
+      .join("&");
+
+    const response = await fetch(getUrl(tokenEndpoint), {
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/x-www-form-urlencoded"
+      },
+      body
     });
+
+    const data = await response.json();
 
     return this._handleAuthResponse(data);
   },
@@ -106,22 +116,31 @@ export default BaseAuthenticator.extend({
    */
   async _refresh(refresh_token, retryCount = 0) {
     try {
-      const data = await this.get("ajax").post(getUrl(tokenEndpoint), {
-        responseType: "application/json",
-        contentType: "application/x-www-form-urlencoded",
-        data: {
-          refresh_token,
-          client_id: clientId,
-          grant_type: "refresh_token",
-          redirect_uri: this.redirectUri
-        }
+      const bodyObject = {
+        refresh_token,
+        client_id: clientId,
+        grant_type: "refresh_token",
+        redirect_uri: this.redirectUri
+      };
+      const body = Object.keys(bodyObject)
+        .map(k => `${k}=${encodeURIComponent(bodyObject[k])}`)
+        .join("&");
+
+      const response = await fetch(getUrl(tokenEndpoint), {
+        method: "POST",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/x-www-form-urlencoded"
+        },
+        body
       });
+      if (isServerErrorResponse(response)) throw new Error(response.message);
+
+      const data = await response.json();
+
       return this._handleAuthResponse(data);
     } catch (e) {
-      if (
-        (isServerError(e) || isAbortError(e) || isTimeoutError(e)) &&
-        retryCount < amountOfRetries - 1
-      ) {
+      if (isAbortError(e) && retryCount < amountOfRetries - 1) {
         return new Promise(resolve => {
           later(
             this,
@@ -168,10 +187,14 @@ export default BaseAuthenticator.extend({
    * @returns {Object} Object containing the user information
    */
   async _getUserinfo(accessToken) {
-    const userinfo = await this.get("ajax").request(getUrl(userinfoEndpoint), {
-      headers: { Authorization: `${authPrefix} ${accessToken}` },
-      responseType: "application/json"
+    const response = await fetch(getUrl(userinfoEndpoint), {
+      headers: {
+        Authorization: `${authPrefix} ${accessToken}`,
+        Accept: "application/json"
+      }
     });
+
+    const userinfo = await response.json();
 
     return userinfo;
   },
