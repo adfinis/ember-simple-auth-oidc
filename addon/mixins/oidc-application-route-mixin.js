@@ -53,7 +53,7 @@ export default Mixin.create(ApplicationRouteMixin, {
     }
 
     return this._redirectToUrl(
-      `${getAbsoluteUrl(host)}${endSessionEndpoint}?${params.join("&")}`
+      `${getAbsoluteUrl(endSessionEndpoint, host)}?${params.join("&")}`
     );
   },
 });
