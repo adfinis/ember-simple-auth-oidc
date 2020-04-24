@@ -17,7 +17,7 @@ module("Unit | Mixin | oidc-application-route-mixin", function (hooks) {
 
     const Route = EmberObject.extend(OidcApplicationRouteMixin);
 
-    const subject = Route.create({
+    const subject = Route.create(this.owner.ownerInjection(), {
       session,
       replaceWith(url) {
         assert.equal(url, "protected/profile");
@@ -32,7 +32,7 @@ module("Unit | Mixin | oidc-application-route-mixin", function (hooks) {
 
     const Route = EmberObject.extend(OidcApplicationRouteMixin);
 
-    const subject = Route.create({
+    const subject = Route.create(this.owner.ownerInjection(), {
       session: EmberObject.create({
         data: { id_token_prev: "myIdToken" },
         on() {},

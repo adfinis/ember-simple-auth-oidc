@@ -50,13 +50,13 @@ jobs:
         run: yarn install --no-lockfile
 
       - name: Run tests (floating dependencies)
-        run: yarn test
+        run: yarn test:ember
 
       - name: Install dependencies
         run: yarn install
 
       - name: Run tests
-        run: yarn test
+        run: yarn test:ember
         env:
           COVERAGE: true
 
@@ -74,8 +74,8 @@ jobs:
     strategy:
       matrix:
         scenario:
-          - ember-lts-3.8
           - ember-lts-3.12
+          - ember-lts-3.16
           - ember-release
           - ember-beta
           - ember-canary
