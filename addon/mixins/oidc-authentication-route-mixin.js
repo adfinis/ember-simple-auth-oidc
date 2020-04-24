@@ -6,7 +6,7 @@ import config from "ember-simple-auth-oidc/config";
 import getAbsoluteUrl from "ember-simple-auth-oidc/utils/absoluteUrl";
 import Configuration from "ember-simple-auth/configuration";
 import UnauthenticatedRouteMixin from "ember-simple-auth/mixins/unauthenticated-route-mixin";
-import v4 from "uuid/v4";
+import { v4 } from "uuid";
 
 const { host, clientId, authEndpoint, scope, loginHintName } = config;
 
