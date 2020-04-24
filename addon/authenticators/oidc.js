@@ -21,8 +21,6 @@ const {
   retryTimeout,
 } = config;
 
-const getUrl = (endpoint) => `${getAbsoluteUrl(host)}${endpoint}`;
-
 export default BaseAuthenticator.extend({
   router: service(),
 
@@ -60,7 +58,7 @@ export default BaseAuthenticator.extend({
       .map((k) => `${k}=${encodeURIComponent(bodyObject[k])}`)
       .join("&");
 
-    const response = await fetch(getUrl(tokenEndpoint), {
+    const response = await fetch(getAbsoluteUrl(tokenEndpoint, host), {
       method: "POST",
       headers: {
         Accept: "application/json",
@@ -126,7 +124,7 @@ export default BaseAuthenticator.extend({
         .map((k) => `${k}=${encodeURIComponent(bodyObject[k])}`)
         .join("&");
 
-      const response = await fetch(getUrl(tokenEndpoint), {
+      const response = await fetch(getAbsoluteUrl(tokenEndpoint, host), {
         method: "POST",
         headers: {
           Accept: "application/json",
@@ -187,7 +185,7 @@ export default BaseAuthenticator.extend({
    * @returns {Object} Object containing the user information
    */
   async _getUserinfo(accessToken) {
-    const response = await fetch(getUrl(userinfoEndpoint), {
+    const response = await fetch(getAbsoluteUrl(userinfoEndpoint, host), {
       headers: {
         Authorization: `${authPrefix} ${accessToken}`,
         Accept: "application/json",

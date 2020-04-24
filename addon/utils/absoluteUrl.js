@@ -1,5 +1,3 @@
-export default (url) => {
-  return url.indexOf("http") === 0
-    ? url
-    : `${location.protocol}//${location.host}${url}`;
+export default (url, host = `${location.protocol}//${location.host}`) => {
+  return /^http(s)?/.test(url) ? url : `${host}${url}`;
 };
