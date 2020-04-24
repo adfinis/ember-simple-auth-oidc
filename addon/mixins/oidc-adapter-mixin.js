@@ -10,7 +10,7 @@ const { authHeaderName, authPrefix, tokenPropertyName } = config;
 export default Mixin.create(DataAdapterMixin, {
   session: inject(),
 
-  headers: computed("session.{isAuthenticated}", function() {
+  headers: computed("session.isAuthenticated", function () {
     const headers = {};
 
     if (this.session.isAuthenticated) {
@@ -26,5 +26,5 @@ export default Mixin.create(DataAdapterMixin, {
     if (status === 401) {
       handleUnauthorized(this.session);
     }
-  }
+  },
 });

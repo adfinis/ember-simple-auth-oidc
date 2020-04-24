@@ -17,7 +17,7 @@ export default Object.assign(
     authHeaderName: "Authorization",
     authPrefix: "Bearer",
     amountOfRetries: 3,
-    retryTimeout: 3000
+    retryTimeout: 3000,
   },
   config["ember-simple-auth-oidc"] || {}
 );

@@ -6,5 +6,5 @@ export default Route.extend({
       ? transition.to.queryParams
       : transition.queryParams;
     window.location.replace(post_logout_redirect_uri);
-  }
+  },
 });

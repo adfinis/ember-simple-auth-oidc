@@ -6,5 +6,5 @@ export default Route.extend({
       ? transition.to.queryParams
       : transition.queryParams;
     window.location.replace(`${redirect_uri}?code=123456789&state=${state}`);
-  }
+  },
 });
