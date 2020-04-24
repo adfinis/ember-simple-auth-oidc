@@ -18,17 +18,17 @@ const {
   authPrefix,
   expiresIn,
   amountOfRetries,
-  retryTimeout
+  retryTimeout,
 } = config;
 
-const getUrl = endpoint => `${getAbsoluteUrl(host)}${endpoint}`;
+const getUrl = (endpoint) => `${getAbsoluteUrl(host)}${endpoint}`;
 
 export default BaseAuthenticator.extend({
   router: service(),
 
   _upcomingRefresh: null,
 
-  redirectUri: computed(function() {
+  redirectUri: computed(function () {
     const { protocol, host } = location;
     const path = this.router.urlFor(Configuration.authenticationRoute);
     return `${protocol}//${host}${path}`;
@@ -54,19 +54,19 @@ export default BaseAuthenticator.extend({
       code,
       client_id: clientId,
       grant_type: "authorization_code",
-      redirect_uri: this.redirectUri
+      redirect_uri: this.redirectUri,
     };
     const body = Object.keys(bodyObject)
-      .map(k => `${k}=${encodeURIComponent(bodyObject[k])}`)
+      .map((k) => `${k}=${encodeURIComponent(bodyObject[k])}`)
       .join("&");
 
     const response = await fetch(getUrl(tokenEndpoint), {
       method: "POST",
       headers: {
         Accept: "application/json",
-        "Content-Type": "application/x-www-form-urlencoded"
+        "Content-Type": "application/x-www-form-urlencoded",
       },
-      body
+      body,
     });
 
     const data = await response.json();
@@ -120,19 +120,19 @@ export default BaseAuthenticator.extend({
         refresh_token,
         client_id: clientId,
         grant_type: "refresh_token",
-        redirect_uri: this.redirectUri
+        redirect_uri: this.redirectUri,
       };
       const body = Object.keys(bodyObject)
-        .map(k => `${k}=${encodeURIComponent(bodyObject[k])}`)
+        .map((k) => `${k}=${encodeURIComponent(bodyObject[k])}`)
         .join("&");
 
       const response = await fetch(getUrl(tokenEndpoint), {
         method: "POST",
         headers: {
           Accept: "application/json",
-          "Content-Type": "application/x-www-form-urlencoded"
+          "Content-Type": "application/x-www-form-urlencoded",
         },
-        body
+        body,
       });
       if (isServerErrorResponse(response)) throw new Error(response.message);
 
@@ -141,7 +141,7 @@ export default BaseAuthenticator.extend({
       return this._handleAuthResponse(data);
     } catch (e) {
       if (isAbortError(e) && retryCount < amountOfRetries - 1) {
-        return new Promise(resolve => {
+        return new Promise((resolve) => {
           later(
             this,
             () => resolve(this._refresh(refresh_token, retryCount + 1)),
@@ -172,7 +172,7 @@ export default BaseAuthenticator.extend({
     }
     this._upcomingRefresh = later(
       this,
-      async token => {
+      async (token) => {
         this.trigger("sessionDataUpdated", await this._refresh(token));
       },
       token,
@@ -190,8 +190,8 @@ export default BaseAuthenticator.extend({
     const response = await fetch(getUrl(userinfoEndpoint), {
       headers: {
         Authorization: `${authPrefix} ${accessToken}`,
-        Accept: "application/json"
-      }
+        Accept: "application/json",
+      },
     });
 
     const userinfo = await response.json();
@@ -213,7 +213,7 @@ export default BaseAuthenticator.extend({
     access_token,
     refresh_token,
     expires_in,
-    id_token
+    id_token,
   }) {
     const userinfo = await this._getUserinfo(access_token);
 
@@ -224,5 +224,5 @@ export default BaseAuthenticator.extend({
     this._scheduleRefresh(expireTime, refresh_token);
 
     return { access_token, refresh_token, userinfo, id_token, expireTime };
-  }
+  },
 });

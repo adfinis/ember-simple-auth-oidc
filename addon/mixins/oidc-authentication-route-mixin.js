@@ -16,10 +16,10 @@ export default Mixin.create(UnauthenticatedRouteMixin, {
 
   queryParams: {
     code: { refreshModel: false },
-    state: { refreshModel: false }
+    state: { refreshModel: false },
   },
 
-  redirectUri: computed(function() {
+  redirectUri: computed("authenticationRoute", function () {
     const { protocol, host } = location;
     const path = this.router.urlFor(
       this.authenticationRoute || Configuration.authenticationRoute
@@ -88,14 +88,14 @@ export default Mixin.create(UnauthenticatedRouteMixin, {
    * @param {String} state The state (uuid4) passed by the identity provider
    */
   async _handleCallbackRequest(code, state) {
-    if (state !== this.get("session.data.state")) {
+    if (state !== this.session.data.state) {
       assert("State did not match");
     }
 
     this.session.set("data.state", undefined);
 
     await this.session.authenticate("authenticator:oidc", {
-      code
+      code,
     });
   },
 
@@ -132,11 +132,11 @@ export default Mixin.create(UnauthenticatedRouteMixin, {
       `response_type=code`,
       `state=${state}`,
       `scope=${scope}`,
-      queryParams[key] ? `${key}=${queryParams[key]}` : null
+      queryParams[key] ? `${key}=${queryParams[key]}` : null,
     ]
       .filter(Boolean)
       .join("&");
 
     this._redirectToUrl(`${getAbsoluteUrl(host)}${authEndpoint}?${search}`);
-  }
+  },
 });

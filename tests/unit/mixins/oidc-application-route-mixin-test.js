@@ -6,10 +6,10 @@ import { module, test } from "qunit";
 
 const { endSessionEndpoint, afterLogoutUri } = config["ember-simple-auth-oidc"];
 
-module("Unit | Mixin | oidc-application-route-mixin", function(hooks) {
+module("Unit | Mixin | oidc-application-route-mixin", function (hooks) {
   setupTest(hooks);
 
-  test("it continues a stored transition", function(assert) {
+  test("it continues a stored transition", function (assert) {
     assert.expect(1);
 
     const session = this.owner.lookup("service:session");
@@ -21,13 +21,13 @@ module("Unit | Mixin | oidc-application-route-mixin", function(hooks) {
       session,
       replaceWith(url) {
         assert.equal(url, "protected/profile");
-      }
+      },
     });
 
     subject.sessionAuthenticated();
   });
 
-  test("it can make an invalidate request", function(assert) {
+  test("it can make an invalidate request", function (assert) {
     assert.expect(3);
 
     const Route = EmberObject.extend(OidcApplicationRouteMixin);
@@ -35,7 +35,7 @@ module("Unit | Mixin | oidc-application-route-mixin", function(hooks) {
     const subject = Route.create({
       session: EmberObject.create({
         data: { id_token_prev: "myIdToken" },
-        on() {}
+        on() {},
       }),
       _redirectToUrl(url) {
         assert.ok(new RegExp(endSessionEndpoint).test(url));
@@ -43,7 +43,7 @@ module("Unit | Mixin | oidc-application-route-mixin", function(hooks) {
           new RegExp(`post_logout_redirect_uri=${afterLogoutUri}`).test(url)
         );
         assert.ok(new RegExp("id_token_hint=myIdToken").test(url));
-      }
+      },
     });
 
     subject.sessionInvalidated(null, { queryParams: {} });

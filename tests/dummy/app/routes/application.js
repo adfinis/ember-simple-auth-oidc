@@ -3,5 +3,5 @@ import OIDCApplicationRouteMixin from "ember-simple-auth-oidc/mixins/oidc-applic
 
 export default Route.extend(OIDCApplicationRouteMixin, {
   routeAfterAuthentication: "protected",
-  routeIfAlreadyAuthenticated: "protected"
+  routeIfAlreadyAuthenticated: "protected",
 });

@@ -6,10 +6,10 @@ import { module, test } from "qunit";
 
 const { authEndpoint, clientId } = config["ember-simple-auth-oidc"];
 
-module("Unit | Mixin | oidc-authentication-route-mixin", function(hooks) {
+module("Unit | Mixin | oidc-authentication-route-mixin", function (hooks) {
   setupTest(hooks);
 
-  test("it can handle an unauthenticated request", function(assert) {
+  test("it can handle an unauthenticated request", function (assert) {
     assert.expect(3);
 
     const Route = EmberObject.extend(OIDCAuthenticationRouteMixin);
@@ -22,13 +22,13 @@ module("Unit | Mixin | oidc-authentication-route-mixin", function(hooks) {
 
         assert.ok(url.includes(`client_id=${clientId}`));
         assert.ok(url.includes("redirect_uri=test"));
-      }
+      },
     });
 
     subject.afterModel(null, { to: { queryParams: {} } });
   });
 
-  test("it can handle a request with an authentication code", function(assert) {
+  test("it can handle a request with an authentication code", function (assert) {
     assert.expect(1);
 
     const Route = EmberObject.extend(OIDCAuthenticationRouteMixin);
@@ -37,21 +37,21 @@ module("Unit | Mixin | oidc-authentication-route-mixin", function(hooks) {
       redirectUri: "test",
       session: EmberObject.create({
         data: {
-          authenticated: {}
+          authenticated: {},
         },
         async authenticate(_, { code }) {
           assert.equal(code, "sometestcode");
-        }
+        },
       }),
       transitionTo() {
         return { abort() {} };
-      }
+      },
     });
 
     subject.afterModel(null, { to: { queryParams: { code: "sometestcode" } } });
   });
 
-  test("it can handle older version of router_js", function(assert) {
+  test("it can handle older version of router_js", function (assert) {
     assert.expect(1);
 
     const Route = EmberObject.extend(OIDCAuthenticationRouteMixin);
@@ -60,21 +60,21 @@ module("Unit | Mixin | oidc-authentication-route-mixin", function(hooks) {
       redirectUri: "test",
       session: EmberObject.create({
         data: {
-          authenticated: {}
+          authenticated: {},
         },
         async authenticate(_, { code }) {
           assert.equal(code, "sometestcode");
-        }
+        },
       }),
       transitionTo() {
         return { abort() {} };
-      }
+      },
     });
 
     subject.afterModel(null, { queryParams: { code: "sometestcode" } });
   });
 
-  test("it can handle a failing authentication", function(assert) {
+  test("it can handle a failing authentication", function (assert) {
     assert.expect(2);
 
     const Route = EmberObject.extend(OIDCAuthenticationRouteMixin);
@@ -84,22 +84,22 @@ module("Unit | Mixin | oidc-authentication-route-mixin", function(hooks) {
       session: EmberObject.create({
         data: {
           authenticated: {},
-          state: "state2"
+          state: "state2",
         },
         async authenticate() {
           return true;
-        }
-      })
+        },
+      }),
     });
 
     // fails because the state is not correct (CSRF)
     subject
       .afterModel(null, {
         to: {
-          queryParams: { code: "sometestcode", state: "state1" }
-        }
+          queryParams: { code: "sometestcode", state: "state1" },
+        },
       })
-      .catch(e => {
+      .catch((e) => {
         assert.ok(/State did not match/.test(e.message));
       });
 
@@ -111,14 +111,14 @@ module("Unit | Mixin | oidc-authentication-route-mixin", function(hooks) {
     assert.rejects(
       subject.afterModel(null, {
         to: {
-          queryParams: { code: "sometestcode", state: "state2" }
-        }
+          queryParams: { code: "sometestcode", state: "state2" },
+        },
       }),
       Error
     );
   });
 
-  test("it forwards customized login_hint param", function(assert) {
+  test("it forwards customized login_hint param", function (assert) {
     assert.expect(4);
 
     const Route = EmberObject.extend(OIDCAuthenticationRouteMixin);
@@ -132,15 +132,15 @@ module("Unit | Mixin | oidc-authentication-route-mixin", function(hooks) {
         assert.ok(url.includes(`client_id=${clientId}`));
         assert.ok(url.includes("redirect_uri=test"));
         assert.ok(url.includes("custom_login_hint=my-idp"));
-      }
+      },
     });
 
     subject.afterModel(null, {
-      to: { queryParams: { custom_login_hint: "my-idp" } }
+      to: { queryParams: { custom_login_hint: "my-idp" } },
     });
   });
 
-  test("it stores an intercepted transition", function(assert) {
+  test("it stores an intercepted transition", function (assert) {
     assert.expect(1);
 
     const Route = EmberObject.extend(OIDCAuthenticationRouteMixin);
@@ -149,11 +149,11 @@ module("Unit | Mixin | oidc-authentication-route-mixin", function(hooks) {
       redirectUri: "test",
       session: EmberObject.create({
         data: { authenticated: {} },
-        attemptedTransition: { intent: { url: "protected/profile" } }
+        attemptedTransition: { intent: { url: "protected/profile" } },
       }),
       _redirectToUrl() {
-        assert.equal(this.get("session.data.nextURL"), "protected/profile");
-      }
+        assert.equal(this.session.data.nextURL, "protected/profile");
+      },
     });
 
     subject.afterModel(null, { to: { queryParams: {} } });

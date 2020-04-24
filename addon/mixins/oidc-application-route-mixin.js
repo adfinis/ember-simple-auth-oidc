@@ -20,9 +20,9 @@ export default Mixin.create(ApplicationRouteMixin, {
    * @public
    */
   sessionAuthenticated() {
-    const nextURL = this.get("session.data.nextURL");
+    const nextURL = this.session.data.nextURL;
     this.session.set("data.nextURL", undefined);
-    const idToken = this.get("session.data.authenticated.id_token");
+    const idToken = this.session.data.authenticated.id_token;
     this.session.set("data.id_token_prev", idToken);
 
     if (nextURL) {
@@ -55,5 +55,5 @@ export default Mixin.create(ApplicationRouteMixin, {
     return this._redirectToUrl(
       `${getAbsoluteUrl(host)}${endSessionEndpoint}?${params.join("&")}`
     );
-  }
+  },
 });
