@@ -48,10 +48,12 @@ into the application adapter.
 ```js
 // app/adapters/application.js
 
-import DS from "ember-data";
+import JSONAPIAdapter from "@ember-data/adapter/json-api";
 import OIDCAdapterMixin from "ember-simple-auth-oidc/mixins/oidc-adapter-mixin";
 
-export default DS.JSONAPIAdapter.extend(OIDCAdapterMixin, {});
+const BaseAdapter = JSONAPIAdapter.extend(OIDCAdapterMixin);
+
+export default class ApplicationAdapter extends BaseAdapter {}
 ```
 
 This mixin already handles unauthorized requests and performs an invalidation
@@ -96,7 +98,7 @@ A minimal configuration includes the following options:
 ```js
 // config/environment.js
 
-module.exports = function(environment) {
+module.exports = function (environment) {
   let ENV = {
     // ...
     "ember-simple-auth-oidc": {
@@ -104,8 +106,8 @@ module.exports = function(environment) {
       clientId: "test",
       authEndpoint: "/authorize",
       tokenEndpoint: "/token",
-      userinfoEndpoint: "/userinfo"
-    }
+      userinfoEndpoint: "/userinfo",
+    },
     // ...
   };
   return ENV;
@@ -121,16 +123,20 @@ A relative or absolute URI of the authorization server.
 The oidc client identifier valid at the authorization server.
 
 **authEndpoint** `<String>`  
-Authorization endpoint at the authorization server.
+Authorization endpoint at the authorization server. This can be a path which
+will be appended to `host` or an absolute URL.
 
 **tokenEndpoint** `<String>`  
-Token endpoint at the authorization server.
+Token endpoint at the authorization server. This can be a path which will be
+appended to `host` or an absolute URL.
 
 **endSessionEndpoint** `<String>` (optional)  
-End session endpoint at the authorization server.
+End session endpoint endpoint at the authorization server. This can be a path
+which will be appended to `host` or an absolute URL.
 
 **userinfoEndpoint** `<String>`  
-Userinfo endpoint at the authorization server.
+Userinfo endpoint endpoint at the authorization server. This can be a path
+which will be appended to `host` or an absolute URL.
 
 **afterLogoutUri** `<String>` (optional)  
 A relative or absolute URI to which will be redirected after logout / end session.
@@ -166,24 +172,24 @@ Timeout in milliseconds between each retry if a token refresh should fail. Defau
 
 ### Installation
 
-- `git clone <repository-url>`
+- `git clone git@github.com:adfinis-sygroup/ember-simple-auth-oidc.git`
 - `cd ember-simple-auth-oidc`
 - `yarn install`
 
 ### Linting
 
-- `yarn lint:js`
-- `yarn lint:js --fix`
+- `yarn lint` – Runs all linting tasks
 
 ### Running tests
 
-- `ember test` – Runs the test suite on the current Ember version
-- `ember test --server` – Runs the test suite in "watch mode"
-- `ember try:each` – Runs the test suite against multiple Ember versions
+- `yarn test` – Runs all linting and test tasks
+- `yarn test:ember` – Runs the test suite on the current Ember version
+- `yarn test:ember --server` – Runs the test suite in "watch mode"
+- `yarn test:ember-compatibility` – Runs the test suite against multiple Ember versions
 
 ### Running the dummy application
 
-- `ember serve`
+- `yarn start`
 - Visit the dummy application at [http://localhost:4200](http://localhost:4200).
 
 For more information on using ember-cli, visit [https://ember-cli.com/](https://ember-cli.com/).
