@@ -113,6 +113,7 @@ export default BaseAuthenticator.extend({
    * @returns {Object} The parsed response data
    */
   async _refresh(refresh_token, retryCount = 0) {
+    let isServerError = false;
     try {
       const bodyObject = {
         refresh_token,
@@ -132,13 +133,17 @@ export default BaseAuthenticator.extend({
         },
         body,
       });
-      if (isServerErrorResponse(response)) throw new Error(response.message);
+      isServerError = isServerErrorResponse(response);
+      if (isServerError) throw new Error(response.message);
 
       const data = await response.json();
 
       return this._handleAuthResponse(data);
     } catch (e) {
-      if (isAbortError(e) && retryCount < amountOfRetries - 1) {
+      if (
+        (isServerError || isAbortError(e)) &&
+        retryCount < amountOfRetries - 1
+      ) {
         return new Promise((resolve) => {
           later(
             this,
