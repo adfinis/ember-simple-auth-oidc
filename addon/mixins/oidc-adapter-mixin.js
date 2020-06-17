@@ -10,17 +10,28 @@ const { authHeaderName, authPrefix, tokenPropertyName } = config;
 export default Mixin.create(DataAdapterMixin, {
   session: inject(),
 
-  headers: computed("session.isAuthenticated", function () {
-    const headers = {};
+  /**
+   * Watch the `data.authenticated.id_token` to recomputed the headers as
+   * according to the openid-connect specification the `id_token` must always
+   * be included.
+   * https://openid.net/specs/openid-connect-core-1_0.html#TokenResponse
+   */
+  headers: computed(
+    "session.{data.authenticated.id_token,isAuthenticated}",
+    function () {
+      const headers = {};
 
-    if (this.session.isAuthenticated) {
-      const token = this.get(`session.data.authenticated.${tokenPropertyName}`);
+      if (this.session.isAuthenticated) {
+        const token = this.get(
+          `session.data.authenticated.${tokenPropertyName}`
+        );
 
-      Object.assign(headers, { [authHeaderName]: `${authPrefix} ${token}` });
+        Object.assign(headers, { [authHeaderName]: `${authPrefix} ${token}` });
+      }
+
+      return headers;
     }
-
-    return headers;
-  }),
+  ),
 
   ensureResponseAuthorized(status) {
     if (status === 401) {
