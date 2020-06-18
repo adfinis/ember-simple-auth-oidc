@@ -1,3 +1,27 @@
+# [2.0.0](https://github.com/adfinis-sygroup/ember-simple-auth-oidc/compare/v1.1.1...v2.0.0) (2020-06-18)
+
+
+### Bug Fixes
+
+* **config:** allow configuration URLs to be absolute and relative ([3477cbc](https://github.com/adfinis-sygroup/ember-simple-auth-oidc/commit/3477cbcaab839283fc01beac59f9d9a7e5694493)), closes [#189](https://github.com/adfinis-sygroup/ember-simple-auth-oidc/issues/189)
+* **mixin:** correctly recompute `headers` in the `oidc-adapter-mixin` ([d994a6e](https://github.com/adfinis-sygroup/ember-simple-auth-oidc/commit/d994a6e0b6b0ef2fd587989d3bd1d64aaf972a0a))
+* **mixin:** restore error handling ([31671f5](https://github.com/adfinis-sygroup/ember-simple-auth-oidc/commit/31671f530d78d980092d77f1fb814f0da9e0be0c))
+
+
+### chore
+
+* **deps:** update ember and other dependencies ([4d3bad3](https://github.com/adfinis-sygroup/ember-simple-auth-oidc/commit/4d3bad3ecc087b95e9dab9ef43083564d91505e9))
+
+
+### Features
+
+* add support for ember-simple-auth 3 ([e86f571](https://github.com/adfinis-sygroup/ember-simple-auth-oidc/commit/e86f571aded982619b1c2b147c4b4447d1e519d0))
+
+
+### BREAKING CHANGES
+
+* **deps:** Support for the old ember LTS 3.8 is dropped
+
 ## [1.1.1](https://github.com/adfinis-sygroup/ember-simple-auth-oidc/compare/v1.1.0...v1.1.1) (2020-04-22)
 
 
