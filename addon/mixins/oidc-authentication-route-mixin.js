@@ -4,7 +4,6 @@ import Mixin from "@ember/object/mixin";
 import { inject as service } from "@ember/service";
 import config from "ember-simple-auth-oidc/config";
 import getAbsoluteUrl from "ember-simple-auth-oidc/utils/absoluteUrl";
-import Configuration from "ember-simple-auth/configuration";
 import UnauthenticatedRouteMixin from "ember-simple-auth/mixins/unauthenticated-route-mixin";
 import { v4 } from "uuid";
 
@@ -19,11 +18,9 @@ export default Mixin.create(UnauthenticatedRouteMixin, {
     state: { refreshModel: false },
   },
 
-  redirectUri: computed("authenticationRoute", function () {
+  redirectUri: computed("authenticationRoute", "routeName", function () {
     const { protocol, host } = location;
-    const path = this.router.urlFor(
-      this.authenticationRoute || Configuration.authenticationRoute
-    );
+    const path = this.router.urlFor(this.routeName);
     return `${protocol}//${host}${path}`;
   }),
 
@@ -96,6 +93,7 @@ export default Mixin.create(UnauthenticatedRouteMixin, {
 
     await this.session.authenticate("authenticator:oidc", {
       code,
+      redirectUri: this.redirectUri,
     });
   },
 

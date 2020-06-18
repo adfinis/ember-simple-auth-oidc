@@ -1,11 +1,9 @@
-import { computed } from "@ember/object";
 import { later, cancel } from "@ember/runloop";
 import { inject as service } from "@ember/service";
 import { isServerErrorResponse, isAbortError } from "ember-fetch/errors";
 import config from "ember-simple-auth-oidc/config";
 import getAbsoluteUrl from "ember-simple-auth-oidc/utils/absoluteUrl";
 import BaseAuthenticator from "ember-simple-auth/authenticators/base";
-import Configuration from "ember-simple-auth/configuration";
 import fetch from "fetch";
 import { resolve } from "rsvp";
 
@@ -26,12 +24,6 @@ export default BaseAuthenticator.extend({
 
   _upcomingRefresh: null,
 
-  redirectUri: computed(function () {
-    const { protocol, host } = location;
-    const path = this.router.urlFor(Configuration.authenticationRoute);
-    return `${protocol}//${host}${path}`;
-  }),
-
   /**
    * Authenticate the client with the given authentication code. The
    * authentication call will return an access and refresh token which will
@@ -41,7 +33,7 @@ export default BaseAuthenticator.extend({
    * @param {String} options.code The authentication code
    * @returns {Object} The parsed response data
    */
-  async authenticate({ code }) {
+  async authenticate({ code, redirectUri }) {
     if (!tokenEndpoint || !userinfoEndpoint) {
       throw new Error(
         "Please define all OIDC endpoints (auth, token, userinfo)"
@@ -52,7 +44,7 @@ export default BaseAuthenticator.extend({
       code,
       client_id: clientId,
       grant_type: "authorization_code",
-      redirect_uri: this.redirectUri,
+      redirect_uri: redirectUri,
     };
     const body = Object.keys(bodyObject)
       .map((k) => `${k}=${encodeURIComponent(bodyObject[k])}`)
@@ -68,6 +60,9 @@ export default BaseAuthenticator.extend({
     });
 
     const data = await response.json();
+
+    // Store the redirect URI in the session for the restore call
+    data.redirectUri = redirectUri;
 
     return this._handleAuthResponse(data);
   },
@@ -93,16 +88,16 @@ export default BaseAuthenticator.extend({
    * @returns {Promise} A promise which resolves with the session data
    */
   async restore(sessionData) {
-    const { refresh_token, expireTime } = sessionData;
+    const { refresh_token, expireTime, redirectUri } = sessionData;
 
     if (!refresh_token) {
       throw new Error("Refresh token is missing");
     }
 
     if (expireTime && expireTime <= new Date().getTime()) {
-      return await this._refresh(refresh_token);
+      return await this._refresh(refresh_token, redirectUri);
     }
-    this._scheduleRefresh(expireTime, refresh_token);
+    this._scheduleRefresh(expireTime, refresh_token, redirectUri);
     return sessionData;
   },
 
@@ -112,14 +107,14 @@ export default BaseAuthenticator.extend({
    * @param {String} refresh_token The refresh token
    * @returns {Object} The parsed response data
    */
-  async _refresh(refresh_token, retryCount = 0) {
+  async _refresh(refresh_token, redirectUri, retryCount = 0) {
     let isServerError = false;
     try {
       const bodyObject = {
         refresh_token,
         client_id: clientId,
         grant_type: "refresh_token",
-        redirect_uri: this.redirectUri,
+        redirect_uri: redirectUri,
       };
       const body = Object.keys(bodyObject)
         .map((k) => `${k}=${encodeURIComponent(bodyObject[k])}`)
@@ -138,6 +133,9 @@ export default BaseAuthenticator.extend({
 
       const data = await response.json();
 
+      // Store the redirect URI in the session for the restore call
+      data.redirectUri = redirectUri;
+
       return this._handleAuthResponse(data);
     } catch (e) {
       if (
@@ -147,7 +145,10 @@ export default BaseAuthenticator.extend({
         return new Promise((resolve) => {
           later(
             this,
-            () => resolve(this._refresh(refresh_token, retryCount + 1)),
+            () =>
+              resolve(
+                this._refresh(refresh_token, redirectUri, retryCount + 1)
+              ),
             retryTimeout
           );
         });
@@ -164,7 +165,7 @@ export default BaseAuthenticator.extend({
    * @param {Number} expireTime Timestamp in milliseconds at which the access token expires
    * @param {String} token The refresh token
    */
-  _scheduleRefresh(expireTime, token) {
+  _scheduleRefresh(expireTime, token, redirectUri) {
     if (expireTime <= new Date().getTime()) {
       return;
     }
@@ -175,10 +176,14 @@ export default BaseAuthenticator.extend({
     }
     this._upcomingRefresh = later(
       this,
-      async (token) => {
-        this.trigger("sessionDataUpdated", await this._refresh(token));
+      async (token, redirectUri) => {
+        this.trigger(
+          "sessionDataUpdated",
+          await this._refresh(token, redirectUri)
+        );
       },
       token,
+      redirectUri,
       expireTime - new Date().getTime()
     );
   },
@@ -217,6 +222,7 @@ export default BaseAuthenticator.extend({
     refresh_token,
     expires_in,
     id_token,
+    redirectUri,
   }) {
     const userinfo = await this._getUserinfo(access_token);
 
@@ -224,8 +230,15 @@ export default BaseAuthenticator.extend({
     const expireTime =
       new Date().getTime() + expireInMilliseconds - refreshLeeway;
 
-    this._scheduleRefresh(expireTime, refresh_token);
+    this._scheduleRefresh(expireTime, refresh_token, redirectUri);
 
-    return { access_token, refresh_token, userinfo, id_token, expireTime };
+    return {
+      access_token,
+      refresh_token,
+      userinfo,
+      id_token,
+      expireTime,
+      redirectUri,
+    };
   },
 });
