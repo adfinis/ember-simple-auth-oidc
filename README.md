@@ -89,6 +89,27 @@ export default ApolloService {
 });
 ```
 
+### Logout / Explicit invalidation
+
+There are two ways to invalidate (logout) the current session:
+
+```js
+session.invalidate();
+```
+
+The session `invalidate` method ends the current ember-simple-auth session and therefore performs a
+logout on the ember application. Note that the session on the authorization server is not invalidated
+this way and a new token/session can simply be obtained when doing the authentication process again.
+
+```js
+session.singleLogout();
+```
+
+The session `singleLogout` method will invalidate the current ember-simple-auth session and after that
+call the `end-session` endpoint of the authorization server. This will result in a logout of the
+ember application and additionally invalidate the session on the authorization server which will logout
+the user of all applications using this authorization server!
+
 ## Configuration
 
 The addon can be configured in the project's `environment.js` file with the key `ember-simple-auth-oidc`.

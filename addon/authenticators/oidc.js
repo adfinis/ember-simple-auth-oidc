@@ -11,6 +11,8 @@ const {
   host,
   tokenEndpoint,
   userinfoEndpoint,
+  endSessionEndpoint,
+  afterLogoutUri,
   clientId,
   refreshLeeway,
   authPrefix,
@@ -68,12 +70,44 @@ export default BaseAuthenticator.extend({
   },
 
   /**
-   * Invalidate the current session with the refresh token
+   * Invalidate the current ember simple auth session
    *
    * @return {Promise} The invalidate promise
    */
   invalidate() {
     return resolve(true);
+  },
+
+  /**
+   * Invalidates the current session (of this application) and calls the
+   * `end-session` endpoint of the authorization server, which will
+   * invalidate all sessions which are handled by the authorization server
+   * (possible for multiple applications).
+   *
+   * @param {String} idToken The id_token of the session to invalidate
+   */
+  singleLogout(idToken) {
+    if (!endSessionEndpoint) {
+      return;
+    }
+
+    const params = [];
+
+    if (afterLogoutUri) {
+      params.push(`post_logout_redirect_uri=${getAbsoluteUrl(afterLogoutUri)}`);
+    }
+
+    if (idToken) {
+      params.push(`id_token_hint=${idToken}`);
+    }
+
+    this._redirectToUrl(
+      `${getAbsoluteUrl(endSessionEndpoint, host)}?${params.join("&")}`
+    );
+  },
+
+  _redirectToUrl(url) {
+    location.replace(url);
   },
 
   /**

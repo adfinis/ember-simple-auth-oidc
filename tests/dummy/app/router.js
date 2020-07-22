@@ -12,6 +12,7 @@ Router.map(function () {
   this.route("login");
   this.route("protected", function () {
     this.route("profile");
+    this.route("secret");
   });
   this.route("oidc", {
     path: "realms/test-realm/protocol/openid-connect/auth",

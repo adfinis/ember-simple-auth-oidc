@@ -1,3 +1,5 @@
+import { Response } from "miragejs";
+
 export default function () {
   this.urlPrefix = "http://localhost:4200";
   this.namespace = "";
@@ -7,10 +9,15 @@ export default function () {
     return {
       access_token: "access.token",
       refresh_token: "refresh.token",
+      id_token: "id.token",
     };
   });
 
   this.get("/realms/test-realm/protocol/openid-connect/userinfo", function () {
     return { sub: 1 };
+  });
+
+  this.get("/users/1", function () {
+    return new Response(401);
   });
 }

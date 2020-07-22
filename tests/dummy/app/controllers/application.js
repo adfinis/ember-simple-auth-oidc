@@ -7,6 +7,6 @@ export default class ApplicationController extends Controller {
 
   @action
   logout() {
-    this.session.invalidate();
+    this.session.singleLogout();
   }
 }
