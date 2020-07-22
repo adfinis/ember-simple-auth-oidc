@@ -79,7 +79,8 @@
     "edition": "octane"
   },
   "ember-addon": {
-    "configPath": "tests/dummy/config"
+    "configPath": "tests/dummy/config",
+    "after": "ember-simple-auth"
   },
   "release": {
     "extends": "@adfinis-sygroup/semantic-release-config"

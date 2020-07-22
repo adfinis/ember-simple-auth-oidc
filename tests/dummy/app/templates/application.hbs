@@ -1,6 +1,7 @@
 <LinkTo @route="index">Index</LinkTo>
-<LinkTo @route="protected">Protected</LinkTo>
+<LinkTo @route="protected">Internal</LinkTo>
 {{#if this.session.isAuthenticated}}
+  <LinkTo @route="protected.profile">Profile (401 handling demo)</LinkTo>
   <a href="#" {{on "click" this.logout}}>Logout</a>
 {{else}}
   <LinkTo @route="login">Login</LinkTo>

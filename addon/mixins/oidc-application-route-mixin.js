@@ -1,10 +1,6 @@
 import Mixin from "@ember/object/mixin";
 import { inject as service } from "@ember/service";
-import config from "ember-simple-auth-oidc/config";
-import getAbsoluteUrl from "ember-simple-auth-oidc/utils/absoluteUrl";
 import ApplicationRouteMixin from "ember-simple-auth/mixins/application-route-mixin";
-
-const { host, endSessionEndpoint, afterLogoutUri } = config;
 
 export default Mixin.create(ApplicationRouteMixin, {
   session: service(),
@@ -22,8 +18,6 @@ export default Mixin.create(ApplicationRouteMixin, {
   sessionAuthenticated() {
     const nextURL = this.session.data.nextURL;
     this.session.set("data.nextURL", undefined);
-    const idToken = this.session.data.authenticated.id_token;
-    this.session.set("data.id_token_prev", idToken);
 
     if (nextURL) {
       this.replaceWith(nextURL);
@@ -32,28 +26,15 @@ export default Mixin.create(ApplicationRouteMixin, {
     }
   },
 
-  _redirectToUrl(url) {
-    location.replace(url);
-  },
-
   sessionInvalidated() {
-    if (!endSessionEndpoint) {
-      return;
-    }
-
-    const params = [];
-
-    if (afterLogoutUri) {
-      params.push(`post_logout_redirect_uri=${getAbsoluteUrl(afterLogoutUri)}`);
-    }
-
-    const idToken = this.session.get("data.id_token_prev");
-    if (idToken) {
-      params.push(`id_token_hint=${idToken}`);
-    }
-
-    return this._redirectToUrl(
-      `${getAbsoluteUrl(endSessionEndpoint, host)}?${params.join("&")}`
-    );
+    /**
+     * Overwriting the standard behavior of the sessionInvalidated event,
+     * which is redirecting to the rootURL of the app. Since the OIDC addon
+     * also triggers a redirect in some cases and this could lead to conflicts
+     * we disable the ember-simple-auth behavior.
+     * If you wish to redirect after invalidating the session, please handle
+     * this by overwriting this event in your application route or at the
+     * exact location where the session is invalidated.
+     */
   },
 });
