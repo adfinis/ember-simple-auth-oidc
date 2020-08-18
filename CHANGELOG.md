@@ -1,3 +1,19 @@
+# [3.0.0](https://github.com/adfinis-sygroup/ember-simple-auth-oidc/compare/v2.0.0...v3.0.0) (2020-08-18)
+
+
+### Features
+
+* **single-logout:** separate session invalidate and oidc logout ([628eecb](https://github.com/adfinis-sygroup/ember-simple-auth-oidc/commit/628eecb77a518122b5c877cccf4fed2bcf279530))
+
+
+### BREAKING CHANGES
+
+* **single-logout:** Since v1.0.0 this addon will always perform a single
+logout on the authorization server. With this change the default
+behaviour is "only" a logout on the current application. If the single
+logout should be preserved the consuming application needs to manually
+call the new `singleLogout` function.
+
 # [2.0.0](https://github.com/adfinis-sygroup/ember-simple-auth-oidc/compare/v1.1.1...v2.0.0) (2020-06-18)
 
 
