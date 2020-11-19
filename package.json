@@ -34,7 +34,7 @@
     "ember-cli-htmlbars": "^5.3.1",
     "ember-fetch": "^8.0.2",
     "ember-get-config": "^0.2.4",
-    "ember-simple-auth": "^3.0.0",
+    "ember-simple-auth": "^3.0.1",
     "uuid": "^8.3.0"
   },
   "devDependencies": {
