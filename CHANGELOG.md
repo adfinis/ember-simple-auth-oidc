@@ -1,3 +1,10 @@
+## [3.0.1](https://github.com/adfinis-sygroup/ember-simple-auth-oidc/compare/v3.0.0...v3.0.1) (2020-11-19)
+
+
+### Bug Fixes
+
+* **deps:** update ember and other dependencies ([c911827](https://github.com/adfinis-sygroup/ember-simple-auth-oidc/commit/c911827779b323f3ad9b3181e6d2911eec133e49))
+
 # [3.0.0](https://github.com/adfinis-sygroup/ember-simple-auth-oidc/compare/v2.0.0...v3.0.0) (2020-08-18)
 
 
