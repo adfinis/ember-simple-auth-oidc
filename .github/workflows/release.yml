@@ -1,23 +1,31 @@
 name: Release
 
-on:
-  push:
-    branches:
-      - release
+on: workflow_dispatch
 
 jobs:
-  build:
+  release:
     name: Release
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v1
-      - uses: actions/setup-node@v1
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-node@v2
+
+      - uses: actions/cache@v2
+        with:
+          path: node_modules
+          key: node-modules-${{ hashFiles('yarn.lock') }}
+          restore-keys: |
+            node-modules-${{ hashFiles('yarn.lock') }}
+            node-modules-
 
       - name: Install dependencies
         run: yarn install
 
       - name: Release on NPM
+        run: yarn semantic-release
         env:
           GH_TOKEN: ${{ secrets.GH_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
-        run: yarn semantic-release
