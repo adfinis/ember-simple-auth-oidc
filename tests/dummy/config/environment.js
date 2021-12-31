@@ -16,7 +16,8 @@ module.exports = function (environment) {
       userinfoEndpoint: "/protocol/openid-connect/userinfo",
       afterLogoutUri: "http://localhost:4200",
       loginHintName: "custom_login_hint",
-      expiresIn: 60000, // Short expire time (60s) for testing purpose
+      expiresIn: 10000, // Short expire time (60s) for testing purpose
+      refreshLeeway: 1000,
     },
 
     EmberENV: {

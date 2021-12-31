@@ -1,9 +1,10 @@
 import Route from "@ember/routing/route";
-import OIDCApplicationRouteMixin from "ember-simple-auth-oidc/mixins/oidc-application-route-mixin";
+import { inject as service } from "@ember/service";
 
-export default class ApplicationRoute extends Route.extend(
-  OIDCApplicationRouteMixin
-) {
-  routeAfterAuthentication = "protected";
-  routeIfAlreadyAuthenticated = "protected";
+export default class ApplicationRoute extends Route {
+  @service session;
+
+  async beforeModel() {
+    await this.session.setup();
+  }
 }

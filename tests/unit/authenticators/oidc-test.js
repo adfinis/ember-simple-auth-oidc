@@ -1,3 +1,4 @@
+import { set } from "@ember/object";
 import setupMirage from "ember-cli-mirage/test-support/setup-mirage";
 import config from "ember-get-config";
 import { setupTest } from "ember-qunit";
@@ -19,15 +20,11 @@ module("Unit | Authenticator | OIDC", function (hooks) {
   setupMirage(hooks);
 
   test("it can authenticate", async function (assert) {
-    assert.expect(6);
+    assert.expect(4);
 
     const subject = this.owner.lookup("authenticator:oidc");
 
-    subject.set("redirectUri", "test");
-    subject._scheduleRefresh = (expireTime, refreshToken) => {
-      assert.ok(expireTime);
-      assert.ok(refreshToken);
-    };
+    set(subject, "redirectUri", "test");
 
     const data = await subject.authenticate({ code: "test" });
 
@@ -38,19 +35,14 @@ module("Unit | Authenticator | OIDC", function (hooks) {
   });
 
   test("it can restore a session", async function (assert) {
-    assert.expect(6);
+    assert.expect(4);
 
     const subject = this.owner.lookup("authenticator:oidc");
-
-    subject.set("redirectUri", "test");
-    subject._scheduleRefresh = (expireTime, refreshToken) => {
-      assert.ok(expireTime);
-      assert.ok(refreshToken);
-    };
 
     const data = await subject.restore({
       refresh_token: `refresh.${getTokenBody(false)}.token`,
       expireTime: new Date().getTime(),
+      redirectUri: "test",
     });
 
     assert.ok(data.access_token, "Returns an access token");
@@ -64,25 +56,13 @@ module("Unit | Authenticator | OIDC", function (hooks) {
 
     const subject = this.owner.lookup("authenticator:oidc");
 
-    subject.set("redirectUri", "test");
-
-    assert.ok(
-      await subject.invalidate({
-        refresh_token: "x.y.z",
-      })
-    );
+    assert.ok(await subject.invalidate());
   });
 
   test("it can refresh a session", async function (assert) {
-    assert.expect(6);
+    assert.expect(4);
 
     const subject = this.owner.lookup("authenticator:oidc");
-
-    subject.set("redirectUri", "test");
-    subject._scheduleRefresh = (expireTime, refreshToken) => {
-      assert.ok(expireTime);
-      assert.ok(refreshToken);
-    };
 
     const data = await subject._refresh("x.y.z");
 
@@ -90,18 +70,6 @@ module("Unit | Authenticator | OIDC", function (hooks) {
     assert.ok(data.refresh_token, "Returns a refresh token");
     assert.ok(data.userinfo, "Returns the user info");
     assert.ok(data.expireTime, "Returns the time at which the token expires");
-  });
-
-  test("it can schedule a refresh", async function (assert) {
-    assert.expect(1);
-
-    const subject = this.owner.lookup("authenticator:oidc");
-
-    subject._refresh = (token) => {
-      assert.equal(token, "testtoken");
-    };
-
-    subject._scheduleRefresh(new Date().getTime() + 500, "testtoken");
   });
 
   test("it can make a single logout", async function (assert) {

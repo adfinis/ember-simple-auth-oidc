@@ -1,11 +1,16 @@
-import { later, cancel } from "@ember/runloop";
+import { later } from "@ember/runloop";
 import { inject as service } from "@ember/service";
-import { isServerErrorResponse, isAbortError } from "ember-fetch/errors";
+import {
+  isServerErrorResponse,
+  isAbortError,
+  isBadRequestResponse,
+} from "ember-fetch/errors";
 import config from "ember-simple-auth-oidc/config";
 import getAbsoluteUrl from "ember-simple-auth-oidc/utils/absoluteUrl";
 import BaseAuthenticator from "ember-simple-auth/authenticators/base";
 import fetch from "fetch";
 import { resolve } from "rsvp";
+import { TrackedObject } from "tracked-built-ins";
 
 const {
   host,
@@ -21,10 +26,9 @@ const {
   retryTimeout,
 } = config;
 
-export default BaseAuthenticator.extend({
-  router: service(),
-
-  _upcomingRefresh: null,
+export default class OidcAuthenticator extends BaseAuthenticator {
+  @service router;
+  @service session;
 
   /**
    * Authenticate the client with the given authentication code. The
@@ -35,13 +39,22 @@ export default BaseAuthenticator.extend({
    * @param {String} options.code The authentication code
    * @returns {Object} The parsed response data
    */
-  async authenticate({ code, redirectUri }) {
+  async authenticate({ code, redirectUri, isRefresh }) {
     if (!tokenEndpoint || !userinfoEndpoint) {
       throw new Error(
         "Please define all OIDC endpoints (auth, token, userinfo)"
       );
     }
 
+    if (isRefresh) {
+      console.log("REFRESHING");
+      return await this._refresh(
+        this.session.data.authenticated.refresh_token,
+        redirectUri
+      );
+    }
+
+    console.log("AUTHENTICATING");
     const bodyObject = {
       code,
       client_id: clientId,
@@ -61,13 +74,20 @@ export default BaseAuthenticator.extend({
       body,
     });
 
+    const isServerError = isServerErrorResponse(response);
+    if (isServerError) throw new Error(response.message);
+
     const data = await response.json();
+
+    // Failed request
+    const isBadRequest = isBadRequestResponse(response);
+    if (isBadRequest) throw data;
 
     // Store the redirect URI in the session for the restore call
     data.redirectUri = redirectUri;
 
     return this._handleAuthResponse(data);
-  },
+  }
 
   /**
    * Invalidate the current ember simple auth session
@@ -76,7 +96,7 @@ export default BaseAuthenticator.extend({
    */
   invalidate() {
     return resolve(true);
-  },
+  }
 
   /**
    * Invalidates the current session (of this application) and calls the
@@ -87,6 +107,7 @@ export default BaseAuthenticator.extend({
    * @param {String} idToken The id_token of the session to invalidate
    */
   singleLogout(idToken) {
+    console.log("singleLogout");
     if (!endSessionEndpoint) {
       return;
     }
@@ -104,11 +125,11 @@ export default BaseAuthenticator.extend({
     this._redirectToUrl(
       `${getAbsoluteUrl(endSessionEndpoint, host)}?${params.join("&")}`
     );
-  },
+  }
 
   _redirectToUrl(url) {
     location.replace(url);
-  },
+  }
 
   /**
    * Restore the session after a page refresh. This will check if an access
@@ -122,6 +143,7 @@ export default BaseAuthenticator.extend({
    * @returns {Promise} A promise which resolves with the session data
    */
   async restore(sessionData) {
+    console.log("restore:", sessionData);
     const { refresh_token, expireTime, redirectUri } = sessionData;
 
     if (!refresh_token) {
@@ -131,9 +153,9 @@ export default BaseAuthenticator.extend({
     if (expireTime && expireTime <= new Date().getTime()) {
       return await this._refresh(refresh_token, redirectUri);
     }
-    this._scheduleRefresh(expireTime, refresh_token, redirectUri);
+
     return sessionData;
-  },
+  }
 
   /**
    * Refresh the access token
@@ -167,6 +189,10 @@ export default BaseAuthenticator.extend({
 
       const data = await response.json();
 
+      // Failed refresh
+      const isBadRequest = isBadRequestResponse(response);
+      if (isBadRequest) return Promise.reject(data);
+
       // Store the redirect URI in the session for the restore call
       data.redirectUri = redirectUri;
 
@@ -189,38 +215,7 @@ export default BaseAuthenticator.extend({
       }
       throw e;
     }
-  },
-
-  /**
-   * Schedule a refresh of the access token.
-   *
-   * This refresh needs to happen before the access token actually expires.
-   *
-   * @param {Number} expireTime Timestamp in milliseconds at which the access token expires
-   * @param {String} token The refresh token
-   */
-  _scheduleRefresh(expireTime, token, redirectUri) {
-    if (expireTime <= new Date().getTime()) {
-      return;
-    }
-
-    if (this._upcomingRefresh) {
-      cancel(this._upcomingRefresh);
-      this._upcomingRefresh = null;
-    }
-    this._upcomingRefresh = later(
-      this,
-      async (token, redirectUri) => {
-        this.trigger(
-          "sessionDataUpdated",
-          await this._refresh(token, redirectUri)
-        );
-      },
-      token,
-      redirectUri,
-      expireTime - new Date().getTime()
-    );
-  },
+  }
 
   /**
    * Request user information from the openid userinfo endpoint
@@ -239,7 +234,7 @@ export default BaseAuthenticator.extend({
     const userinfo = await response.json();
 
     return userinfo;
-  },
+  }
 
   /**
    * Handle an auth response. This method parses the token and schedules a
@@ -264,15 +259,13 @@ export default BaseAuthenticator.extend({
     const expireTime =
       new Date().getTime() + expireInMilliseconds - refreshLeeway;
 
-    this._scheduleRefresh(expireTime, refresh_token, redirectUri);
-
-    return {
+    return new TrackedObject({
       access_token,
       refresh_token,
       userinfo,
       id_token,
       expireTime,
       redirectUri,
-    };
-  },
-});
+    });
+  }
+}

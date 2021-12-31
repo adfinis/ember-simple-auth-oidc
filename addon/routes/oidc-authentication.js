@@ -1,32 +1,37 @@
 import { assert } from "@ember/debug";
-import { computed } from "@ember/object";
-import Mixin from "@ember/object/mixin";
+import Route from "@ember/routing/route";
 import { inject as service } from "@ember/service";
 import config from "ember-simple-auth-oidc/config";
 import getAbsoluteUrl from "ember-simple-auth-oidc/utils/absoluteUrl";
-import UnauthenticatedRouteMixin from "ember-simple-auth/mixins/unauthenticated-route-mixin";
 import { v4 } from "uuid";
 
 const { host, clientId, authEndpoint, scope, loginHintName } = config;
 
-export default Mixin.create(UnauthenticatedRouteMixin, {
-  session: service(),
-  router: service(),
+export default class OIDCAuthenticationRoute extends Route {
+  @service session;
+  @service router;
 
-  queryParams: {
+  queryParams = {
     code: { refreshModel: false },
     state: { refreshModel: false },
-  },
+  };
 
-  redirectUri: computed("authenticationRoute", "routeName", function () {
+  get redirectUri() {
     const { protocol, host } = location;
     const path = this.router.urlFor(this.routeName);
     return `${protocol}//${host}${path}`;
-  }),
+  }
 
   _redirectToUrl(url) {
     location.replace(url);
-  },
+  }
+
+  beforeModel(transition) {
+    if (transition.from) {
+      console.log("prohibitAuthentication:", transition);
+      this.session.prohibitAuthentication(transition.from.name);
+    }
+  }
 
   /**
    * Handle unauthenticated requests
@@ -58,15 +63,18 @@ export default Mixin.create(UnauthenticatedRouteMixin, {
       ? transition.to.queryParams
       : transition.queryParams;
 
+    console.log("queryParams:", queryParams);
+
     if (queryParams.code) {
       return await this._handleCallbackRequest(
         queryParams.code,
-        queryParams.state
+        queryParams.state,
+        transition
       );
     }
 
     return this._handleRedirectRequest(queryParams);
-  },
+  }
 
   /**
    * Authenticate with the authentication code given by the identity provider in the redirect.
@@ -85,7 +93,13 @@ export default Mixin.create(UnauthenticatedRouteMixin, {
    * @param {String} state The state (uuid4) passed by the identity provider
    */
   async _handleCallbackRequest(code, state) {
+    console.log("_handleCallbackRequest");
+    console.log("state:", state);
+    console.log("data.state", this.session.data.state);
+    console.log("this.redirectUri:", this.redirectUri);
+
     if (state !== this.session.data.state) {
+      console.log("NO MATCH");
       assert("State did not match");
     }
 
@@ -95,7 +109,7 @@ export default Mixin.create(UnauthenticatedRouteMixin, {
       code,
       redirectUri: this.redirectUri,
     });
-  },
+  }
 
   /**
    * Redirect the client to the configured identity provider login.
@@ -106,18 +120,22 @@ export default Mixin.create(UnauthenticatedRouteMixin, {
    * CSRF attacks.
    */
   _handleRedirectRequest(queryParams) {
+    console.log("_handleRedirectRequest");
+
     const state = v4();
 
+    // Store state to session data
     this.session.set("data.state", state);
 
     /**
      * Store the `nextURL` in the localstorage so when the user returns after
      * the login he can be sent to the initial destination.
      */
-    if (!this.session.get("data.nextURL")) {
+    console.log("this.session.data.nextURL:", this.session.data.nextURL);
+    if (!this.session.data.nextURL) {
       this.session.set(
         "data.nextURL",
-        this.session.get("attemptedTransition.intent.url")
+        this.session.attemptedTransition?.intent.url
       );
     }
 
@@ -135,6 +153,9 @@ export default Mixin.create(UnauthenticatedRouteMixin, {
       .filter(Boolean)
       .join("&");
 
+    console.log(
+      `_redirectToUrl: ${getAbsoluteUrl(host)}${authEndpoint}?${search}`
+    );
     this._redirectToUrl(`${getAbsoluteUrl(host)}${authEndpoint}?${search}`);
-  },
-});
+  }
+}

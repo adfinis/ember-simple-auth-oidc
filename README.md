@@ -15,50 +15,65 @@ $ ember install ember-simple-auth-oidc
 ```
 
 ## Usage
+To use the oidc authorization code flow the following elements need to be added
+to the Ember application.
 
-To use the oidc authorization code flow add at least the following mixins to
-their respective routes:
-
-The `oidc-application-route-mixin` replaces the Ember Simple Auth `application-route-mixin`.
-
-```js
-// app/routes/application.js
-
-import Route from "@ember/routing/route";
-import OIDCApplicationRouteMixin from "ember-simple-auth-oidc/mixins/oidc-application-route-mixin";
-
-export default Route.extend(OIDCApplicationRouteMixin, {});
-```
-
-The `oidc-authentication-route-mixin` must cover the login / authentication route
-(for example the Ember Simple Auth default `/login`).
+The login / authentication route (for example the Ember Simple Auth default `/login`)
+needs to extend from the `OIDCAuthenticationRoute`, which handles the authentication
+procedure. In case the user is already authenticated, the transition is aborted.
 
 ```js
 // app/routes/login.js
 
-import Route from "@ember/routing/route";
-import OIDCAuthenticationRouteMixin from "ember-simple-auth-oidc/mixins/oidc-authentication-route-mixin";
+import OIDCAuthenticationRoute from "ember-simple-auth-oidc/routes/oidc-authentication";
 
-export default Route.extend(OIDCAuthenticationRouteMixin, {});
+export default class LoginRoute extends OIDCAuthenticationRoute {}
 ```
 
-To include authorization info in all Ember Data requests add the `oidc-adapter-mixin`
-into the application adapter.
+Authenticated routes need to call `session.requireAuthentication` in their 
+respective `beforeModel`, to ensure that unauthenticated transitions are 
+prevented and redirected to the authentication route.
+
+```js
+// app/routes/protected.js
+
+import Route from "@ember/routing/route";
+import { inject as service } from "@ember/service";
+
+export default class ProtectedRoute extends Route {
+  @service session;
+
+  beforeModel(transition) {
+    this.session.requireAuthentication(transition, "login");
+  }
+}
+```
+
+To include authorization info in all Ember Data requests override `headers` in
+the application adapter and include `session.headers` alongside any other
+necessary headers. By extending the application adapter from the `OIDCAdapter`,
+the `access_token` is refreshed before Ember Data requests, if necessary. The
+`OIDCAdapter` also provides default headers with the authorization header
+included.
 
 ```js
 // app/adapters/application.js
 
-import JSONAPIAdapter from "@ember-data/adapter/json-api";
-import OIDCAdapterMixin from "ember-simple-auth-oidc/mixins/oidc-adapter-mixin";
+import { inject as service } from "@ember/service";
+import OIDCAdapter from "ember-simple-auth-oidc/adapters/oidc-adapter";
 
-const BaseAdapter = JSONAPIAdapter.extend(OIDCAdapterMixin);
+export default class ApplicationAdapter extends OIDCAdapter {
+  @service session;
 
-export default class ApplicationAdapter extends BaseAdapter {}
+  get headers() {
+    return { ...this.session.headers, "Content-Language": "en-us" };
+  }
+}
 ```
 
-This mixin already handles unauthorized requests and performs an invalidation
-of the session which also remembers your visited URL. If you want this
-behaviour for other request services as well, you can use the
+The `OIDCAdapter` already handles unauthorized requests and performs an 
+invalidation of the session which also remembers your visited URL. If you want 
+this behaviour for other request services as well, you can use the
 `handleUnauthorized` function. The following snippet shows an example
 `ember-apollo-client` afterware (error handling) implementation:
 
@@ -70,11 +85,11 @@ import { onError } from "apollo-link-error";
 import ApolloService from "ember-apollo-client/services/apollo";
 import { handleUnauthorized } from "ember-simple-auth-oidc";
 
-export default ApolloService {
-  session: service(),
+export default class ApolloService {
+  @service session;
 
-  link() {
-    const httpLink = this._super(...arguments);
+  link(...args) {
+    const httpLink = super.link(...args);
 
     const afterware = onError(error => {
       const { networkError } = error;
@@ -86,7 +101,26 @@ export default ApolloService {
 
     return afterware.concat(httpLink);
   }
-});
+}
+```
+
+[Ember Simple Auth v4.1.0](https://github.com/simplabs/ember-simple-auth/releases/tag/4.1.0) 
+encourages the manual setup of the session service in the `beforeModel` of the 
+application route.
+
+```js
+// app/routes/application.js
+
+import Route from "@ember/routing/route";
+import { inject as service } from "@ember/service";
+
+export default class ApplicationRoute extends Route {
+  @service session;
+
+  async beforeModel() {
+    await this.session.setup();
+  }
+}
 ```
 
 ### Logout / Explicit invalidation
