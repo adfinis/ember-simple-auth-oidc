@@ -1,6 +1,13 @@
+import { inject as service } from "@ember/service";
+import { enqueueTask } from "ember-concurrency-decorators";
+import config from "ember-simple-auth-oidc/config";
 import SessionServiceESA from "ember-simple-auth/services/session";
 
-export default SessionServiceESA.extend({
+const { authHeaderName, authPrefix, tokenPropertyName } = config;
+
+export default class Service extends SessionServiceESA {
+  @service router;
+
   singleLogout() {
     const session = this.session; // InternalSession
     const authenticator = session._lookupAuthenticator(session.authenticator);
@@ -11,5 +18,88 @@ export default SessionServiceESA.extend({
 
     // Trigger a single logout on the authorization server
     return authenticator.singleLogout(idToken);
-  },
-});
+  }
+
+  get redirectUri() {
+    const { protocol, host } = location;
+    const path = this.router.currentURL;
+    return `${protocol}//${host}${path}`;
+  }
+
+  /**
+   * Watch the `data.authenticated.id_token` to recomputed the headers as
+   * according to the openid-connect specification the `id_token` must always
+   * be included.
+   * https://openid.net/specs/openid-connect-core-1_0.html#TokenResponse
+   */
+  get headers() {
+    const headers = {};
+
+    if (this.isAuthenticated) {
+      const token = this.data.authenticated[tokenPropertyName];
+      Object.assign(headers, { [authHeaderName]: `${authPrefix} ${token}` });
+    }
+
+    console.log("headers:", headers);
+    return headers;
+  }
+
+  @enqueueTask
+  *refreshAuthentication() {
+    const expireTime = this.data.authenticated.expireTime;
+    const isExpired = expireTime && expireTime <= new Date().getTime();
+    console.log(
+      `access_token | expired: ${isExpired}, expireTime: ${expireTime}`
+    );
+
+    if (this.isAuthenticated && isExpired) {
+      return yield this.session.authenticate("authenticator:oidc", {
+        redirectUri: this.redirectUri,
+        isRefresh: true,
+      });
+    }
+  }
+
+  async requireAuthentication(transition, routeOrCallback) {
+    await this.refreshAuthentication.perform();
+    return super.requireAuthentication(transition, routeOrCallback);
+  }
+
+  /**
+   * This method is called after a successful authentication and continues an
+   * intercepted transition if a URL is stored in `nextURL` in the
+   * localstorage. Otherwise call the parent/super to invoke the normal
+   * behavior of the `sessionAuthenticated` method.
+   *
+   * @method handleAuthentication
+   * @public
+   */
+  handleAuthentication(routeAfterAuthentication) {
+    console.log("handleAuthentication");
+    const nextURL = this.data.nextURL;
+    // nextURL is stored to the localStorage using the 
+    // session service's set method
+    // eslint-disable-next-line ember/classic-decorator-no-classic-methods
+    this.set("data.nextURL", undefined);
+
+    if (nextURL) {
+      console.log("nextURL:", nextURL);
+      this.router.replaceWith(nextURL);
+    } else {
+      super.handleAuthentication(routeAfterAuthentication);
+    }
+  }
+
+  /**
+   * Overwriting the standard behavior of handleInvalidation,
+   * which is redirecting to the rootURL of the app. Since the OIDC addon
+   * also triggers a redirect in some cases and this could lead to conflicts
+   * we disable the ember-simple-auth behavior.
+   * If you wish to redirect after invalidating the session, please handle
+   * this by overwriting this method in your application route or at the
+   * exact location where the session is invalidated.
+   */
+  handleInvalidation() {
+    console.log("handleInvalidation");
+  }
+}
