@@ -47,14 +47,12 @@ export default class OidcAuthenticator extends BaseAuthenticator {
     }
 
     if (isRefresh) {
-      console.log("REFRESHING");
       return await this._refresh(
         this.session.data.authenticated.refresh_token,
         redirectUri
       );
     }
 
-    console.log("AUTHENTICATING");
     const bodyObject = {
       code,
       client_id: clientId,
@@ -107,7 +105,6 @@ export default class OidcAuthenticator extends BaseAuthenticator {
    * @param {String} idToken The id_token of the session to invalidate
    */
   singleLogout(idToken) {
-    console.log("singleLogout");
     if (!endSessionEndpoint) {
       return;
     }
@@ -143,7 +140,6 @@ export default class OidcAuthenticator extends BaseAuthenticator {
    * @returns {Promise} A promise which resolves with the session data
    */
   async restore(sessionData) {
-    console.log("restore:", sessionData);
     const { refresh_token, expireTime, redirectUri } = sessionData;
 
     if (!refresh_token) {

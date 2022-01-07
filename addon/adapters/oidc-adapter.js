@@ -39,7 +39,6 @@ export default class OIDCAdapter extends JSONAPIAdapter {
   }
 
   handleResponse(status, ...args) {
-    console.log("handleResponse:", status);
     if (status === 401) {
       handleUnauthorized(this.session);
     }
