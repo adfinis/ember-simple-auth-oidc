@@ -58,7 +58,7 @@ module("Unit | Adapter | oidc adapter", function (hooks) {
 
     adapter.handleResponse(401, {}, {}, {});
 
-    assert.equal(
+    assert.strictEqual(
       adapter.session.data.nextURL,
       location.href.replace(location.origin, "")
     );

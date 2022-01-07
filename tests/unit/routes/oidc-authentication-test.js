@@ -58,7 +58,7 @@ module("Unit | Route | oidc-authentication", function (hooks) {
           authenticated: {},
         },
         async authenticate(_, { code }) {
-          assert.equal(code, "sometestcode");
+          assert.strictEqual(code, "sometestcode");
         },
         set() {},
       };
@@ -81,7 +81,7 @@ module("Unit | Route | oidc-authentication", function (hooks) {
           authenticated: {},
         },
         async authenticate(_, { code }) {
-          assert.equal(code, "sometestcode");
+          assert.strictEqual(code, "sometestcode");
         },
         set() {},
       };
@@ -189,7 +189,7 @@ module("Unit | Route | oidc-authentication", function (hooks) {
         },
       };
       _redirectToUrl() {
-        assert.equal(this.session.data.nextURL, "protected/profile");
+        assert.strictEqual(this.session.data.nextURL, "protected/profile");
       }
     })();
 

@@ -11,21 +11,21 @@ module("Unit | Utils | absoluteUrl", function (hooks) {
     const url = "/login";
     const host = "https://myTestHost";
 
-    assert.equal(
+    assert.strictEqual(
       getAbsoluteUrl(url),
       `${location.protocol}//${location.host}/login`
     );
 
-    assert.equal(getAbsoluteUrl(url, host), `${host}/login`);
+    assert.strictEqual(getAbsoluteUrl(url, host), `${host}/login`);
   });
 
   test("it does not transform an absolute url", function (assert) {
     assert.expect(2);
 
     const url = "http://myTestHost/login";
-    assert.equal(getAbsoluteUrl(url), url);
+    assert.strictEqual(getAbsoluteUrl(url), url);
 
     const urlSSL = "https://myTestHost/login";
-    assert.equal(getAbsoluteUrl(urlSSL), urlSSL);
+    assert.strictEqual(getAbsoluteUrl(urlSSL), urlSSL);
   });
 });
