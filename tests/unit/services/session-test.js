@@ -78,7 +78,7 @@ module("Unit | Service | session", function (hooks) {
 
     const router = this.owner.lookup("service:router");
     router.replaceWith = (url) => {
-      assert.equal(url, "protected/secret");
+      assert.strictEqual(url, "protected/secret");
     };
 
     session.handleAuthentication();
