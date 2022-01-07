@@ -28,7 +28,6 @@ export default class OIDCAuthenticationRoute extends Route {
 
   beforeModel(transition) {
     if (transition.from) {
-      console.log("prohibitAuthentication:", transition);
       this.session.prohibitAuthentication(transition.from.name);
     }
   }
@@ -63,8 +62,6 @@ export default class OIDCAuthenticationRoute extends Route {
       ? transition.to.queryParams
       : transition.queryParams;
 
-    console.log("queryParams:", queryParams);
-
     if (queryParams.code) {
       return await this._handleCallbackRequest(
         queryParams.code,
@@ -93,13 +90,7 @@ export default class OIDCAuthenticationRoute extends Route {
    * @param {String} state The state (uuid4) passed by the identity provider
    */
   async _handleCallbackRequest(code, state) {
-    console.log("_handleCallbackRequest");
-    console.log("state:", state);
-    console.log("data.state", this.session.data.state);
-    console.log("this.redirectUri:", this.redirectUri);
-
     if (state !== this.session.data.state) {
-      console.log("NO MATCH");
       assert("State did not match");
     }
 
@@ -120,8 +111,6 @@ export default class OIDCAuthenticationRoute extends Route {
    * CSRF attacks.
    */
   _handleRedirectRequest(queryParams) {
-    console.log("_handleRedirectRequest");
-
     const state = v4();
 
     // Store state to session data
@@ -131,7 +120,6 @@ export default class OIDCAuthenticationRoute extends Route {
      * Store the `nextURL` in the localstorage so when the user returns after
      * the login he can be sent to the initial destination.
      */
-    console.log("this.session.data.nextURL:", this.session.data.nextURL);
     if (!this.session.data.nextURL) {
       this.session.set(
         "data.nextURL",
@@ -153,9 +141,6 @@ export default class OIDCAuthenticationRoute extends Route {
       .filter(Boolean)
       .join("&");
 
-    console.log(
-      `_redirectToUrl: ${getAbsoluteUrl(host)}${authEndpoint}?${search}`
-    );
     this._redirectToUrl(`${getAbsoluteUrl(host)}${authEndpoint}?${search}`);
   }
 }

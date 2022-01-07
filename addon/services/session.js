@@ -40,7 +40,6 @@ export default class Service extends SessionServiceESA {
       Object.assign(headers, { [authHeaderName]: `${authPrefix} ${token}` });
     }
 
-    console.log("headers:", headers);
     return headers;
   }
 
@@ -48,9 +47,6 @@ export default class Service extends SessionServiceESA {
   *refreshAuthentication() {
     const expireTime = this.data.authenticated.expireTime;
     const isExpired = expireTime && expireTime <= new Date().getTime();
-    console.log(
-      `access_token | expired: ${isExpired}, expireTime: ${expireTime}`
-    );
 
     if (this.isAuthenticated && isExpired) {
       return yield this.session.authenticate("authenticator:oidc", {
@@ -75,7 +71,6 @@ export default class Service extends SessionServiceESA {
    * @public
    */
   handleAuthentication(routeAfterAuthentication) {
-    console.log("handleAuthentication");
     const nextURL = this.data.nextURL;
     // nextURL is stored to the localStorage using the
     // session service's set method
@@ -83,7 +78,6 @@ export default class Service extends SessionServiceESA {
     this.set("data.nextURL", undefined);
 
     if (nextURL) {
-      console.log("nextURL:", nextURL);
       this.router.replaceWith(nextURL);
     } else {
       super.handleAuthentication(routeAfterAuthentication);
@@ -99,7 +93,5 @@ export default class Service extends SessionServiceESA {
    * this by overwriting this method in your application route or at the
    * exact location where the session is invalidated.
    */
-  handleInvalidation() {
-    console.log("handleInvalidation");
-  }
+  handleInvalidation() {}
 }
