@@ -77,7 +77,7 @@ export default class Service extends SessionServiceESA {
   handleAuthentication(routeAfterAuthentication) {
     console.log("handleAuthentication");
     const nextURL = this.data.nextURL;
-    // nextURL is stored to the localStorage using the 
+    // nextURL is stored to the localStorage using the
     // session service's set method
     // eslint-disable-next-line ember/classic-decorator-no-classic-methods
     this.set("data.nextURL", undefined);
