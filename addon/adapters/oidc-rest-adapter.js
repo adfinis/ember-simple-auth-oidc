@@ -1,8 +1,8 @@
-import JSONAPIAdapter from "@ember-data/adapter/json-api";
+import RESTAdapter from "@ember-data/adapter/rest";
 import { inject as service } from "@ember/service";
 import { handleUnauthorized } from "ember-simple-auth-oidc";
 
-export default class OIDCAdapter extends JSONAPIAdapter {
+export default class OIDCRESTAdapter extends RESTAdapter {
   @service session;
 
   constructor(...args) {

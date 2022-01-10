@@ -1,7 +1,7 @@
 import { inject as service } from "@ember/service";
-import OIDCAdapter from "ember-simple-auth-oidc/adapters/oidc-adapter";
+import OIDCJSONAPIAdapter from "ember-simple-auth-oidc/adapters/oidc-json-api-adapter";
 
-export default class ApplicationAdapter extends OIDCAdapter {
+export default class ApplicationAdapter extends OIDCJSONAPIAdapter {
   @service session;
 
   get headers() {

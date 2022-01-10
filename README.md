@@ -58,18 +58,19 @@ export default class ProtectedRoute extends Route {
 
 To include authorization info in all Ember Data requests override `headers` in
 the application adapter and include `session.headers` alongside any other
-necessary headers. By extending the application adapter from the `OIDCAdapter`,
-the `access_token` is refreshed before Ember Data requests, if necessary. The
-`OIDCAdapter` also provides default headers with the authorization header
-included.
+necessary headers. By extending the application adapter from either of the
+provided `OIDCJSONAPIAdapter` or `OIDCRESTAdapter`, the `access_token` is 
+refreshed before Ember Data requests, if necessary. Both the `OIDCJSONAPIAdapter` 
+and the `OIDCRESTAdapter` also provide default headers with the authorization 
+header included.
 
 ```js
 // app/adapters/application.js
 
 import { inject as service } from "@ember/service";
-import OIDCAdapter from "ember-simple-auth-oidc/adapters/oidc-adapter";
+import OIDCJSONAPIAdapter from "ember-simple-auth-oidc/adapters/oidc-json-api-adapter";
 
-export default class ApplicationAdapter extends OIDCAdapter {
+export default class ApplicationAdapter extends OIDCJSONAPIAdapter {
   @service session;
 
   get headers() {
@@ -78,11 +79,11 @@ export default class ApplicationAdapter extends OIDCAdapter {
 }
 ```
 
-The `OIDCAdapter` already handles unauthorized requests and performs an 
-invalidation of the session which also remembers your visited URL. If you want 
-this behaviour for other request services as well, you can use the
-`handleUnauthorized` function. The following snippet shows an example
-`ember-apollo-client` afterware (error handling) implementation:
+Both the `OIDCJSONAPIAdapter` and `OIDCRESTAdapter` already handle unauthorized 
+requests and perform an invalidation of the session, which also remembers your 
+visited URL. If you want this behaviour for other request services as well, you 
+can use the `handleUnauthorized` function. The following snippet shows an 
+example `ember-apollo-client` afterware (error handling) implementation:
 
 ```js
 // app/services/apollo.js
