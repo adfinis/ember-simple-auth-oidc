@@ -112,24 +112,10 @@ export default class CustomApolloService extends ApolloService {
 }
 ```
 
-[Ember Simple Auth v4.1.0](https://github.com/simplabs/ember-simple-auth/releases/tag/4.1.0) 
-encourages the manual setup of the session service in the `beforeModel` of the 
-application route.
+Ember Simple Auth encourages the manual setup of the session service in the `beforeModel` of the 
+application route, starting with [version 4.1.0](https://github.com/simplabs/ember-simple-auth/releases/tag/4.1.0). 
+The relevant changes are described in their [upgrade to v4 guide](https://github.com/simplabs/ember-simple-auth/blob/master/guides/upgrade-to-v4.md).
 
-```js
-// app/routes/application.js
-
-import Route from "@ember/routing/route";
-import { inject as service } from "@ember/service";
-
-export default class ApplicationRoute extends Route {
-  @service session;
-
-  async beforeModel() {
-    await this.session.setup();
-  }
-}
-```
 
 ### Logout / Explicit invalidation
 
