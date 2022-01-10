@@ -3,14 +3,14 @@ import setupMirage from "ember-cli-mirage/test-support/setup-mirage";
 import { setupTest } from "ember-qunit";
 import { module, test } from "qunit";
 
-module("Unit | Adapter | oidc adapter", function (hooks) {
+module("Unit | Adapter | oidc rest adapter", function (hooks) {
   setupTest(hooks);
   setupMirage(hooks);
 
   test("it sets the correct headers", async function (assert) {
     assert.expect(1);
 
-    const adapter = this.owner.lookup("adapter:oidc-adapter");
+    const adapter = this.owner.lookup("adapter:oidc-rest-adapter");
     const session = this.owner.lookup("service:session");
     set(session, "session.isAuthenticated", true);
     session.data.authenticated.access_token = "access.token";
@@ -21,7 +21,7 @@ module("Unit | Adapter | oidc adapter", function (hooks) {
   test("it refreshes the access token before ember-data requests", async function (assert) {
     assert.expect(21);
 
-    const adapter = this.owner.lookup("adapter:oidc-adapter");
+    const adapter = this.owner.lookup("adapter:oidc-rest-adapter");
 
     adapter.session.refreshAuthentication.perform = () => {
       assert.step("refresh");
@@ -48,7 +48,7 @@ module("Unit | Adapter | oidc adapter", function (hooks) {
   test("it invalidates the session correctly on a 401 response", function (assert) {
     assert.expect(3);
 
-    const adapter = this.owner.lookup("adapter:oidc-adapter");
+    const adapter = this.owner.lookup("adapter:oidc-rest-adapter");
     const session = adapter.session;
     session.session.content = {};
     session.session.isAuthenticated = true;
