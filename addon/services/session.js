@@ -1,5 +1,5 @@
 import { inject as service } from "@ember/service";
-import { enqueueTask } from "ember-concurrency-decorators";
+import { enqueueTask } from "ember-concurrency";
 import config from "ember-simple-auth-oidc/config";
 import SessionServiceESA from "ember-simple-auth/services/session";
 
