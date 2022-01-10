@@ -92,11 +92,11 @@ import { onError } from "apollo-link-error";
 import ApolloService from "ember-apollo-client/services/apollo";
 import { handleUnauthorized } from "ember-simple-auth-oidc";
 
-export default class ApolloService {
+export default class CustomApolloService extends ApolloService {
   @service session;
 
-  link(...args) {
-    const httpLink = super.link(...args);
+  link() {
+    const httpLink = super.link();
 
     const afterware = onError(error => {
       const { networkError } = error;

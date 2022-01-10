@@ -17,9 +17,7 @@ export default function () {
     return { sub: 1 };
   });
 
-  this.get("/users", function (schema) {
-    return schema.users.all();
-  });
+  this.get("/users");
 
   this.get("/users/1", function () {
     return new Response(401);
