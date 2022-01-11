@@ -36,7 +36,7 @@ module("Unit | Route | oidc-authentication", function (hooks) {
     const route = this.owner.lookup("route:oidc-authentication");
     route.session = this.owner.lookup("service:session");
     set(route.session, "data.authenticated", {});
-    set(route.session, "attemptedTransition", { intent: {} });
+    set(route.session, "attemptedTransition", { to: {} });
     route._redirectToUrl = (url) => {
       assert.ok(url.includes(authEndpoint));
       assert.ok(url.includes(`client_id=${clientId}`));
@@ -159,7 +159,7 @@ module("Unit | Route | oidc-authentication", function (hooks) {
       session = {
         data: { authenticated: {} },
         set() {},
-        attemptedTransition: { intent: {} },
+        attemptedTransition: { to: {} },
       };
       _redirectToUrl(url) {
         assert.ok(url.includes(authEndpoint));
@@ -178,18 +178,20 @@ module("Unit | Route | oidc-authentication", function (hooks) {
   test("it stores an intercepted transition", function (assert) {
     assert.expect(1);
 
+    const router = this.owner.lookup("service:router");
     const routeFactory = this.owner.factoryFor("route:oidc-authentication");
     const route = new (class extends routeFactory.class {
+      router = router;
       redirectUri = "test";
       session = {
         data: { authenticated: {} },
-        attemptedTransition: { intent: { url: "protected/profile" } },
+        attemptedTransition: { to: { name: "protected.users" } },
         set(key, value) {
           set(this, key, value);
         },
       };
       _redirectToUrl() {
-        assert.strictEqual(this.session.data.nextURL, "protected/profile");
+        assert.strictEqual(this.session.data.nextURL, "/protected/users");
       }
     })();
 
