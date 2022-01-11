@@ -74,11 +74,11 @@ module("Unit | Service | session", function (hooks) {
     assert.expect(1);
 
     const session = this.owner.lookup("service:session");
-    set(session, "data.nextURL", "protected/secret");
+    set(session, "data.nextURL", "/protected/secret");
 
     const router = this.owner.lookup("service:router");
     router.replaceWith = (url) => {
-      assert.strictEqual(url, "protected/secret");
+      assert.strictEqual(url, "/protected/secret");
     };
 
     session.handleAuthentication();

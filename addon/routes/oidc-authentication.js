@@ -121,10 +121,9 @@ export default class OIDCAuthenticationRoute extends Route {
      * the login he can be sent to the initial destination.
      */
     if (!this.session.data.nextURL) {
-      this.session.set(
-        "data.nextURL",
-        this.session.attemptedTransition?.intent.url
-      );
+      const route = this.session.attemptedTransition?.to.name;
+      const url = route && this.router.urlFor(route);
+      this.session.set("data.nextURL", url);
     }
 
     // forward `login_hint` query param if present
