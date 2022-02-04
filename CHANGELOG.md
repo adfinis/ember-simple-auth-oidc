@@ -1,3 +1,29 @@
+# [4.0.0](https://github.com/adfinis-sygroup/ember-simple-auth-oidc/compare/v3.0.1...v4.0.0) (2022-02-04)
+
+
+### Bug Fixes
+
+* **authentication:** fix collection of attempted transition url ([503a0d5](https://github.com/adfinis-sygroup/ember-simple-auth-oidc/commit/503a0d5eb0efe0e2f3ba5fad556237cb8b386cfd))
+* **config:** remove usage of ember-get-config ([74a9c0d](https://github.com/adfinis-sygroup/ember-simple-auth-oidc/commit/74a9c0de5fed30dbedd966e19e8059f9d7699ea9))
+* **debug:** remove console log statements ([eb3af4b](https://github.com/adfinis-sygroup/ember-simple-auth-oidc/commit/eb3af4b983f45805c57cdc21a5675367057e993a))
+* **dummy:** correct session setup and fix serializer deprecation ([aae998d](https://github.com/adfinis-sygroup/ember-simple-auth-oidc/commit/aae998da253c7edfe24abcabf242630d816fe5e3))
+* **lint:** add missing linter deps and fix linting errors ([d21c18e](https://github.com/adfinis-sygroup/ember-simple-auth-oidc/commit/d21c18e6b867aedd7d6f28c3b0d4c0aad2bf2c0e))
+* minor fixes and requested changes ([28a67ac](https://github.com/adfinis-sygroup/ember-simple-auth-oidc/commit/28a67ac9ef8ffdfe7a6906659e3e02ebaad586ce))
+
+
+* feat(adapter)!: add oidc rest adapter and refactor adapter naming ([2c9f446](https://github.com/adfinis-sygroup/ember-simple-auth-oidc/commit/2c9f4466a4e36d25c49395e131719cb9b61e8d5d))
+* refactor(octane)!: refactor to native js classes and remove mixins ([b3610e8](https://github.com/adfinis-sygroup/ember-simple-auth-oidc/commit/b3610e824df94fcf2bd008d9deb96b6ae48b6aa2))
+
+
+### BREAKING CHANGES
+
+* Include an adapter subclass of the Ember
+RestAdapter to handle OIDC token refreshes and unauthorized
+request handling. The existing OIDCadapter is renamed to
+OIDCJSONAPIAdapter to clarify the base class origin.
+* mixins can no longer be used, requires migration
+of consuming ember applications.
+
 # [4.0.0-beta.2](https://github.com/adfinis-sygroup/ember-simple-auth-oidc/compare/v4.0.0-beta.1...v4.0.0-beta.2) (2022-02-04)
 
 
