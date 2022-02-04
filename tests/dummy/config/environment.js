@@ -5,7 +5,7 @@ module.exports = function (environment) {
     modulePrefix: "dummy",
     environment,
     rootURL: "/",
-    locationType: "auto",
+    locationType: "history",
 
     "ember-simple-auth-oidc": {
       host: "http://localhost:4200/realms/test-realm",
