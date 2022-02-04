@@ -20,6 +20,7 @@ in its implementation, if IE browser support is necessary, a polyfill needs to b
 ```bash
 $ ember install ember-simple-auth-oidc
 ```
+If you're upgrading from 3.x to 4.x see the [upgrade guide](docs/migration-v4.md).
 
 ## Usage
 To use the oidc authorization code flow the following elements need to be added
