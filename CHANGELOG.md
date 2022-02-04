@@ -1,3 +1,10 @@
+# [4.0.0-beta.2](https://github.com/adfinis-sygroup/ember-simple-auth-oidc/compare/v4.0.0-beta.1...v4.0.0-beta.2) (2022-02-04)
+
+
+### Bug Fixes
+
+* **config:** remove usage of ember-get-config ([74a9c0d](https://github.com/adfinis-sygroup/ember-simple-auth-oidc/commit/74a9c0de5fed30dbedd966e19e8059f9d7699ea9))
+
 # [4.0.0-beta.1](https://github.com/adfinis-sygroup/ember-simple-auth-oidc/compare/v3.0.1...v4.0.0-beta.1) (2022-01-11)
 
 
