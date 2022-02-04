@@ -1,6 +1,7 @@
 import { setupTest } from "ember-qunit";
-import getAbsoluteUrl from "ember-simple-auth-oidc/utils/absoluteUrl";
 import { module, test } from "qunit";
+
+import getAbsoluteUrl from "ember-simple-auth-oidc/utils/absoluteUrl";
 
 module("Unit | Utils | absoluteUrl", function (hooks) {
   setupTest(hooks);

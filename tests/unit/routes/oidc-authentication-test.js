@@ -1,8 +1,9 @@
 import { set } from "@ember/object";
 import setupMirage from "ember-cli-mirage/test-support/setup-mirage";
 import { setupTest } from "ember-qunit";
-import { getConfig } from "ember-simple-auth-oidc/config";
 import { module, test } from "qunit";
+
+import { getConfig } from "ember-simple-auth-oidc/config";
 
 module("Unit | Route | oidc-authentication", function (hooks) {
   setupTest(hooks);

@@ -1,4 +1,5 @@
 import { getOwner } from "@ember/application";
+
 import { getConfig } from "ember-simple-auth-oidc/config";
 import getAbsoluteUrl from "ember-simple-auth-oidc/utils/absoluteUrl";
 
