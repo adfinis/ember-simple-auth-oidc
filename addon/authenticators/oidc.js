@@ -12,23 +12,11 @@ import fetch from "fetch";
 import { resolve } from "rsvp";
 import { TrackedObject } from "tracked-built-ins";
 
-const {
-  host,
-  tokenEndpoint,
-  userinfoEndpoint,
-  endSessionEndpoint,
-  afterLogoutUri,
-  clientId,
-  refreshLeeway,
-  authPrefix,
-  expiresIn,
-  amountOfRetries,
-  retryTimeout,
-} = config;
-
 export default class OidcAuthenticator extends BaseAuthenticator {
   @service router;
   @service session;
+
+  @config config;
 
   /**
    * Authenticate the client with the given authentication code. The
@@ -40,7 +28,7 @@ export default class OidcAuthenticator extends BaseAuthenticator {
    * @returns {Object} The parsed response data
    */
   async authenticate({ code, redirectUri, isRefresh }) {
-    if (!tokenEndpoint || !userinfoEndpoint) {
+    if (!this.config.tokenEndpoint || !this.config.userinfoEndpoint) {
       throw new Error(
         "Please define all OIDC endpoints (auth, token, userinfo)"
       );
@@ -55,7 +43,7 @@ export default class OidcAuthenticator extends BaseAuthenticator {
 
     const bodyObject = {
       code,
-      client_id: clientId,
+      client_id: this.config.clientId,
       grant_type: "authorization_code",
       redirect_uri: redirectUri,
     };
@@ -63,14 +51,17 @@ export default class OidcAuthenticator extends BaseAuthenticator {
       .map((k) => `${k}=${encodeURIComponent(bodyObject[k])}`)
       .join("&");
 
-    const response = await fetch(getAbsoluteUrl(tokenEndpoint, host), {
-      method: "POST",
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/x-www-form-urlencoded",
-      },
-      body,
-    });
+    const response = await fetch(
+      getAbsoluteUrl(this.config.tokenEndpoint, this.config.host),
+      {
+        method: "POST",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/x-www-form-urlencoded",
+        },
+        body,
+      }
+    );
 
     const isServerError = isServerErrorResponse(response);
     if (isServerError) throw new Error(response.message);
@@ -105,14 +96,16 @@ export default class OidcAuthenticator extends BaseAuthenticator {
    * @param {String} idToken The id_token of the session to invalidate
    */
   singleLogout(idToken) {
-    if (!endSessionEndpoint) {
+    if (!this.config.endSessionEndpoint) {
       return;
     }
 
     const params = [];
 
-    if (afterLogoutUri) {
-      params.push(`post_logout_redirect_uri=${getAbsoluteUrl(afterLogoutUri)}`);
+    if (this.config.afterLogoutUri) {
+      params.push(
+        `post_logout_redirect_uri=${getAbsoluteUrl(this.config.afterLogoutUri)}`
+      );
     }
 
     if (idToken) {
@@ -120,7 +113,10 @@ export default class OidcAuthenticator extends BaseAuthenticator {
     }
 
     this._redirectToUrl(
-      `${getAbsoluteUrl(endSessionEndpoint, host)}?${params.join("&")}`
+      `${getAbsoluteUrl(
+        this.config.endSessionEndpoint,
+        this.config.host
+      )}?${params.join("&")}`
     );
   }
 
@@ -164,7 +160,7 @@ export default class OidcAuthenticator extends BaseAuthenticator {
     try {
       const bodyObject = {
         refresh_token,
-        client_id: clientId,
+        client_id: this.config.clientId,
         grant_type: "refresh_token",
         redirect_uri: redirectUri,
       };
@@ -172,14 +168,17 @@ export default class OidcAuthenticator extends BaseAuthenticator {
         .map((k) => `${k}=${encodeURIComponent(bodyObject[k])}`)
         .join("&");
 
-      const response = await fetch(getAbsoluteUrl(tokenEndpoint, host), {
-        method: "POST",
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/x-www-form-urlencoded",
-        },
-        body,
-      });
+      const response = await fetch(
+        getAbsoluteUrl(this.config.tokenEndpoint, this.config.host),
+        {
+          method: "POST",
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "application/x-www-form-urlencoded",
+          },
+          body,
+        }
+      );
       isServerError = isServerErrorResponse(response);
       if (isServerError) throw new Error(response.message);
 
@@ -196,7 +195,7 @@ export default class OidcAuthenticator extends BaseAuthenticator {
     } catch (e) {
       if (
         (isServerError || isAbortError(e)) &&
-        retryCount < amountOfRetries - 1
+        retryCount < this.config.amountOfRetries - 1
       ) {
         return new Promise((resolve) => {
           later(
@@ -205,7 +204,7 @@ export default class OidcAuthenticator extends BaseAuthenticator {
               resolve(
                 this._refresh(refresh_token, redirectUri, retryCount + 1)
               ),
-            retryTimeout
+            this.config.retryTimeout
           );
         });
       }
@@ -220,12 +219,15 @@ export default class OidcAuthenticator extends BaseAuthenticator {
    * @returns {Object} Object containing the user information
    */
   async _getUserinfo(accessToken) {
-    const response = await fetch(getAbsoluteUrl(userinfoEndpoint, host), {
-      headers: {
-        Authorization: `${authPrefix} ${accessToken}`,
-        Accept: "application/json",
-      },
-    });
+    const response = await fetch(
+      getAbsoluteUrl(this.config.userinfoEndpoint, this.config.host),
+      {
+        headers: {
+          Authorization: `${this.config.authPrefix} ${accessToken}`,
+          Accept: "application/json",
+        },
+      }
+    );
 
     const userinfo = await response.json();
 
@@ -251,9 +253,11 @@ export default class OidcAuthenticator extends BaseAuthenticator {
   }) {
     const userinfo = await this._getUserinfo(access_token);
 
-    const expireInMilliseconds = expires_in ? expires_in * 1000 : expiresIn;
+    const expireInMilliseconds = expires_in
+      ? expires_in * 1000
+      : this.config.expiresIn;
     const expireTime =
-      new Date().getTime() + expireInMilliseconds - refreshLeeway;
+      new Date().getTime() + expireInMilliseconds - this.config.refreshLeeway;
 
     return new TrackedObject({
       access_token,

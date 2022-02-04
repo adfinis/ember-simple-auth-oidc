@@ -1,7 +1,7 @@
-import config from "ember-get-config";
+import { getOwner } from "@ember/application";
 
-export default Object.assign(
-  {
+export function getConfig(owner) {
+  return {
     host: "http://localhost:4200",
     clientId: "client",
     authEndpoint: null,
@@ -18,6 +18,16 @@ export default Object.assign(
     authPrefix: "Bearer",
     amountOfRetries: 3,
     retryTimeout: 3000,
-  },
-  config["ember-simple-auth-oidc"] || {}
-);
+    ...(owner.resolveRegistration("config:environment")[
+      "ember-simple-auth-oidc"
+    ] ?? {}),
+  };
+}
+
+export default function config() {
+  return {
+    get() {
+      return getConfig(getOwner(this));
+    },
+  };
+}

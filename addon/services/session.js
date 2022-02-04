@@ -3,10 +3,10 @@ import { enqueueTask } from "ember-concurrency";
 import config from "ember-simple-auth-oidc/config";
 import SessionServiceESA from "ember-simple-auth/services/session";
 
-const { authHeaderName, authPrefix, tokenPropertyName } = config;
-
 export default class Service extends SessionServiceESA {
   @service router;
+
+  @config config;
 
   singleLogout() {
     const session = this.session; // InternalSession
@@ -36,8 +36,10 @@ export default class Service extends SessionServiceESA {
     const headers = {};
 
     if (this.isAuthenticated) {
-      const token = this.data.authenticated[tokenPropertyName];
-      Object.assign(headers, { [authHeaderName]: `${authPrefix} ${token}` });
+      const token = this.data.authenticated[this.config.tokenPropertyName];
+      Object.assign(headers, {
+        [this.config.authHeaderName]: `${this.config.authPrefix} ${token}`,
+      });
     }
 
     return headers;

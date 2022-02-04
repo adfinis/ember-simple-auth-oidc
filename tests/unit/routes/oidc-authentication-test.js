@@ -1,14 +1,16 @@
 import { set } from "@ember/object";
 import setupMirage from "ember-cli-mirage/test-support/setup-mirage";
-import config from "ember-get-config";
 import { setupTest } from "ember-qunit";
+import { getConfig } from "ember-simple-auth-oidc/config";
 import { module, test } from "qunit";
-
-const { authEndpoint, clientId } = config["ember-simple-auth-oidc"];
 
 module("Unit | Route | oidc-authentication", function (hooks) {
   setupTest(hooks);
   setupMirage(hooks);
+
+  hooks.beforeEach(function () {
+    this.config = getConfig(this.owner);
+  });
 
   test("it can handle already authenticated requests", function (assert) {
     assert.expect(3);
@@ -38,8 +40,8 @@ module("Unit | Route | oidc-authentication", function (hooks) {
     set(route.session, "data.authenticated", {});
     set(route.session, "attemptedTransition", { to: {} });
     route._redirectToUrl = (url) => {
-      assert.ok(url.includes(authEndpoint));
-      assert.ok(url.includes(`client_id=${clientId}`));
+      assert.ok(url.includes(this.config.authEndpoint));
+      assert.ok(url.includes(`client_id=${this.config.clientId}`));
       const { protocol, host } = location;
       assert.ok(url.includes(`redirect_uri=${protocol}//${host}/test`));
     };
@@ -51,21 +53,22 @@ module("Unit | Route | oidc-authentication", function (hooks) {
     assert.expect(1);
 
     const routeFactory = this.owner.factoryFor("route:oidc-authentication");
-    const route = new (class extends routeFactory.class {
-      redirectUri = "test";
-      session = {
-        data: {
-          authenticated: {},
-        },
-        async authenticate(_, { code }) {
-          assert.strictEqual(code, "sometestcode");
-        },
-        set() {},
-      };
-      transitionTo() {
-        return { abort() {} };
+    this.owner.register(
+      "route:custom-oidc-authentication",
+      class extends routeFactory.class {
+        redirectUri = "test";
+        session = {
+          data: {
+            authenticated: {},
+          },
+          async authenticate(_, { code }) {
+            assert.strictEqual(code, "sometestcode");
+          },
+          set() {},
+        };
       }
-    })();
+    );
+    const route = this.owner.lookup("route:custom-oidc-authentication");
 
     route.afterModel(null, { to: { queryParams: { code: "sometestcode" } } });
   });
@@ -74,21 +77,22 @@ module("Unit | Route | oidc-authentication", function (hooks) {
     assert.expect(1);
 
     const routeFactory = this.owner.factoryFor("route:oidc-authentication");
-    const route = new (class extends routeFactory.class {
-      redirectUri = "test";
-      session = {
-        data: {
-          authenticated: {},
-        },
-        async authenticate(_, { code }) {
-          assert.strictEqual(code, "sometestcode");
-        },
-        set() {},
-      };
-      transitionTo() {
-        return { abort() {} };
+    this.owner.register(
+      "route:custom-oidc-authentication",
+      class extends routeFactory.class {
+        redirectUri = "test";
+        session = {
+          data: {
+            authenticated: {},
+          },
+          async authenticate(_, { code }) {
+            assert.strictEqual(code, "sometestcode");
+          },
+          set() {},
+        };
       }
-    })();
+    );
+    const route = this.owner.lookup("route:custom-oidc-authentication");
 
     route.afterModel(null, { queryParams: { code: "sometestcode" } });
   });
@@ -97,18 +101,22 @@ module("Unit | Route | oidc-authentication", function (hooks) {
     assert.expect(3);
 
     const routeFactory = this.owner.factoryFor("route:oidc-authentication");
-    const route = new (class extends routeFactory.class {
-      redirectUri = "test";
-      session = {
-        data: {
-          authenticated: {},
-          state: "state2",
-        },
-        async authenticate() {
-          return true;
-        },
-      };
-    })();
+    this.owner.register(
+      "route:custom-oidc-authentication",
+      class extends routeFactory.class {
+        redirectUri = "test";
+        session = {
+          data: {
+            authenticated: {},
+            state: "state2",
+          },
+          async authenticate() {
+            return true;
+          },
+        };
+      }
+    );
+    const route = this.owner.lookup("route:custom-oidc-authentication");
 
     // fails because the state is not correct (CSRF)
     route
@@ -154,21 +162,25 @@ module("Unit | Route | oidc-authentication", function (hooks) {
     assert.expect(4);
 
     const routeFactory = this.owner.factoryFor("route:oidc-authentication");
-    const route = new (class extends routeFactory.class {
-      redirectUri = "test";
-      session = {
-        data: { authenticated: {} },
-        set() {},
-        attemptedTransition: { to: {} },
-      };
-      _redirectToUrl(url) {
-        assert.ok(url.includes(authEndpoint));
+    this.owner.register(
+      "route:custom-oidc-authentication",
+      class extends routeFactory.class {
+        redirectUri = "test";
+        session = {
+          data: { authenticated: {} },
+          set() {},
+          attemptedTransition: { to: {} },
+        };
+        _redirectToUrl(url) {
+          assert.ok(url.includes(this.config.authEndpoint));
 
-        assert.ok(url.includes(`client_id=${clientId}`));
-        assert.ok(url.includes("redirect_uri=test"));
-        assert.ok(url.includes("custom_login_hint=my-idp"));
+          assert.ok(url.includes(`client_id=${this.config.clientId}`));
+          assert.ok(url.includes("redirect_uri=test"));
+          assert.ok(url.includes("custom_login_hint=my-idp"));
+        }
       }
-    })();
+    );
+    const route = this.owner.lookup("route:custom-oidc-authentication");
 
     route.afterModel(null, {
       to: { queryParams: { custom_login_hint: "my-idp" } },
@@ -180,20 +192,24 @@ module("Unit | Route | oidc-authentication", function (hooks) {
 
     const router = this.owner.lookup("service:router");
     const routeFactory = this.owner.factoryFor("route:oidc-authentication");
-    const route = new (class extends routeFactory.class {
-      router = router;
-      redirectUri = "test";
-      session = {
-        data: { authenticated: {} },
-        attemptedTransition: { to: { name: "protected.users" } },
-        set(key, value) {
-          set(this, key, value);
-        },
-      };
-      _redirectToUrl() {
-        assert.strictEqual(this.session.data.nextURL, "/protected/users");
+    this.owner.register(
+      "route:custom-oidc-authentication",
+      class extends routeFactory.class {
+        router = router;
+        redirectUri = "test";
+        session = {
+          data: { authenticated: {} },
+          attemptedTransition: { to: { name: "protected.users" } },
+          set(key, value) {
+            set(this, key, value);
+          },
+        };
+        _redirectToUrl() {
+          assert.strictEqual(this.session.data.nextURL, "/protected/users");
+        }
       }
-    })();
+    );
+    const route = this.owner.lookup("route:custom-oidc-authentication");
 
     route.afterModel(null, { to: { queryParams: {} } });
   });

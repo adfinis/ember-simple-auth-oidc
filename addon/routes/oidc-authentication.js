@@ -5,11 +5,11 @@ import config from "ember-simple-auth-oidc/config";
 import getAbsoluteUrl from "ember-simple-auth-oidc/utils/absoluteUrl";
 import { v4 } from "uuid";
 
-const { host, clientId, authEndpoint, scope, loginHintName } = config;
-
 export default class OIDCAuthenticationRoute extends Route {
   @service session;
   @service router;
+
+  @config config;
 
   queryParams = {
     code: { refreshModel: false },
@@ -52,7 +52,7 @@ export default class OIDCAuthenticationRoute extends Route {
    * @param {String} transition.to.queryParams.state The state given by the identity provider
    */
   async afterModel(_, transition) {
-    if (!authEndpoint) {
+    if (!this.config.authEndpoint) {
       throw new Error(
         "Please define all OIDC endpoints (auth, token, logout, userinfo)"
       );
@@ -127,19 +127,21 @@ export default class OIDCAuthenticationRoute extends Route {
     }
 
     // forward `login_hint` query param if present
-    const key = loginHintName || "login_hint";
+    const key = this.config.loginHintName || "login_hint";
 
     const search = [
-      `client_id=${clientId}`,
+      `client_id=${this.config.clientId}`,
       `redirect_uri=${this.redirectUri}`,
       `response_type=code`,
       `state=${state}`,
-      `scope=${scope}`,
+      `scope=${this.config.scope}`,
       queryParams[key] ? `${key}=${queryParams[key]}` : null,
     ]
       .filter(Boolean)
       .join("&");
 
-    this._redirectToUrl(`${getAbsoluteUrl(host)}${authEndpoint}?${search}`);
+    this._redirectToUrl(
+      `${getAbsoluteUrl(this.config.host)}${this.config.authEndpoint}?${search}`
+    );
   }
 }
