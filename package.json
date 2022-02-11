@@ -28,7 +28,7 @@
   "dependencies": {
     "ember-auto-import": "^2.4.0",
     "ember-cli-babel": "^7.26.11",
-    "ember-concurrency": "^2.2.0",
+    "ember-concurrency": "^2.2.1",
     "ember-fetch": "^8.1.1",
     "ember-simple-auth": "^4.1.1",
     "tracked-built-ins": "^2.0.1",
