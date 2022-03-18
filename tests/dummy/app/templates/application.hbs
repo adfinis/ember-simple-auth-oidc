@@ -3,6 +3,7 @@
 {{#if this.session.isAuthenticated}}
   <LinkTo @route="protected.profile">Profile (401 handling demo)</LinkTo>
   <LinkTo @route="protected.users">Users</LinkTo>
+  <LinkTo @route="protected.apollo">Apollo</LinkTo>
   <a href="#" {{on "click" this.logout}}>Logout</a>
 {{else}}
   <LinkTo @route="login">Login</LinkTo>

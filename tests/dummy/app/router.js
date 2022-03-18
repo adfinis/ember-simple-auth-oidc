@@ -13,6 +13,7 @@ Router.map(function () {
     this.route("users");
     this.route("profile");
     this.route("secret");
+    this.route("apollo");
   });
   this.route("oidc", {
     path: "realms/test-realm/protocol/openid-connect/auth",

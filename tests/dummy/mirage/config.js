@@ -1,5 +1,5 @@
 import { discoverEmberDataModels } from "ember-cli-mirage";
-import { createServer } from "miragejs";
+import { createServer, Response } from "miragejs";
 
 export default function makeServer(config) {
   return createServer({
@@ -20,6 +20,22 @@ export default function makeServer(config) {
       });
       this.get("/users");
       this.get("/users/1", {}, 401);
+
+      this.post("/graphql", (_, request) => {
+        const { query } = JSON.parse(request.requestBody);
+
+        if (query.startsWith("mutation")) {
+          return new Response(401);
+        }
+
+        return new Response(
+          200,
+          {},
+          {
+            data: { items: [{ id: 1, name: "Test" }] },
+          }
+        );
+      });
     },
   });
 }

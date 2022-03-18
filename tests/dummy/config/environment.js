@@ -6,7 +6,9 @@ module.exports = function (environment) {
     environment,
     rootURL: "/",
     locationType: "history",
-
+    apollo: {
+      apiURL: "http://localhost:4200/graphql",
+    },
     "ember-simple-auth-oidc": {
       host: "http://localhost:4200/realms/test-realm",
       clientId: "test-client",

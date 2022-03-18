@@ -10,19 +10,21 @@ OpenID Connect [Authorization Code Flow](https://openid.net/specs/openid-connect
 
 ## Installation
 
-* Ember.js v3.24 or above
-* Ember CLI v3.24 or above
-* Node.js v12 or above
+- Ember.js v3.24 or above
+- Ember CLI v3.24 or above
+- Node.js v12 or above
 
-Note: The addon uses [Proxy](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Proxy) 
+Note: The addon uses [Proxy](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Proxy)
 in its implementation, if IE browser support is necessary, a polyfill needs to be provided.
 
 ```bash
 $ ember install ember-simple-auth-oidc
 ```
+
 If you're upgrading from 3.x to 4.x see the [upgrade guide](docs/migration-v4.md).
 
 ## Usage
+
 To use the oidc authorization code flow the following elements need to be added
 to the Ember application.
 
@@ -38,8 +40,8 @@ import OIDCAuthenticationRoute from "ember-simple-auth-oidc/routes/oidc-authenti
 export default class LoginRoute extends OIDCAuthenticationRoute {}
 ```
 
-Authenticated routes need to call `session.requireAuthentication` in their 
-respective `beforeModel`, to ensure that unauthenticated transitions are 
+Authenticated routes need to call `session.requireAuthentication` in their
+respective `beforeModel`, to ensure that unauthenticated transitions are
 prevented and redirected to the authentication route.
 
 ```js
@@ -60,9 +62,9 @@ export default class ProtectedRoute extends Route {
 To include authorization info in all Ember Data requests override `headers` in
 the application adapter and include `session.headers` alongside any other
 necessary headers. By extending the application adapter from either of the
-provided `OIDCJSONAPIAdapter` or `OIDCRESTAdapter`, the `access_token` is 
-refreshed before Ember Data requests, if necessary. Both the `OIDCJSONAPIAdapter` 
-and the `OIDCRESTAdapter` also provide default headers with the authorization 
+provided `OIDCJSONAPIAdapter` or `OIDCRESTAdapter`, the `access_token` is
+refreshed before Ember Data requests, if necessary. Both the `OIDCJSONAPIAdapter`
+and the `OIDCRESTAdapter` also provide default headers with the authorization
 header included.
 
 ```js
@@ -80,19 +82,16 @@ export default class ApplicationAdapter extends OIDCJSONAPIAdapter {
 }
 ```
 
-Both the `OIDCJSONAPIAdapter` and `OIDCRESTAdapter` already handle unauthorized 
-requests and perform an invalidation of the session, which also remembers your 
-visited URL. If you want this behaviour for other request services as well, you 
-can use the `handleUnauthorized` function. The following snippet shows an 
-example `ember-apollo-client` afterware (error handling) implementation:
+`ember-simple-auth-oidc` also provides a middleware which handles authorization
+and unauthorization on the apollo service provided by `ember-apollo-client`.
+Simply, wrap the http link in `apolloMiddleware` like so:
 
 ```js
 // app/services/apollo.js
 
 import { inject as service } from "@ember/service";
-import { onError } from "apollo-link-error";
 import ApolloService from "ember-apollo-client/services/apollo";
-import { handleUnauthorized } from "ember-simple-auth-oidc";
+import { apolloMiddleware } from "ember-simple-auth-oidc";
 
 export default class CustomApolloService extends ApolloService {
   @service session;
@@ -100,23 +99,42 @@ export default class CustomApolloService extends ApolloService {
   link() {
     const httpLink = super.link();
 
-    const afterware = onError(error => {
-      const { networkError } = error;
-
-      if (networkError.statusCode === 401) {
-        handleUnauthorized(this.session);
-      }
-    });
-
-    return afterware.concat(httpLink);
+    return apolloMiddleware(httpLink, this.session);
   }
 }
 ```
 
-Ember Simple Auth encourages the manual setup of the session service in the `beforeModel` of the 
-application route, starting with [version 4.1.0](https://github.com/simplabs/ember-simple-auth/releases/tag/4.1.0). 
-The relevant changes are described in their [upgrade to v4 guide](https://github.com/simplabs/ember-simple-auth/blob/master/guides/upgrade-to-v4.md).
+The provided adapters and the apollo middleware already handle authorization and
+unauthorized requests properly. If you want the same behaviour for other request
+services as well, you can use the `handleUnauthorized` function and the
+`refreshAuthentication.perform` method on the session. The following snippet
+shows an example of a custom fetch service with proper authentication handling:
 
+```js
+import Service, { inject as service } from "@ember/service";
+import { handleUnauthorized } from "ember-simple-auth-oidc";
+import fetch from "fetch";
+
+export default class FetchService extends Service {
+  @service session;
+
+  async fetch(url) {
+    await this.session.refreshAuthentication.perform();
+
+    const response = await fetch(url, { headers: this.session.headers });
+
+    if (!response.ok && response.status === 401) {
+      handleUnauthorized(this.session);
+    }
+
+    return response;
+  }
+}
+```
+
+Ember Simple Auth encourages the manual setup of the session service in the `beforeModel` of the
+application route, starting with [version 4.1.0](https://github.com/simplabs/ember-simple-auth/releases/tag/4.1.0).
+The relevant changes are described in their [upgrade to v4 guide](https://github.com/simplabs/ember-simple-auth/blob/master/guides/upgrade-to-v4.md).
 
 ### Logout / Explicit invalidation
 
