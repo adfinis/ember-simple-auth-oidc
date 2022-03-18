@@ -1,0 +1,7 @@
+<ul>
+  {{#each @model.items as |item|}}
+    <li>{{item.name}}</li>
+  {{/each}}
+</ul>
+
+<button type="button" {{on "click" this.triggerUnauthenticated}}>Trigger 401</button>
