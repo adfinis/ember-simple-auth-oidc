@@ -4,7 +4,7 @@ import { inject as service } from "@ember/service";
 import { v4 } from "uuid";
 
 import config from "ember-simple-auth-oidc/config";
-import getAbsoluteUrl from "ember-simple-auth-oidc/utils/absoluteUrl";
+import getAbsoluteUrl from "ember-simple-auth-oidc/utils/absolute-url";
 
 export default class OIDCAuthenticationRoute extends Route {
   @service session;
