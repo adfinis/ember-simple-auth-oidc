@@ -1,3 +1,10 @@
+# [4.1.0](https://github.com/adfinis-sygroup/ember-simple-auth-oidc/compare/v4.0.0...v4.1.0) (2022-03-22)
+
+
+### Features
+
+* **apollo:** add middleware for ember-apollo-client ([7e22f17](https://github.com/adfinis-sygroup/ember-simple-auth-oidc/commit/7e22f17172d02df77a8390013cabf81ab9cbc04e))
+
 # [4.0.0](https://github.com/adfinis-sygroup/ember-simple-auth-oidc/compare/v3.0.1...v4.0.0) (2022-02-04)
 
 
