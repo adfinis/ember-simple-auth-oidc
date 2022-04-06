@@ -18,6 +18,7 @@ export function getConfig(owner) {
     authPrefix: "Bearer",
     amountOfRetries: 3,
     retryTimeout: 3000,
+    enablePkce: false,
     ...(owner.resolveRegistration("config:environment")[
       "ember-simple-auth-oidc"
     ] ?? {}),

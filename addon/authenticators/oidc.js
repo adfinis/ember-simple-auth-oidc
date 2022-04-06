@@ -28,7 +28,7 @@ export default class OidcAuthenticator extends BaseAuthenticator {
    * @param {String} options.code The authentication code
    * @returns {Object} The parsed response data
    */
-  async authenticate({ code, redirectUri, isRefresh }) {
+  async authenticate({ code, redirectUri, codeVerifier, isRefresh }) {
     if (!this.config.tokenEndpoint || !this.config.userinfoEndpoint) {
       throw new Error(
         "Please define all OIDC endpoints (auth, token, userinfo)"
@@ -48,6 +48,11 @@ export default class OidcAuthenticator extends BaseAuthenticator {
       grant_type: "authorization_code",
       redirect_uri: redirectUri,
     };
+
+    if (this.config.enablePkce) {
+      bodyObject.code_verifier = codeVerifier;
+    }
+
     const body = Object.keys(bodyObject)
       .map((k) => `${k}=${encodeURIComponent(bodyObject[k])}`)
       .join("&");
