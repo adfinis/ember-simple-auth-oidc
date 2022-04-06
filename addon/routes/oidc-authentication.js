@@ -5,7 +5,10 @@ import { v4 } from "uuid";
 
 import config from "ember-simple-auth-oidc/config";
 import getAbsoluteUrl from "ember-simple-auth-oidc/utils/absolute-url";
-
+import {
+  generatePkceChallenge,
+  generateCodeVerifier,
+} from "ember-simple-auth-oidc/utils/pkce";
 export default class OIDCAuthenticationRoute extends Route {
   @service session;
   @service router;
@@ -30,6 +33,16 @@ export default class OIDCAuthenticationRoute extends Route {
   beforeModel(transition) {
     if (transition.from) {
       this.session.prohibitAuthentication(transition.from.name);
+    }
+
+    // PKCE Verifier has to be set in session, because we redirect to keycloak and back
+    if (this.config.enablePkce) {
+      let pkceCodeVerifier = this.session.data.pkceCodeVerifier;
+
+      if (!pkceCodeVerifier) {
+        pkceCodeVerifier = generateCodeVerifier(96);
+        this.session.set("data.pkceCodeVerifier", pkceCodeVerifier);
+      }
     }
   }
 
@@ -97,10 +110,16 @@ export default class OIDCAuthenticationRoute extends Route {
 
     this.session.set("data.state", undefined);
 
-    await this.session.authenticate("authenticator:oidc", {
+    const data = {
       code,
       redirectUri: this.redirectUri,
-    });
+    };
+
+    if (this.config.enablePkce) {
+      data.codeVerifier = this.session.data.pkceCodeVerifier;
+    }
+
+    await this.session.authenticate("authenticator:oidc", data);
   }
 
   /**
@@ -129,16 +148,24 @@ export default class OIDCAuthenticationRoute extends Route {
     // forward `login_hint` query param if present
     const key = this.config.loginHintName || "login_hint";
 
-    const search = [
+    let search = [
       `client_id=${this.config.clientId}`,
       `redirect_uri=${this.redirectUri}`,
       `response_type=code`,
       `state=${state}`,
       `scope=${this.config.scope}`,
       queryParams[key] ? `${key}=${queryParams[key]}` : null,
-    ]
-      .filter(Boolean)
-      .join("&");
+    ];
+
+    if (this.config.enablePkce) {
+      const pkceChallenge = generatePkceChallenge(
+        this.session.data.pkceCodeVerifier
+      );
+      search.push(`code_challenge=${pkceChallenge}`);
+      search.push("code_challenge_method=S256");
+    }
+
+    search = search.filter(Boolean).join("&");
 
     this._redirectToUrl(
       `${getAbsoluteUrl(this.config.host)}${this.config.authEndpoint}?${search}`
