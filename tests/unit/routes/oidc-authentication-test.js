@@ -188,7 +188,7 @@ module("Unit | Route | oidc-authentication", function (hooks) {
     });
   });
 
-  test("it stores an intercepted transition", function (assert) {
+  test("it stores an intercepted transition with query params", function (assert) {
     assert.expect(1);
 
     const router = this.owner.lookup("service:router");
@@ -200,13 +200,20 @@ module("Unit | Route | oidc-authentication", function (hooks) {
         redirectUri = "test";
         session = {
           data: { authenticated: {} },
-          attemptedTransition: { to: { name: "protected.users" } },
+          attemptedTransition: {
+            intent: {
+              url: "/protected/users?param0=value0&param1=value1",
+            },
+          },
           set(key, value) {
             set(this, key, value);
           },
         };
         _redirectToUrl() {
-          assert.strictEqual(this.session.data.nextURL, "/protected/users");
+          assert.strictEqual(
+            this.session.data.nextURL,
+            "/protected/users?param0=value0&param1=value1"
+          );
         }
       }
     );

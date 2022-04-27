@@ -122,8 +122,7 @@ export default class OIDCAuthenticationRoute extends Route {
      * the login he can be sent to the initial destination.
      */
     if (!this.session.data.nextURL) {
-      const route = this.session.attemptedTransition?.to.name;
-      const url = route && this.router.urlFor(route);
+      const url = this.session.attemptedTransition?.intent?.url;
       this.session.set("data.nextURL", url);
     }
 
