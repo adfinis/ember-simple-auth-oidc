@@ -1,3 +1,10 @@
+## [4.1.1](https://github.com/adfinis-sygroup/ember-simple-auth-oidc/compare/v4.1.0...v4.1.1) (2022-04-28)
+
+
+### Bug Fixes
+
+* **auth-route:** store query params of attempted transition ([4a8406d](https://github.com/adfinis-sygroup/ember-simple-auth-oidc/commit/4a8406d2f8db68d8b7f2f39912232a243bc81dbe))
+
 # [4.1.0](https://github.com/adfinis-sygroup/ember-simple-auth-oidc/compare/v4.0.0...v4.1.0) (2022-03-22)
 
 
