@@ -5429,10 +5429,10 @@ elliptic@^6.5.3:
     minimalistic-assert "^1.0.1"
     minimalistic-crypto-utils "^1.0.1"
 
-ember-apollo-client@4.0.2:
-  version "4.0.2"
-  resolved "https://registry.yarnpkg.com/ember-apollo-client/-/ember-apollo-client-4.0.2.tgz#2f7ec52fc88c48930cd4090f9d9c1808f33e9d3b"
-  integrity sha512-Rhp6Tx6pZPL8h2GFtq6rRGBbnmNUi/dpteDhzPgNNS40MqUb721xHcChX4Td2hb3LlkcRT3d/e5WYxmaG2mu5A==
+ember-apollo-client@4.1.0:
+  version "4.1.0"
+  resolved "https://registry.yarnpkg.com/ember-apollo-client/-/ember-apollo-client-4.1.0.tgz#00ea5c42c27f449bf9d52720feb25a6ce5e2d64f"
+  integrity sha512-yZNp65HIRtlrVtFBzJ7jNpMWSFG42inWLDPRQyU2iA2I126p6gaj09Szx7hoChxtn5hK9zdN77j5meq7RddSyg==
   dependencies:
     "@apollo/client" "^3.5.10"
     "@ember/test-waiters" "~3.0.1"
