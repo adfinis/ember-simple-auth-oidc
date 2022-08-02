@@ -27,7 +27,7 @@
   },
   "dependencies": {
     "@embroider/macros": "^1.6.0",
-    "ember-auto-import": "^2.4.1",
+    "ember-auto-import": "^2.4.2",
     "ember-cli-babel": "^7.26.11",
     "ember-concurrency": "^2.2.1",
     "ember-fetch": "^8.1.1",
