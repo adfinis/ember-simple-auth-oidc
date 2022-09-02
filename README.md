@@ -236,6 +236,9 @@ Amount of retries should be made if the request to fetch a new token fails. Defa
 **retryTimeout** `<Number>` (optional)  
 Timeout in milliseconds between each retry if a token refresh should fail. Default is `3000`.
 
+**enablePkce** `<Boolean>` (optional)
+Enables PKCE mechanism to provide additional protection during code to token exchanges. Default is `false`.
+
 ## Contributing
 
 ### Installation

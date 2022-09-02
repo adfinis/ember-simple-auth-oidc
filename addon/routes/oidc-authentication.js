@@ -35,7 +35,7 @@ export default class OIDCAuthenticationRoute extends Route {
       this.session.prohibitAuthentication(transition.from.name);
     }
 
-    // PKCE Verifier has to be set in session, because we redirect to keycloak and back
+    // PKCE Verifier has to be set in session, because we redirect
     if (this.config.enablePkce) {
       let pkceCodeVerifier = this.session.data.pkceCodeVerifier;
 
