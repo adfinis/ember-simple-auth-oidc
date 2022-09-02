@@ -1,3 +1,20 @@
+# [5.0.0](https://github.com/adfinis/ember-simple-auth-oidc/compare/v4.1.1...v5.0.0) (2022-09-02)
+
+
+### chore
+
+* **deps:** update dependencies ([2c298f5](https://github.com/adfinis/ember-simple-auth-oidc/commit/2c298f5015e8090ae3eb6641873a970a9b9f27cf))
+
+
+### Features
+
+* add pkce generation ([e9bbfc3](https://github.com/adfinis/ember-simple-auth-oidc/commit/e9bbfc38e699e8af10ff81bf0c86420a8e1aa341))
+
+
+### BREAKING CHANGES
+
+* **deps:** Drop support for Node v12 and Ember LTS v3.24.
+
 ## [4.1.1](https://github.com/adfinis/ember-simple-auth-oidc/compare/v4.1.0...v4.1.1) (2022-04-28)
 
 ### Bug Fixes
