@@ -40,7 +40,7 @@
   "devDependencies": {
     "@adfinis-sygroup/eslint-config": "1.5.0",
     "@adfinis-sygroup/semantic-release-config": "3.4.0",
-    "@apollo/client": "3.6.9",
+    "@apollo/client": "3.6.10",
     "@ember/optional-features": "2.0.0",
     "@ember/test-helpers": "2.8.1",
     "@embroider/test-setup": "1.8.3",
