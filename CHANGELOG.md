@@ -1,3 +1,10 @@
+## [5.0.1](https://github.com/adfinis/ember-simple-auth-oidc/compare/v5.0.0...v5.0.1) (2022-10-20)
+
+
+### Bug Fixes
+
+* **apollo:** make apollo client a dependency ([31aca2e](https://github.com/adfinis/ember-simple-auth-oidc/commit/31aca2e7ff849d1d7e467d0a6f3eb1609c88ce7c)), closes [#597](https://github.com/adfinis/ember-simple-auth-oidc/issues/597)
+
 # [5.0.0](https://github.com/adfinis/ember-simple-auth-oidc/compare/v4.1.1...v5.0.0) (2022-09-02)
 
 
