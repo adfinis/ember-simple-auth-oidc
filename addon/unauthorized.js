@@ -5,16 +5,13 @@ import { getConfig } from "ember-simple-auth-oidc/config";
 import getAbsoluteUrl from "ember-simple-auth-oidc/utils/absolute-url";
 
 export default function handleUnauthorized(session) {
-  if (session.isAuthenticated) {
-    session.set("data.nextURL", location.href.replace(location.origin, ""));
-    session.invalidate();
-
-    if (macroCondition(isTesting())) {
-      // don't redirect in tests
-    } else {
-      location.replace(
-        getAbsoluteUrl(getConfig(getOwner(session)).afterLogoutUri || "")
-      );
-    }
+  session.set("data.nextURL", location.href.replace(location.origin, ""));
+  session.invalidate();
+  if (macroCondition(isTesting())) {
+    // don't redirect in tests
+  } else {
+    location.replace(
+      getAbsoluteUrl(getConfig(getOwner(session)).afterLogoutUri || "")
+    );
   }
 }

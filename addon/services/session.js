@@ -52,10 +52,14 @@ export default class Service extends SessionServiceESA {
     const isExpired = expireTime && expireTime <= new Date().getTime();
 
     if (this.isAuthenticated && isExpired) {
-      return yield this.session.authenticate("authenticator:oidc", {
-        redirectUri: this.redirectUri,
-        isRefresh: true,
-      });
+      try {
+        return yield this.session.authenticate("authenticator:oidc", {
+          redirectUri: this.redirectUri,
+          isRefresh: true,
+        });
+      } catch (e) {
+        console.warn("Token is invalid. Re-authentification is required.");
+      }
     }
   }
 
