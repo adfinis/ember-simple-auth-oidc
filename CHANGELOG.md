@@ -1,3 +1,10 @@
+## [5.0.2](https://github.com/adfinis/ember-simple-auth-oidc/compare/v5.0.1...v5.0.2) (2023-03-16)
+
+
+### Bug Fixes
+
+* always reconnect on unauthorized responses ([4a2f0a6](https://github.com/adfinis/ember-simple-auth-oidc/commit/4a2f0a6d29cb4900fe0c52a4cb76c7e2fd8174dc))
+
 ## [5.0.1](https://github.com/adfinis/ember-simple-auth-oidc/compare/v5.0.0...v5.0.1) (2022-10-20)
 
 
