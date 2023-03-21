@@ -27,7 +27,7 @@
   },
   "dependencies": {
     "@apollo/client": "^3.7.10",
-    "@embroider/macros": "^1.9.0",
+    "@embroider/macros": "1.9.0",
     "base64-js": "^1.5.1",
     "ember-auto-import": "^2.4.3",
     "ember-cli-babel": "^7.26.11",
