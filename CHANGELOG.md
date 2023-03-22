@@ -1,3 +1,10 @@
+## [5.0.3](https://github.com/adfinis/ember-simple-auth-oidc/compare/v5.0.2...v5.0.3) (2023-03-22)
+
+
+### Bug Fixes
+
+* prevent redirect loops to login route ([4e5d909](https://github.com/adfinis/ember-simple-auth-oidc/commit/4e5d909f53a11d4d3be2c4ef2c025051a04129b1))
+
 ## [5.0.2](https://github.com/adfinis/ember-simple-auth-oidc/compare/v5.0.1...v5.0.2) (2023-03-16)
 
 
