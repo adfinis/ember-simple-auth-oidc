@@ -3848,7 +3848,7 @@ broccoli-funnel@^3.0.3, broccoli-funnel@^3.0.5, broccoli-funnel@^3.0.8:
     minimatch "^3.0.0"
     walk-sync "^2.0.2"
 
-broccoli-graphql-filter@^1.0.0:
+broccoli-graphql-filter@^1.0.0, broccoli-graphql-filter@^1.0.1:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/broccoli-graphql-filter/-/broccoli-graphql-filter-1.0.1.tgz#0b24d2b8e8a817c5d6e1923cbdb62384ad4fdc4c"
   integrity sha512-tOKqVLCUxX/2LvkHk4H2ri6FuBBjUIfgC75nE45v2RBWWklnkryhOb/7J0uBv+jdyOYsvMm+eBwZ68zw77q9oA==

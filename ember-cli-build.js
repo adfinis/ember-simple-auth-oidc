@@ -8,6 +8,9 @@ module.exports = function (defaults) {
     "ember-simple-auth": {
       useSessionSetupMethod: true,
     },
+    "ember-cli-babel": {
+      includePolyfill: true,
+    },
   });
 
   /*
@@ -22,6 +25,22 @@ module.exports = function (defaults) {
     skipBabel: [
       {
         package: "qunit",
+      },
+    ],
+    packageRules: [
+      {
+        package: "@ember-data/store",
+        addonModules: {
+          "-private.js": {
+            dependsOnModules: [],
+          },
+          "-private/system/core-store.js": {
+            dependsOnModules: [],
+          },
+          "-private/system/model/internal-model.js": {
+            dependsOnModules: [],
+          },
+        },
       },
     ],
   });
