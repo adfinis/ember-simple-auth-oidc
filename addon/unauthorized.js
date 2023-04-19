@@ -1,9 +1,15 @@
 import { getOwner } from "@ember/application";
-import { later } from "@ember/runloop";
+import { debounce } from "@ember/runloop";
 import { isTesting, macroCondition } from "@embroider/macros";
 
 import { getConfig } from "ember-simple-auth-oidc/config";
 import getAbsoluteUrl from "ember-simple-auth-oidc/utils/absolute-url";
+
+const replaceUri = (session) => {
+  location.replace(
+    getAbsoluteUrl(getConfig(getOwner(session)).afterLogoutUri || "")
+  );
+};
 
 export default function handleUnauthorized(session) {
   if (session.isAuthenticated) {
@@ -15,13 +21,9 @@ export default function handleUnauthorized(session) {
   if (macroCondition(isTesting())) {
     // don't redirect in tests
   } else {
-    // Defer the redirect, so we can collect all unauthorized requests and trigger a final
+    // Debounce the redirect, so we can collect all unauthorized requests and trigger a final
     // redirect. We don't want to interrupt calls to the authorization endpoint nor create race
     // conditions when multiple requests land in this unauthorized handler.
-    later(() => {
-      location.replace(
-        getAbsoluteUrl(getConfig(getOwner(session)).afterLogoutUri || "")
-      );
-    }, 1000);
+    debounce(this, replaceUri, session, 1000);
   }
 }
