@@ -1,5 +1,5 @@
-import RESTAdapter from "@ember-data/adapter/rest";
 import { inject as service } from "@ember/service";
+import RESTAdapter from "@ember-data/adapter/rest";
 import { handleUnauthorized } from "ember-simple-auth-oidc";
 
 export default class OIDCRESTAdapter extends RESTAdapter {
