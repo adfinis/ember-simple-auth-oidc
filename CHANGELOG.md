@@ -1,3 +1,16 @@
+# [5.1.0](https://github.com/adfinis/ember-simple-auth-oidc/compare/v5.0.3...v5.1.0) (2023-04-20)
+
+
+### Bug Fixes
+
+* debounce redirect in unauthorized handler ([dd18217](https://github.com/adfinis/ember-simple-auth-oidc/commit/dd18217bee6431f99e947955e09af454e2289b69))
+* prevent race condition in unauthorized handler ([dd4e63c](https://github.com/adfinis/ember-simple-auth-oidc/commit/dd4e63c800d314069912929338d7a93f8e45a61e))
+
+
+### Features
+
+* add config option for debouncing unauthorized handler ([0bafd98](https://github.com/adfinis/ember-simple-auth-oidc/commit/0bafd9800bceb7b455eacdc21067e84a51cb7ba9))
+
 ## [5.0.3](https://github.com/adfinis/ember-simple-auth-oidc/compare/v5.0.2...v5.0.3) (2023-03-22)
 
 
