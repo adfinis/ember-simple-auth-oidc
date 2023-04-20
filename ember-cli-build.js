@@ -3,12 +3,7 @@
 const EmberAddon = require("ember-cli/lib/broccoli/ember-addon");
 
 module.exports = function (defaults) {
-  const app = new EmberAddon(defaults, {
-    // Add options here
-    "ember-simple-auth": {
-      useSessionSetupMethod: true,
-    },
-  });
+  const app = new EmberAddon(defaults, {});
 
   /*
     This build file specifies the options for the dummy test app of this
