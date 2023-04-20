@@ -22,6 +22,7 @@ export function getConfig(owner) {
     ...(owner.resolveRegistration("config:environment")[
       "ember-simple-auth-oidc"
     ] ?? {}),
+    unauthorizedRequestRedirectTimeout: 1000,
   };
 }
 
