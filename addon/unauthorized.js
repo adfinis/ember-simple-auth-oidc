@@ -24,6 +24,11 @@ export default function handleUnauthorized(session) {
     // Debounce the redirect, so we can collect all unauthorized requests and trigger a final
     // redirect. We don't want to interrupt calls to the authorization endpoint nor create race
     // conditions when multiple requests land in this unauthorized handler.
-    debounce(this, replaceUri, session, 1000);
+    debounce(
+      this,
+      replaceUri,
+      session,
+      getConfig(getOwner(session)).unauthorizedRequestRedirectTimeout
+    );
   }
 }

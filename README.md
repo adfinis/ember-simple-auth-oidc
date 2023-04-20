@@ -42,7 +42,10 @@ export default class LoginRoute extends OIDCAuthenticationRoute {}
 
 Authenticated routes need to call `session.requireAuthentication` in their
 respective `beforeModel`, to ensure that unauthenticated transitions are
-prevented and redirected to the authentication route.
+prevented and redirected to the authentication route. It's recommended to 
+await the `beforeModel` hook, to make sure authentication is handled before
+other API calls are triggered (which might lead to `401` responses, potentially
+causing redirect loops).
 
 ```js
 // app/routes/protected.js
@@ -53,8 +56,8 @@ import { inject as service } from "@ember/service";
 export default class ProtectedRoute extends Route {
   @service session;
 
-  beforeModel(transition) {
-    this.session.requireAuthentication(transition, "login");
+  async beforeModel(transition) {
+    await this.session.requireAuthentication(transition, "login");
   }
 }
 ```
@@ -238,6 +241,9 @@ Timeout in milliseconds between each retry if a token refresh should fail. Defau
 
 **enablePkce** `<Boolean>` (optional)
 Enables PKCE mechanism to provide additional protection during code to token exchanges. Default is `false`.
+
+**unauthorizedRequestRedirectTimeout** `<Number>` (optional)
+Debounce timeout for redirection after (multiple) `401` responses are received to prevent redirect loops (at the cost of a small delay). Set to `0` to disable debouncing. Default is `1000`.
 
 ## Contributing
 
