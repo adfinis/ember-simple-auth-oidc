@@ -5009,10 +5009,10 @@ electron-to-chromium@^1.4.284:
   resolved "https://registry.yarnpkg.com/electron-to-chromium/-/electron-to-chromium-1.4.379.tgz#c9b597e090ce738e7a76db84e5678f27817bd644"
   integrity sha512-eRMq6Cf4PhjB14R9U6QcXM/VRQ54Gc3OL9LKnFugUIh2AXm3KJlOizlSfVIgjH76bII4zHGK4t0PVTE5qq8dZg==
 
-ember-apollo-client@4.1.0:
-  version "4.1.0"
-  resolved "https://registry.yarnpkg.com/ember-apollo-client/-/ember-apollo-client-4.1.0.tgz#00ea5c42c27f449bf9d52720feb25a6ce5e2d64f"
-  integrity sha512-yZNp65HIRtlrVtFBzJ7jNpMWSFG42inWLDPRQyU2iA2I126p6gaj09Szx7hoChxtn5hK9zdN77j5meq7RddSyg==
+ember-apollo-client@4.1.1:
+  version "4.1.1"
+  resolved "https://registry.yarnpkg.com/ember-apollo-client/-/ember-apollo-client-4.1.1.tgz#704df88047b50604209e6787274773c5768c757e"
+  integrity sha512-WvRxbgyiLedSTHgof9U6J1poRbWH37eoLJHeX6RBpj0eGjzO3wq04Uc8On2hRbx+1jawzDg8GcOCGeB7fGv+2g==
   dependencies:
     "@apollo/client" "^3.5.10"
     "@ember/test-waiters" "~3.0.1"

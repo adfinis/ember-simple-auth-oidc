@@ -52,7 +52,7 @@
     "@glimmer/tracking": "1.1.2",
     "broccoli-asset-rev": "3.0.0",
     "concurrently": "8.0.1",
-    "ember-apollo-client": "4.1.0",
+    "ember-apollo-client": "4.1.1",
     "ember-cli": "4.12.1",
     "ember-cli-dependency-checker": "3.3.1",
     "ember-cli-htmlbars": "6.2.0",
