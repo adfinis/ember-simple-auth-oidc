@@ -48,7 +48,7 @@
     "@ember/optional-features": "2.0.0",
     "@ember/string": "3.0.1",
     "@ember/test-helpers": "2.9.3",
-    "@embroider/test-setup": "2.1.1",
+    "@embroider/test-setup": "3.0.1",
     "@glimmer/tracking": "1.1.2",
     "broccoli-asset-rev": "3.0.0",
     "concurrently": "8.0.1",
