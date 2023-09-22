@@ -28,7 +28,7 @@
     "test:ember-compatibility": "ember try:each"
   },
   "dependencies": {
-    "@apollo/client": "^3.7.16",
+    "@apollo/client": "^3.8.4",
     "@embroider/macros": "^1.11.1",
     "base64-js": "^1.5.1",
     "ember-auto-import": "^2.6.3",
