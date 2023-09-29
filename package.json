@@ -38,7 +38,7 @@
     "ember-simple-auth": "^6.0.0",
     "js-sha256": "^0.9.0",
     "tracked-built-ins": "^3.1.1",
-    "uuid": "^9.0.0"
+    "uuid": "^9.0.1"
   },
   "devDependencies": {
     "@adfinis/eslint-config": "2.0.0",
