@@ -8,8 +8,6 @@ module("Unit | Service | session", function (hooks) {
   setupMirage(hooks);
 
   test("it can trigger a single logout", async function (assert) {
-    assert.expect(3);
-
     const authenticator = this.owner.lookup("authenticator:oidc");
     const session = this.owner.lookup("service:session");
     set(session, "session.authenticator", "authenticator:oidc");
@@ -27,8 +25,6 @@ module("Unit | Service | session", function (hooks) {
   });
 
   test("it can trigger an authentication refresh", async function (assert) {
-    assert.expect(4);
-
     const authenticator = this.owner.lookup("authenticator:oidc");
     authenticator._refresh = () => {
       assert.step("refresh");
@@ -43,7 +39,7 @@ module("Unit | Service | session", function (hooks) {
     assert.notStrictEqual(
       session.data.authenticated.expireTime,
       1,
-      "Updates expiry time"
+      "Updates expiry time",
     );
 
     set(session, "data.authenticated.expireTime", new Date().getTime() + 10000);
@@ -52,8 +48,6 @@ module("Unit | Service | session", function (hooks) {
   });
 
   test("it can compute authentication headers", function (assert) {
-    assert.expect(2);
-
     const session = this.owner.lookup("service:session");
     const internalSession = session.session;
     internalSession.isAuthenticated = true;
@@ -71,8 +65,6 @@ module("Unit | Service | session", function (hooks) {
   });
 
   test("it continues a stored transition", function (assert) {
-    assert.expect(1);
-
     const session = this.owner.lookup("service:session");
     set(session, "data.nextURL", "/protected/secret");
 

@@ -68,7 +68,7 @@ export default class OIDCAuthenticationRoute extends Route {
   async afterModel(_, transition) {
     if (!this.config.authEndpoint) {
       throw new Error(
-        "Please define all OIDC endpoints (auth, token, logout, userinfo)"
+        "Please define all OIDC endpoints (auth, token, logout, userinfo)",
       );
     }
 
@@ -80,7 +80,7 @@ export default class OIDCAuthenticationRoute extends Route {
       return await this._handleCallbackRequest(
         queryParams.code,
         queryParams.state,
-        transition
+        transition,
       );
     }
 
@@ -159,7 +159,7 @@ export default class OIDCAuthenticationRoute extends Route {
 
     if (this.config.enablePkce) {
       const pkceChallenge = generatePkceChallenge(
-        this.session.data.pkceCodeVerifier
+        this.session.data.pkceCodeVerifier,
       );
       search.push(`code_challenge=${pkceChallenge}`);
       search.push("code_challenge_method=S256");
@@ -168,7 +168,9 @@ export default class OIDCAuthenticationRoute extends Route {
     search = search.filter(Boolean).join("&");
 
     this._redirectToUrl(
-      `${getAbsoluteUrl(this.config.host)}${this.config.authEndpoint}?${search}`
+      `${getAbsoluteUrl(this.config.host)}${
+        this.config.authEndpoint
+      }?${search}`,
     );
   }
 }

@@ -22,7 +22,7 @@ export function generateCodeVerifier(len = 43) {
   const chars = new Array(len);
   for (let i = 0; i < len; i++) {
     chars[i] = RANDOM_DATA_ALPHABET.charCodeAt(
-      randomData[i] % RANDOM_DATA_ALPHABET.length
+      randomData[i] % RANDOM_DATA_ALPHABET.length,
     );
   }
 

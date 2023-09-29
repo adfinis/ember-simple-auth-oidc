@@ -8,8 +8,6 @@ module("Unit | Adapter | oidc json api adapter", function (hooks) {
   setupMirage(hooks);
 
   test("it sets the correct headers", async function (assert) {
-    assert.expect(1);
-
     const adapter = this.owner.lookup("adapter:oidc-json-api-adapter");
     const session = this.owner.lookup("service:session");
     set(session, "session.isAuthenticated", true);
@@ -19,8 +17,6 @@ module("Unit | Adapter | oidc json api adapter", function (hooks) {
   });
 
   test("it refreshes the access token before ember-data requests", async function (assert) {
-    assert.expect(21);
-
     const adapter = this.owner.lookup("adapter:oidc-json-api-adapter");
 
     adapter.session.refreshAuthentication.perform = () => {
@@ -46,8 +42,6 @@ module("Unit | Adapter | oidc json api adapter", function (hooks) {
   });
 
   test("it invalidates the session correctly on a 401 response", function (assert) {
-    assert.expect(3);
-
     const adapter = this.owner.lookup("adapter:oidc-json-api-adapter");
     const session = adapter.session;
     session.session.content = {};
@@ -60,7 +54,7 @@ module("Unit | Adapter | oidc json api adapter", function (hooks) {
 
     assert.strictEqual(
       adapter.session.data.nextURL,
-      location.href.replace(location.origin, "")
+      location.href.replace(location.origin, ""),
     );
 
     assert.verifySteps(["invalidate"]);

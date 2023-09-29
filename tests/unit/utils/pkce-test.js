@@ -17,7 +17,7 @@ module("Unit | Utility | pkce", function () {
         .fromByteArray(new Uint8Array(sha256.arrayBuffer(codeVerifier)))
         .replace(/\+/g, "-")
         .replace(/\//g, "_")
-        .replace(/=+$/, "")
+        .replace(/=+$/, ""),
     );
   });
 

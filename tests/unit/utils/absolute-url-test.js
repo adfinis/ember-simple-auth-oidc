@@ -7,22 +7,18 @@ module("Unit | Utils | absoluteUrl", function (hooks) {
   setupTest(hooks);
 
   test("it transforms a relative url to an absolute one", function (assert) {
-    assert.expect(2);
-
     const url = "/login";
     const host = "https://myTestHost";
 
     assert.strictEqual(
       getAbsoluteUrl(url),
-      `${location.protocol}//${location.host}/login`
+      `${location.protocol}//${location.host}/login`,
     );
 
     assert.strictEqual(getAbsoluteUrl(url, host), `${host}/login`);
   });
 
   test("it does not transform an absolute url", function (assert) {
-    assert.expect(2);
-
     const url = "http://myTestHost/login";
     assert.strictEqual(getAbsoluteUrl(url), url);
 
