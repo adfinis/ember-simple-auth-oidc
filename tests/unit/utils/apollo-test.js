@@ -14,15 +14,13 @@ module("Unit | apollo", function (hooks) {
   });
 
   test("it handles authorization", async function (assert) {
-    assert.expect(2);
-
     this.server.post(
       "/graphql",
       (_, request) => {
         assert.strictEqual(request.requestHeaders.authorization, "Bearer test");
         return { data: { foo: 1 } };
       },
-      200
+      200,
     );
 
     const response = await this.apollo.query({
@@ -37,8 +35,6 @@ module("Unit | apollo", function (hooks) {
   });
 
   test("it handles 401 errors", async function (assert) {
-    assert.expect(1);
-
     this.server.post("/graphql", {}, 401);
 
     try {

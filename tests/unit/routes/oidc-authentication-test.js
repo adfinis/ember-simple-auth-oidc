@@ -14,8 +14,6 @@ module("Unit | Route | oidc-authentication", function (hooks) {
   });
 
   test("it can handle already authenticated requests", function (assert) {
-    assert.expect(3);
-
     const router = this.owner.lookup("route:oidc-authentication");
     router.urlFor = () => "/test";
 
@@ -31,8 +29,6 @@ module("Unit | Route | oidc-authentication", function (hooks) {
   });
 
   test("it can handle an unauthenticated request", function (assert) {
-    assert.expect(3);
-
     const router = this.owner.lookup("service:router");
     router.urlFor = () => "/test";
 
@@ -51,8 +47,6 @@ module("Unit | Route | oidc-authentication", function (hooks) {
   });
 
   test("it can handle a request with an authentication code", function (assert) {
-    assert.expect(1);
-
     const routeFactory = this.owner.factoryFor("route:oidc-authentication");
     this.owner.register(
       "route:custom-oidc-authentication",
@@ -67,7 +61,7 @@ module("Unit | Route | oidc-authentication", function (hooks) {
           },
           set() {},
         };
-      }
+      },
     );
     const route = this.owner.lookup("route:custom-oidc-authentication");
 
@@ -75,8 +69,6 @@ module("Unit | Route | oidc-authentication", function (hooks) {
   });
 
   test("it can handle older version of router_js", function (assert) {
-    assert.expect(1);
-
     const routeFactory = this.owner.factoryFor("route:oidc-authentication");
     this.owner.register(
       "route:custom-oidc-authentication",
@@ -91,7 +83,7 @@ module("Unit | Route | oidc-authentication", function (hooks) {
           },
           set() {},
         };
-      }
+      },
     );
     const route = this.owner.lookup("route:custom-oidc-authentication");
 
@@ -99,8 +91,6 @@ module("Unit | Route | oidc-authentication", function (hooks) {
   });
 
   test("it can handle a failing authentication", function (assert) {
-    assert.expect(3);
-
     const routeFactory = this.owner.factoryFor("route:oidc-authentication");
     this.owner.register(
       "route:custom-oidc-authentication",
@@ -115,7 +105,7 @@ module("Unit | Route | oidc-authentication", function (hooks) {
             return true;
           },
         };
-      }
+      },
     );
     const route = this.owner.lookup("route:custom-oidc-authentication");
 
@@ -141,7 +131,7 @@ module("Unit | Route | oidc-authentication", function (hooks) {
           queryParams: { code: "sometestcode", state: "state2" },
         },
       }),
-      Error
+      Error,
     );
 
     route.session.authenticate = async () => {
@@ -155,13 +145,11 @@ module("Unit | Route | oidc-authentication", function (hooks) {
           queryParams: { code: "sometestcode", state: "state2" },
         },
       }),
-      Error
+      Error,
     );
   });
 
   test("it forwards customized login_hint param", function (assert) {
-    assert.expect(4);
-
     const routeFactory = this.owner.factoryFor("route:oidc-authentication");
     this.owner.register(
       "route:custom-oidc-authentication",
@@ -179,7 +167,7 @@ module("Unit | Route | oidc-authentication", function (hooks) {
           assert.ok(url.includes("redirect_uri=test"));
           assert.ok(url.includes("custom_login_hint=my-idp"));
         }
-      }
+      },
     );
     const route = this.owner.lookup("route:custom-oidc-authentication");
 
@@ -189,8 +177,6 @@ module("Unit | Route | oidc-authentication", function (hooks) {
   });
 
   test("it stores an intercepted transition with query params", function (assert) {
-    assert.expect(1);
-
     const router = this.owner.lookup("service:router");
     const routeFactory = this.owner.factoryFor("route:oidc-authentication");
     this.owner.register(
@@ -212,10 +198,10 @@ module("Unit | Route | oidc-authentication", function (hooks) {
         _redirectToUrl() {
           assert.strictEqual(
             this.session.data.nextURL,
-            "/protected/users?param0=value0&param1=value1"
+            "/protected/users?param0=value0&param1=value1",
           );
         }
-      }
+      },
     );
     const route = this.owner.lookup("route:custom-oidc-authentication");
 

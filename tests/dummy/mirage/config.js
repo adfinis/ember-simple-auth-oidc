@@ -33,7 +33,7 @@ export default function makeServer(config) {
           {},
           {
             data: { items: [{ id: 1, name: "Test" }] },
-          }
+          },
         );
       });
     },
