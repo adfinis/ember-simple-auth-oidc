@@ -42,7 +42,7 @@ export default class LoginRoute extends OIDCAuthenticationRoute {}
 
 Authenticated routes need to call `session.requireAuthentication` in their
 respective `beforeModel`, to ensure that unauthenticated transitions are
-prevented and redirected to the authentication route. It's recommended to 
+prevented and redirected to the authentication route. It's recommended to
 await the `beforeModel` hook, to make sure authentication is handled before
 other API calls are triggered (which might lead to `401` responses, potentially
 causing redirect loops).
@@ -251,22 +251,22 @@ Debounce timeout for redirection after (multiple) `401` responses are received t
 
 - `git clone git@github.com:adfinis/ember-simple-auth-oidc.git`
 - `cd ember-simple-auth-oidc`
-- `yarn install`
+- `pnpm install`
 
 ### Linting
 
-- `yarn lint` – Runs all linting tasks
+- `pnpm lint` – Runs all linting tasks
 
 ### Running tests
 
-- `yarn test` – Runs all linting and test tasks
-- `yarn test:ember` – Runs the test suite on the current Ember version
-- `yarn test:ember --server` – Runs the test suite in "watch mode"
-- `yarn test:ember-compatibility` – Runs the test suite against multiple Ember versions
+- `pnpm test` – Runs all linting and test tasks
+- `pnpm test:ember` – Runs the test suite on the current Ember version
+- `pnpm test:ember --server` – Runs the test suite in "watch mode"
+- `pnpm test:ember-compatibility` – Runs the test suite against multiple Ember versions
 
 ### Running the dummy application
 
-- `yarn start`
+- `pnpm start`
 - Visit the dummy application at [http://localhost:4200](http://localhost:4200).
 
 For more information on using ember-cli, visit [https://ember-cli.com/](https://ember-cli.com/).
