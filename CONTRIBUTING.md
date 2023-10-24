@@ -3,14 +3,13 @@
 ## Installation
 
 - `git clone <repository-url>`
-- `cd my-addon`
+- `cd ember-simple-auth-oidc`
 - `pnpm install`
 
 ## Linting
 
-- `pnpm run lint:hbs`
-- `pnpm run lint:js`
-- `pnpm run lint:js -- --fix`
+- `pnpm lint`
+- `pnpm lint:fix`
 
 ## Running tests
 
