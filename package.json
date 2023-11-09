@@ -80,7 +80,7 @@
     "graphql": "16.8.1",
     "graphql-tag": "2.12.6",
     "loader.js": "4.7.0",
-    "miragejs": "0.1.47",
+    "miragejs": "0.1.48",
     "prettier": "3.0.3",
     "qunit": "2.20.0",
     "qunit-dom": "3.0.0",
