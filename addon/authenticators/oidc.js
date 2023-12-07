@@ -1,5 +1,7 @@
 import { later } from "@ember/runloop";
 import { inject as service } from "@ember/service";
+import { camelize } from "@ember/string";
+import { lastValue, task } from "ember-concurrency";
 import BaseAuthenticator from "ember-simple-auth/authenticators/base";
 import { resolve } from "rsvp";
 import { TrackedObject } from "tracked-built-ins";
@@ -12,11 +14,46 @@ import {
   isBadRequestResponse,
 } from "ember-simple-auth-oidc/utils/errors";
 
+const camelizeObjectKeys = (obj) => {
+  Object.keys(obj).forEach((key) => {
+    obj[camelize(key)] = obj[key];
+    delete obj[key];
+  });
+  return obj;
+};
+
 export default class OidcAuthenticator extends BaseAuthenticator {
   @service router;
   @service session;
 
   @config config;
+
+  get configuration() {
+    return { ...this.config, ...this.fetchedConfig };
+  }
+
+  get hasEndpointsConfigured() {
+    return (
+      this.configuration.tokenEndpoint && this.configuration.userinfoEndpoint
+    );
+  }
+
+  /**
+   * Tries to fetch the OIDC provider configuration from the specified host/realm.
+   * SPEC: https://openid.net/specs/openid-connect-discovery-1_0.html#ProviderConfig
+   */
+  @lastValue("_fetchAuthConfiguration") fetchedConfig;
+  _fetchAuthConfiguration = task(async () => {
+    if (!this.config.host) {
+      throw new Error("Please define a OIDC host.");
+    }
+    const response = await fetch(
+      `${this.config.host}/.well-known/openid-configuration`,
+    );
+    const json = await response.json();
+
+    return camelizeObjectKeys(json.data);
+  });
 
   /**
    * Authenticate the client with the given authentication code. The
@@ -28,10 +65,14 @@ export default class OidcAuthenticator extends BaseAuthenticator {
    * @returns {Object} The parsed response data
    */
   async authenticate({ code, redirectUri, codeVerifier, isRefresh }) {
-    if (!this.config.tokenEndpoint || !this.config.userinfoEndpoint) {
-      throw new Error(
-        "Please define all OIDC endpoints (auth, token, userinfo)",
-      );
+    if (!this.hasEndpointsConfigured) {
+      await this._fetchAuthConfiguration.perform();
+
+      if (!this.hasEndpointsConfigured) {
+        throw new Error(
+          "Please define all OIDC endpoints (auth, token, userinfo)",
+        );
+      }
     }
 
     if (isRefresh) {
@@ -43,12 +84,12 @@ export default class OidcAuthenticator extends BaseAuthenticator {
 
     const bodyObject = {
       code,
-      client_id: this.config.clientId,
+      client_id: this.configuration.clientId,
       grant_type: "authorization_code",
       redirect_uri: redirectUri,
     };
 
-    if (this.config.enablePkce) {
+    if (this.configuration.enablePkce) {
       bodyObject.code_verifier = codeVerifier;
     }
 
@@ -57,7 +98,7 @@ export default class OidcAuthenticator extends BaseAuthenticator {
       .join("&");
 
     const response = await fetch(
-      getAbsoluteUrl(this.config.tokenEndpoint, this.config.host),
+      getAbsoluteUrl(this.configuration.tokenEndpoint, this.config.host),
       {
         method: "POST",
         headers: {
@@ -101,16 +142,16 @@ export default class OidcAuthenticator extends BaseAuthenticator {
    * @param {String} idToken The id_token of the session to invalidate
    */
   singleLogout(idToken) {
-    if (!this.config.endSessionEndpoint) {
+    if (!this.configuration.endSessionEndpoint) {
       return;
     }
 
     const params = [];
 
-    if (this.config.afterLogoutUri) {
+    if (this.configuration.afterLogoutUri) {
       params.push(
         `post_logout_redirect_uri=${getAbsoluteUrl(
-          this.config.afterLogoutUri,
+          this.configuration.afterLogoutUri,
         )}`,
       );
     }
@@ -121,8 +162,8 @@ export default class OidcAuthenticator extends BaseAuthenticator {
 
     this._redirectToUrl(
       `${getAbsoluteUrl(
-        this.config.endSessionEndpoint,
-        this.config.host,
+        this.configuration.endSessionEndpoint,
+        this.configuration.host,
       )}?${params.join("&")}`,
     );
   }
@@ -167,7 +208,7 @@ export default class OidcAuthenticator extends BaseAuthenticator {
     try {
       const bodyObject = {
         refresh_token,
-        client_id: this.config.clientId,
+        client_id: this.configuration.clientId,
         grant_type: "refresh_token",
         redirect_uri: redirectUri,
       };
@@ -176,7 +217,7 @@ export default class OidcAuthenticator extends BaseAuthenticator {
         .join("&");
 
       const response = await fetch(
-        getAbsoluteUrl(this.config.tokenEndpoint, this.config.host),
+        getAbsoluteUrl(this.configuration.tokenEndpoint, this.config.host),
         {
           method: "POST",
           headers: {
@@ -202,7 +243,7 @@ export default class OidcAuthenticator extends BaseAuthenticator {
     } catch (e) {
       if (
         (isServerError || isAbortError(e)) &&
-        retryCount < this.config.amountOfRetries - 1
+        retryCount < this.configuration.amountOfRetries - 1
       ) {
         return new Promise((resolve) => {
           later(
@@ -211,7 +252,7 @@ export default class OidcAuthenticator extends BaseAuthenticator {
               resolve(
                 this._refresh(refresh_token, redirectUri, retryCount + 1),
               ),
-            this.config.retryTimeout,
+            this.configuration.retryTimeout,
           );
         });
       }
@@ -227,10 +268,10 @@ export default class OidcAuthenticator extends BaseAuthenticator {
    */
   async _getUserinfo(accessToken) {
     const response = await fetch(
-      getAbsoluteUrl(this.config.userinfoEndpoint, this.config.host),
+      getAbsoluteUrl(this.configuration.userinfoEndpoint, this.config.host),
       {
         headers: {
-          Authorization: `${this.config.authPrefix} ${accessToken}`,
+          Authorization: `${this.configuration.authPrefix} ${accessToken}`,
           Accept: "application/json",
         },
       },
@@ -262,9 +303,11 @@ export default class OidcAuthenticator extends BaseAuthenticator {
 
     const expireInMilliseconds = expires_in
       ? expires_in * 1000
-      : this.config.expiresIn;
+      : this.configuration.expiresIn;
     const expireTime =
-      new Date().getTime() + expireInMilliseconds - this.config.refreshLeeway;
+      new Date().getTime() +
+      expireInMilliseconds -
+      this.configuration.refreshLeeway;
 
     return new TrackedObject({
       access_token,

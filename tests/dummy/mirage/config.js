@@ -1,6 +1,9 @@
 import { discoverEmberDataModels } from "ember-cli-mirage";
 import { createServer, Response } from "miragejs";
 
+const REALM = "test-realm";
+const REALM_PATH = `/realms/${REALM}`;
+
 export default function makeServer(config) {
   return createServer({
     ...config,
@@ -10,12 +13,30 @@ export default function makeServer(config) {
       this.namespace = "";
       this.timing = 0;
 
-      this.post("/realms/test-realm/protocol/openid-connect/token", {
+      this.get(`${REALM_PATH}/.well-known/openid-configuration`, () => {
+        const config = {
+          issuer: this.urlPrefix,
+          authorization_endpoint: `${this.urlPrefix}/connect/authorize`,
+          token_endpoint: `${this.urlPrefix}${REALM_PATH}/protocol/openid-connect/token`,
+          userinfo_endpoint: `${this.urlPrefix}${REALM_PATH}/protocol/openid-connect/userinfo`,
+          end_session_endpoint: `${this.urlPrefix}/connect/end_session`,
+          jwks_uri: `${this.urlPrefix}/jwks.json`,
+          registration_endpoint: `${this.urlPrefix}/connect/register`,
+        };
+        return new Response(
+          200,
+          {},
+          {
+            data: config,
+          },
+        );
+      });
+      this.post(`${REALM_PATH}/protocol/openid-connect/token`, {
         access_token: "access.token",
         refresh_token: "refresh.token",
         id_token: "id.token",
       });
-      this.get("/realms/test-realm/protocol/openid-connect/userinfo", {
+      this.get(`${REALM_PATH}/protocol/openid-connect/userinfo`, {
         sub: 1,
       });
       this.get("/users");
