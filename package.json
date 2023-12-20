@@ -25,7 +25,8 @@
     "start": "ember serve",
     "test": "concurrently \"npm:lint\" \"npm:test:*\" --names \"lint,test:\"",
     "test:ember": "ember test",
-    "test:ember-compatibility": "ember try:each"
+    "test:ember-compatibility": "ember try:each",
+    "prepare": "husky install"
   },
   "dependencies": {
     "@apollo/client": "^3.8.8",
@@ -46,6 +47,8 @@
     "@adfinis/semantic-release-config": "4.1.0",
     "@babel/eslint-parser": "7.23.3",
     "@babel/plugin-proposal-decorators": "7.23.5",
+    "@commitlint/cli": "^18.4.3",
+    "@commitlint/config-conventional": "^18.4.3",
     "@ember/optional-features": "2.0.0",
     "@ember/string": "3.1.1",
     "@ember/test-helpers": "3.2.1",
@@ -79,6 +82,8 @@
     "eslint-plugin-qunit": "8.0.1",
     "graphql": "16.8.1",
     "graphql-tag": "2.12.6",
+    "husky": "^8.0.0",
+    "lint-staged": "^15.2.0",
     "loader.js": "4.7.0",
     "miragejs": "0.1.48",
     "prettier": "3.1.0",
@@ -111,5 +116,11 @@
     "extends": [
       "@commitlint/config-conventional"
     ]
+  },
+  "lint-staged": {
+    "*.js": "eslint --cache --fix",
+    "*.hbs": "ember-template-lint --fix",
+    "*.scss": "stylelint --fix",
+    "*.{graphql,json,md,yaml}": "prettier --write"
   }
 }
