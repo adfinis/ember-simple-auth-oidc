@@ -3,14 +3,14 @@
 ember-simple-auth-oidc v4 includes an upgrade to Ember v4 and Ember Simple
 Auth v4, which entails the removal of the deprecated usage of mixins. This
 results in a number of breaking changes, which are described in the following
-sections. Refer to the [Ember Simple Auth](https://github.com/simplabs/ember-simple-auth) 
-and [Ember v4](https://blog.emberjs.com/the-road-to-ember-4-0/) documentation 
+sections. Refer to the [Ember Simple Auth](https://github.com/simplabs/ember-simple-auth)
+and [Ember v4](https://blog.emberjs.com/the-road-to-ember-4-0/) documentation
 for more information.
 
 In addition, the access token is no longer refreshed through a timer-based
 approach and requires an explicit refresh to ensure that the access token
 hasn't expired. Although a refresh is ensured by the addon in certain
-scenarios, the consuming application needs to be aware of these behavioral 
+scenarios, the consuming application needs to be aware of these behavioral
 changes, especially when performing authorized requests.
 
 ## Mixin removal and replacement
@@ -84,7 +84,7 @@ requests first trigger an access token refresh, to ensure that the authorization
 token is up-to-date. By default, the adapters simply provide the authorization
 headers necessary to authorize the Ember Data requests. The headers are also
 available through the session service and can be used when overriding the
-adapter's headers. The provided adapters contain the necessary logic to handle 
+adapter's headers. The provided adapters contain the necessary logic to handle
 401 responses appropriately.
 
 ```diff
@@ -115,21 +115,20 @@ For more information visit their [upgrade to v4 guide](https://github.com/simpla
 
 ## Proxy usage and IE11 support
 
-The new implementation of `OIDCJSONAPIAdapter` and `OIDCRESTAdapter` include 
-the usage of [Proxy](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Proxy) 
-to ensure that an access token refresh is performed before issuing Ember Data 
-requests. When using these adapters and requiring IE11 support, a polyfill needs 
+The new implementation of `OIDCJSONAPIAdapter` and `OIDCRESTAdapter` include
+the usage of [Proxy](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Proxy)
+to ensure that an access token refresh is performed before issuing Ember Data
+requests. When using these adapters and requiring IE11 support, a polyfill needs
 to be provided.
 
 ## Access token refresh
 
 Previous implementations included a timer-based access token refresh mechanism,
 which ensured that the access token never expired as long as a valid refresh
-token was available. The new implementation automatically refreshes the access 
-token before transitioning to an authenticated route and before issuing Ember 
-Data requests. When other kinds of authorized requests are performed, a token 
-refresh needs to be ensured before making the request, by performing the task 
-`session.refreshAuthentication` provided through the session service. This will 
-ensure that the access token is valid and will prevent any unnecessary 401 
+token was available. The new implementation automatically refreshes the access
+token before transitioning to an authenticated route and before issuing Ember
+Data requests. When other kinds of authorized requests are performed, a token
+refresh needs to be ensured before making the request, by performing the task
+`session.refreshAuthentication` provided through the session service. This will
+ensure that the access token is valid and will prevent any unnecessary 401
 responses.
-

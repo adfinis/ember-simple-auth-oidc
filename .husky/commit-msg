@@ -1,0 +1,5 @@
+# skip in CI
+[ -n "$CI" ] && exit 0
+
+# lint commit message
+pnpm commitlint --edit "$1"

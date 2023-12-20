@@ -8,8 +8,14 @@
 
 ## Linting
 
+Automatic linting via `husky` _pre-commit_ is setup. For manual linting use:
+
 - `pnpm lint`
 - `pnpm lint:fix`
+
+## Formatting
+
+Please stick to [conventional commit](https://www.conventionalcommits.org/en/v1.0.0/) messages to make our semantic release versioning work.
 
 ## Running tests
 
