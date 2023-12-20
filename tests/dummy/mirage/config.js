@@ -4,7 +4,7 @@ import { createServer, Response } from "miragejs";
 export default function makeServer(config) {
   return createServer({
     ...config,
-    models: { ...discoverEmberDataModels(), ...config.models },
+    models: { ...discoverEmberDataModels(config.store), ...config.models },
     routes() {
       this.urlPrefix = "http://localhost:4200";
       this.namespace = "";
