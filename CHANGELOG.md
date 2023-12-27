@@ -1,3 +1,10 @@
+## [6.0.1](https://github.com/adfinis/ember-simple-auth-oidc/compare/v6.0.0...v6.0.1) (2023-12-27)
+
+
+### Bug Fixes
+
+* pass config.store to discoverEmberDataModels ([7959dd9](https://github.com/adfinis/ember-simple-auth-oidc/commit/7959dd9bb2a602975ffc1dd838cba12f0aa18a71))
+
 # [6.0.0](https://github.com/adfinis/ember-simple-auth-oidc/compare/v5.1.0...v6.0.0) (2023-08-30)
 
 
