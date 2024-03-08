@@ -33,8 +33,8 @@ dependencies:
     specifier: ^6.0.0
     version: 6.0.0(@ember/test-helpers@3.2.1)
   js-sha256:
-    specifier: ^0.10.1
-    version: 0.10.1
+    specifier: ^0.11.0
+    version: 0.11.0
   tracked-built-ins:
     specifier: ^3.3.0
     version: 3.3.0
@@ -8840,8 +8840,8 @@ packages:
       merge-stream: 2.0.0
       supports-color: 8.1.1
 
-  /js-sha256@0.10.1:
-    resolution: {integrity: sha512-5obBtsz9301ULlsgggLg542s/jqtddfOpV5KJc4hajc9JV8GeY2gZHSVpYBn4nWqAUTJ9v+xwtbJ1mIBgIH5Vw==}
+  /js-sha256@0.11.0:
+    resolution: {integrity: sha512-6xNlKayMZvds9h1Y1VWc0fQHQ82BxTXizWPEtEeGvmOUYpBRy4gbWroHLpzowe6xiQhHpelCQiE7HEdznyBL9Q==}
     dev: false
 
   /js-string-escape@1.0.1:
