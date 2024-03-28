@@ -45,7 +45,7 @@ dependencies:
 devDependencies:
   '@adfinis/eslint-config':
     specifier: 2.1.0
-    version: 2.1.0(@babel/core@7.23.5)(@babel/eslint-parser@7.23.10)(@babel/plugin-proposal-decorators@7.23.9)(eslint-config-prettier@9.1.0)(eslint-plugin-ember@11.12.0)(eslint-plugin-import@2.29.1)(eslint-plugin-n@16.6.2)(eslint-plugin-prettier@5.1.3)(eslint-plugin-qunit@8.1.1)(eslint@8.57.0)(prettier@3.2.5)
+    version: 2.1.0(@babel/core@7.23.5)(@babel/eslint-parser@7.23.10)(@babel/plugin-proposal-decorators@7.24.1)(eslint-config-prettier@9.1.0)(eslint-plugin-ember@11.12.0)(eslint-plugin-import@2.29.1)(eslint-plugin-n@16.6.2)(eslint-plugin-prettier@5.1.3)(eslint-plugin-qunit@8.1.1)(eslint@8.57.0)(prettier@3.2.5)
   '@adfinis/semantic-release-config':
     specifier: 4.1.0
     version: 4.1.0(typescript@5.2.2)
@@ -53,8 +53,8 @@ devDependencies:
     specifier: 7.23.10
     version: 7.23.10(@babel/core@7.23.5)(eslint@8.57.0)
   '@babel/plugin-proposal-decorators':
-    specifier: 7.23.9
-    version: 7.23.9(@babel/core@7.23.5)
+    specifier: 7.24.1
+    version: 7.24.1(@babel/core@7.23.5)
   '@ember/optional-features':
     specifier: 2.1.0
     version: 2.1.0
@@ -192,7 +192,7 @@ packages:
     engines: {node: '>=0.10.0'}
     dev: true
 
-  /@adfinis/eslint-config@2.1.0(@babel/core@7.23.5)(@babel/eslint-parser@7.23.10)(@babel/plugin-proposal-decorators@7.23.9)(eslint-config-prettier@9.1.0)(eslint-plugin-ember@11.12.0)(eslint-plugin-import@2.29.1)(eslint-plugin-n@16.6.2)(eslint-plugin-prettier@5.1.3)(eslint-plugin-qunit@8.1.1)(eslint@8.57.0)(prettier@3.2.5):
+  /@adfinis/eslint-config@2.1.0(@babel/core@7.23.5)(@babel/eslint-parser@7.23.10)(@babel/plugin-proposal-decorators@7.24.1)(eslint-config-prettier@9.1.0)(eslint-plugin-ember@11.12.0)(eslint-plugin-import@2.29.1)(eslint-plugin-n@16.6.2)(eslint-plugin-prettier@5.1.3)(eslint-plugin-qunit@8.1.1)(eslint@8.57.0)(prettier@3.2.5):
     resolution: {integrity: sha512-GwxyFjj7SCzmka5zPH/rCDgnySKJHjJftoK0HXYmG+M1B0EGcBrxG15/xWdbERyM55oJvkEjjKUSxlXFHoDxsA==}
     peerDependencies:
       '@babel-plugin-proposal-decorators': '*'
@@ -219,7 +219,7 @@ packages:
     dependencies:
       '@babel/core': 7.23.5
       '@babel/eslint-parser': 7.23.10(@babel/core@7.23.5)(eslint@8.57.0)
-      '@babel/plugin-proposal-decorators': 7.23.9(@babel/core@7.23.5)
+      '@babel/plugin-proposal-decorators': 7.24.1(@babel/core@7.23.5)
       eslint: 8.57.0
       eslint-config-prettier: 9.1.0(eslint@8.57.0)
       eslint-plugin-ember: 11.12.0(eslint@8.57.0)
@@ -367,8 +367,8 @@ packages:
       lru-cache: 5.1.1
       semver: 6.3.1
 
-  /@babel/helper-create-class-features-plugin@7.23.5(@babel/core@7.23.5):
-    resolution: {integrity: sha512-QELlRWxSpgdwdJzSJn4WAhKC+hvw/AtHbbrIoncKHkhKKR/luAlKkgBDcri1EzWAo8f8VvYVryEHN4tax/V67A==}
+  /@babel/helper-create-class-features-plugin@7.23.9(@babel/core@7.23.5):
+    resolution: {integrity: sha512-B2L9neXTIyPQoXDm+NtovPvG6VOLWnaXu3BIeVDWwdKFgG30oNa6CqVGiJPDWQwIAK49t9gnQI9c6K6RzabiKw==}
     engines: {node: '>=6.9.0'}
     peerDependencies:
       '@babel/core': ^7.0.0
@@ -384,8 +384,8 @@ packages:
       '@babel/helper-split-export-declaration': 7.22.6
       semver: 6.3.1
 
-  /@babel/helper-create-class-features-plugin@7.23.9(@babel/core@7.23.5):
-    resolution: {integrity: sha512-B2L9neXTIyPQoXDm+NtovPvG6VOLWnaXu3BIeVDWwdKFgG30oNa6CqVGiJPDWQwIAK49t9gnQI9c6K6RzabiKw==}
+  /@babel/helper-create-class-features-plugin@7.24.1(@babel/core@7.23.5):
+    resolution: {integrity: sha512-1yJa9dX9g//V6fDebXoEfEsxkZHk3Hcbm+zLhyu6qVgYFLvmTALTeV+jNU9e5RnYtioBrGEOdoI2joMSNQ/+aA==}
     engines: {node: '>=6.9.0'}
     peerDependencies:
       '@babel/core': ^7.0.0
@@ -396,7 +396,7 @@ packages:
       '@babel/helper-function-name': 7.23.0
       '@babel/helper-member-expression-to-functions': 7.23.0
       '@babel/helper-optimise-call-expression': 7.22.5
-      '@babel/helper-replace-supers': 7.22.20(@babel/core@7.23.5)
+      '@babel/helper-replace-supers': 7.24.1(@babel/core@7.23.5)
       '@babel/helper-skip-transparent-expression-wrappers': 7.22.5
       '@babel/helper-split-export-declaration': 7.22.6
       semver: 6.3.1
@@ -478,6 +478,10 @@ packages:
     resolution: {integrity: sha512-uLls06UVKgFG9QD4OeFYLEGteMIAa5kpTPcFL28yuCIIzsf6ZyKZMllKVOCZFhiZ5ptnwX4mtKdWCBE/uT4amg==}
     engines: {node: '>=6.9.0'}
 
+  /@babel/helper-plugin-utils@7.24.0:
+    resolution: {integrity: sha512-9cUznXMG0+FxRuJfvL82QlTqIzhVW9sL0KjMPHhAOOvpQGL8QtdxnBKILjBqxlHyliz0yCa1G903ZXI/FuHy2w==}
+    engines: {node: '>=6.9.0'}
+
   /@babel/helper-remap-async-to-generator@7.22.20(@babel/core@7.23.5):
     resolution: {integrity: sha512-pBGyV4uBqOns+0UvhsTO8qgl8hO89PmiDYv+/COyp1aeMcmfrfruz+/nCMFiYyFF/Knn0yfrC85ZzNFjembFTw==}
     engines: {node: '>=6.9.0'}
@@ -491,6 +495,17 @@ packages:
 
   /@babel/helper-replace-supers@7.22.20(@babel/core@7.23.5):
     resolution: {integrity: sha512-qsW0In3dbwQUbK8kejJ4R7IHVGwHJlV6lpG6UA7a9hSa2YEiAib+N1T2kr6PEeUT+Fl7najmSOS6SmAwCHK6Tw==}
+    engines: {node: '>=6.9.0'}
+    peerDependencies:
+      '@babel/core': ^7.0.0
+    dependencies:
+      '@babel/core': 7.23.5
+      '@babel/helper-environment-visitor': 7.22.20
+      '@babel/helper-member-expression-to-functions': 7.23.0
+      '@babel/helper-optimise-call-expression': 7.22.5
+
+  /@babel/helper-replace-supers@7.24.1(@babel/core@7.23.5):
+    resolution: {integrity: sha512-QCR1UqC9BzG5vZl8BMicmZ28RuUBnHhAMddD8yHFHDRH9lLTZ9uUPehX8ctVPT8l0TKblJidqcgUUKGVrePleQ==}
     engines: {node: '>=6.9.0'}
     peerDependencies:
       '@babel/core': ^7.0.0
@@ -591,19 +606,19 @@ packages:
       '@babel/core': ^7.0.0-0
     dependencies:
       '@babel/core': 7.23.5
-      '@babel/helper-create-class-features-plugin': 7.23.5(@babel/core@7.23.5)
+      '@babel/helper-create-class-features-plugin': 7.23.9(@babel/core@7.23.5)
       '@babel/helper-plugin-utils': 7.22.5
 
-  /@babel/plugin-proposal-decorators@7.23.9(@babel/core@7.23.5):
-    resolution: {integrity: sha512-hJhBCb0+NnTWybvWq2WpbCYDOcflSbx0t+BYP65e5R9GVnukiDTi+on5bFkk4p7QGuv190H6KfNiV9Knf/3cZA==}
+  /@babel/plugin-proposal-decorators@7.24.1(@babel/core@7.23.5):
+    resolution: {integrity: sha512-zPEvzFijn+hRvJuX2Vu3KbEBN39LN3f7tW3MQO2LsIs57B26KU+kUc82BdAktS1VCM6libzh45eKGI65lg0cpA==}
     engines: {node: '>=6.9.0'}
     peerDependencies:
       '@babel/core': ^7.0.0-0
     dependencies:
       '@babel/core': 7.23.5
-      '@babel/helper-create-class-features-plugin': 7.23.9(@babel/core@7.23.5)
-      '@babel/helper-plugin-utils': 7.22.5
-      '@babel/plugin-syntax-decorators': 7.23.3(@babel/core@7.23.5)
+      '@babel/helper-create-class-features-plugin': 7.24.1(@babel/core@7.23.5)
+      '@babel/helper-plugin-utils': 7.24.0
+      '@babel/plugin-syntax-decorators': 7.24.1(@babel/core@7.23.5)
 
   /@babel/plugin-proposal-private-methods@7.18.6(@babel/core@7.23.5):
     resolution: {integrity: sha512-nutsvktDItsNn4rpGItSNV2sz1XwS+nfU0Rg8aCx3W3NOKVzdMjJRu0O5OkgDp3ZGICSTbgRpxZoWsxoKRvbeA==}
@@ -613,7 +628,7 @@ packages:
       '@babel/core': ^7.0.0-0
     dependencies:
       '@babel/core': 7.23.5
-      '@babel/helper-create-class-features-plugin': 7.23.5(@babel/core@7.23.5)
+      '@babel/helper-create-class-features-plugin': 7.23.9(@babel/core@7.23.5)
       '@babel/helper-plugin-utils': 7.22.5
 
   /@babel/plugin-proposal-private-property-in-object@7.21.0-placeholder-for-preset-env.2(@babel/core@7.23.5):
@@ -633,7 +648,7 @@ packages:
     dependencies:
       '@babel/core': 7.23.5
       '@babel/helper-annotate-as-pure': 7.22.5
-      '@babel/helper-create-class-features-plugin': 7.23.5(@babel/core@7.23.5)
+      '@babel/helper-create-class-features-plugin': 7.23.9(@babel/core@7.23.5)
       '@babel/helper-plugin-utils': 7.22.5
       '@babel/plugin-syntax-private-property-in-object': 7.14.5(@babel/core@7.23.5)
 
@@ -670,6 +685,15 @@ packages:
     dependencies:
       '@babel/core': 7.23.5
       '@babel/helper-plugin-utils': 7.22.5
+
+  /@babel/plugin-syntax-decorators@7.24.1(@babel/core@7.23.5):
+    resolution: {integrity: sha512-05RJdO/cCrtVWuAaSn1tS3bH8jbsJa/Y1uD186u6J4C/1mnHFxseeuWpsqr9anvo7TUulev7tm7GDwRV+VuhDw==}
+    engines: {node: '>=6.9.0'}
+    peerDependencies:
+      '@babel/core': ^7.0.0-0
+    dependencies:
+      '@babel/core': 7.23.5
+      '@babel/helper-plugin-utils': 7.24.0
 
   /@babel/plugin-syntax-dynamic-import@7.8.3(@babel/core@7.23.5):
     resolution: {integrity: sha512-5gdGbFon+PszYzqs83S3E5mpi7/y/8M9eC90MRTZfduQOYW76ig6SOSPNe41IG5LoP3FGBn2N0RjVDSQiS94kQ==}
@@ -863,7 +887,7 @@ packages:
       '@babel/core': ^7.0.0-0
     dependencies:
       '@babel/core': 7.23.5
-      '@babel/helper-create-class-features-plugin': 7.23.5(@babel/core@7.23.5)
+      '@babel/helper-create-class-features-plugin': 7.23.9(@babel/core@7.23.5)
       '@babel/helper-plugin-utils': 7.22.5
 
   /@babel/plugin-transform-class-static-block@7.22.11(@babel/core@7.23.5):
@@ -873,7 +897,7 @@ packages:
       '@babel/core': ^7.12.0
     dependencies:
       '@babel/core': 7.23.5
-      '@babel/helper-create-class-features-plugin': 7.23.5(@babel/core@7.23.5)
+      '@babel/helper-create-class-features-plugin': 7.23.9(@babel/core@7.23.5)
       '@babel/helper-plugin-utils': 7.22.5
       '@babel/plugin-syntax-class-static-block': 7.14.5(@babel/core@7.23.5)
 
@@ -1162,7 +1186,7 @@ packages:
       '@babel/core': ^7.0.0-0
     dependencies:
       '@babel/core': 7.23.5
-      '@babel/helper-create-class-features-plugin': 7.23.5(@babel/core@7.23.5)
+      '@babel/helper-create-class-features-plugin': 7.23.9(@babel/core@7.23.5)
       '@babel/helper-plugin-utils': 7.22.5
 
   /@babel/plugin-transform-private-property-in-object@7.22.11(@babel/core@7.23.5):
@@ -1173,7 +1197,7 @@ packages:
     dependencies:
       '@babel/core': 7.23.5
       '@babel/helper-annotate-as-pure': 7.22.5
-      '@babel/helper-create-class-features-plugin': 7.23.5(@babel/core@7.23.5)
+      '@babel/helper-create-class-features-plugin': 7.23.9(@babel/core@7.23.5)
       '@babel/helper-plugin-utils': 7.22.5
       '@babel/plugin-syntax-private-property-in-object': 7.14.5(@babel/core@7.23.5)
 
@@ -1275,7 +1299,7 @@ packages:
     dependencies:
       '@babel/core': 7.23.5
       '@babel/helper-annotate-as-pure': 7.22.5
-      '@babel/helper-create-class-features-plugin': 7.23.5(@babel/core@7.23.5)
+      '@babel/helper-create-class-features-plugin': 7.23.9(@babel/core@7.23.5)
       '@babel/helper-plugin-utils': 7.22.5
       '@babel/plugin-syntax-typescript': 7.22.5(@babel/core@7.23.5)
 
@@ -5531,7 +5555,7 @@ packages:
     dependencies:
       '@babel/core': 7.23.5
       '@babel/plugin-proposal-class-properties': 7.18.6(@babel/core@7.23.5)
-      '@babel/plugin-proposal-decorators': 7.23.9(@babel/core@7.23.5)
+      '@babel/plugin-proposal-decorators': 7.24.1(@babel/core@7.23.5)
       '@babel/plugin-proposal-private-methods': 7.18.6(@babel/core@7.23.5)
       '@babel/plugin-transform-class-static-block': 7.22.11(@babel/core@7.23.5)
       '@babel/preset-env': 7.23.2(@babel/core@7.23.5)
@@ -5611,7 +5635,7 @@ packages:
       '@babel/core': 7.23.5
       '@babel/helper-compilation-targets': 7.22.15
       '@babel/plugin-proposal-class-properties': 7.18.6(@babel/core@7.23.5)
-      '@babel/plugin-proposal-decorators': 7.23.9(@babel/core@7.23.5)
+      '@babel/plugin-proposal-decorators': 7.24.1(@babel/core@7.23.5)
       '@babel/plugin-proposal-private-methods': 7.18.6(@babel/core@7.23.5)
       '@babel/plugin-proposal-private-property-in-object': 7.21.11(@babel/core@7.23.5)
       '@babel/plugin-transform-modules-amd': 7.23.0(@babel/core@7.23.5)
@@ -5650,7 +5674,7 @@ packages:
       '@babel/core': 7.23.5
       '@babel/helper-compilation-targets': 7.22.15
       '@babel/plugin-proposal-class-properties': 7.18.6(@babel/core@7.23.5)
-      '@babel/plugin-proposal-decorators': 7.23.9(@babel/core@7.23.5)
+      '@babel/plugin-proposal-decorators': 7.24.1(@babel/core@7.23.5)
       '@babel/plugin-proposal-private-methods': 7.18.6(@babel/core@7.23.5)
       '@babel/plugin-proposal-private-property-in-object': 7.21.11(@babel/core@7.23.5)
       '@babel/plugin-transform-class-static-block': 7.22.11(@babel/core@7.23.5)
