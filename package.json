@@ -29,7 +29,7 @@
   },
   "dependencies": {
     "@apollo/client": "^3.8.8",
-    "@babel/core": "^7.23.5",
+    "@babel/core": "^7.24.4",
     "@embroider/macros": "^1.13.3",
     "base64-js": "^1.5.1",
     "ember-auto-import": "^2.7.2",
