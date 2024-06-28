@@ -10,9 +10,9 @@ OpenID Connect [Authorization Code Flow](https://openid.net/specs/openid-connect
 
 ## Installation
 
-- Ember.js v4.4 or above
-- Ember CLI v4.4 or above
-- Node.js v16 or above
+- Ember.js v4.12 or above
+- Ember CLI v4.12 or above
+- Node.js v18 or above
 
 Note: The addon uses [Proxy](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Proxy)
 in its implementation, if IE browser support is necessary, a polyfill needs to be provided.
@@ -244,32 +244,6 @@ Enables PKCE mechanism to provide additional protection during code to token exc
 
 **unauthorizedRequestRedirectTimeout** `<Number>` (optional)
 Debounce timeout for redirection after (multiple) `401` responses are received to prevent redirect loops (at the cost of a small delay). Set to `0` to disable debouncing. Default is `1000`.
-
-## Contributing
-
-### Installation
-
-- `git clone git@github.com:adfinis/ember-simple-auth-oidc.git`
-- `cd ember-simple-auth-oidc`
-- `pnpm install`
-
-### Linting
-
-- `pnpm lint` – Runs all linting tasks
-
-### Running tests
-
-- `pnpm test` – Runs all linting and test tasks
-- `pnpm test:ember` – Runs the test suite on the current Ember version
-- `pnpm test:ember --server` – Runs the test suite in "watch mode"
-- `pnpm test:ember-compatibility` – Runs the test suite against multiple Ember versions
-
-### Running the dummy application
-
-- `pnpm start`
-- Visit the dummy application at [http://localhost:4200](http://localhost:4200).
-
-For more information on using ember-cli, visit [https://ember-cli.com/](https://ember-cli.com/).
 
 ## License
 
