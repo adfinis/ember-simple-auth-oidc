@@ -1,3 +1,15 @@
+# [7.0.0](https://github.com/adfinis/ember-simple-auth-oidc/compare/v6.0.1...v7.0.0) (2024-06-28)
+
+
+### Bug Fixes
+
+* **deps:** update dependencies ([d0644ad](https://github.com/adfinis/ember-simple-auth-oidc/commit/d0644ad8ea0b8421c106fa32f81cbe608592fa9f))
+
+
+### BREAKING CHANGES
+
+* **deps:** Drop support for Ember LTS < 4.12 and Node < 18.
+
 ## [6.0.1](https://github.com/adfinis/ember-simple-auth-oidc/compare/v6.0.0...v6.0.1) (2023-12-27)
 
 
