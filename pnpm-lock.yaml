@@ -45,7 +45,7 @@ dependencies:
 devDependencies:
   '@adfinis/eslint-config':
     specifier: 2.1.1
-    version: 2.1.1(@babel/core@7.24.7)(@babel/eslint-parser@7.24.7)(@babel/plugin-proposal-decorators@7.24.7)(eslint-config-prettier@9.1.0)(eslint-plugin-ember@12.1.1)(eslint-plugin-import@2.29.1)(eslint-plugin-n@17.9.0)(eslint-plugin-prettier@5.1.3)(eslint-plugin-qunit@8.1.1)(eslint@8.57.0)(prettier@3.3.2)
+    version: 2.1.1(@babel/core@7.24.7)(@babel/eslint-parser@7.24.7)(@babel/plugin-proposal-decorators@7.24.7)(eslint-config-prettier@9.1.0)(eslint-plugin-ember@12.1.1)(eslint-plugin-import@2.29.1)(eslint-plugin-n@17.9.0)(eslint-plugin-prettier@5.1.3)(eslint-plugin-qunit@8.1.1)(eslint@8.57.0)(prettier@3.3.3)
   '@adfinis/semantic-release-config':
     specifier: 5.0.0
     version: 5.0.0(@types/node@20.14.9)(typescript@5.5.2)
@@ -144,7 +144,7 @@ devDependencies:
     version: 17.9.0(eslint@8.57.0)
   eslint-plugin-prettier:
     specifier: 5.1.3
-    version: 5.1.3(eslint-config-prettier@9.1.0)(eslint@8.57.0)(prettier@3.3.2)
+    version: 5.1.3(eslint-config-prettier@9.1.0)(eslint@8.57.0)(prettier@3.3.3)
   eslint-plugin-qunit:
     specifier: 8.1.1
     version: 8.1.1(eslint@8.57.0)
@@ -161,8 +161,8 @@ devDependencies:
     specifier: 0.1.48
     version: 0.1.48
   prettier:
-    specifier: 3.3.2
-    version: 3.3.2
+    specifier: 3.3.3
+    version: 3.3.3
   qunit:
     specifier: 2.21.0
     version: 2.21.0
@@ -180,14 +180,14 @@ devDependencies:
     version: 36.0.1(stylelint@16.6.1)
   stylelint-prettier:
     specifier: 5.0.0
-    version: 5.0.0(prettier@3.3.2)(stylelint@16.6.1)
+    version: 5.0.0(prettier@3.3.3)(stylelint@16.6.1)
   webpack:
     specifier: 5.92.1
     version: 5.92.1
 
 packages:
 
-  /@adfinis/eslint-config@2.1.1(@babel/core@7.24.7)(@babel/eslint-parser@7.24.7)(@babel/plugin-proposal-decorators@7.24.7)(eslint-config-prettier@9.1.0)(eslint-plugin-ember@12.1.1)(eslint-plugin-import@2.29.1)(eslint-plugin-n@17.9.0)(eslint-plugin-prettier@5.1.3)(eslint-plugin-qunit@8.1.1)(eslint@8.57.0)(prettier@3.3.2):
+  /@adfinis/eslint-config@2.1.1(@babel/core@7.24.7)(@babel/eslint-parser@7.24.7)(@babel/plugin-proposal-decorators@7.24.7)(eslint-config-prettier@9.1.0)(eslint-plugin-ember@12.1.1)(eslint-plugin-import@2.29.1)(eslint-plugin-n@17.9.0)(eslint-plugin-prettier@5.1.3)(eslint-plugin-qunit@8.1.1)(eslint@8.57.0)(prettier@3.3.3):
     resolution: {integrity: sha512-MXbEJjlCYg8x/dcKkOySMCd7FTpamlvvoF9F9YpqLPx9HCHB2/pDFe/bDbYZ/WbnR2XArilJScHBZ87gmiIx7w==}
     peerDependencies:
       '@babel-plugin-proposal-decorators': '*'
@@ -220,9 +220,9 @@ packages:
       eslint-plugin-ember: 12.1.1(@babel/core@7.24.7)(eslint@8.57.0)
       eslint-plugin-import: 2.29.1(eslint@8.57.0)
       eslint-plugin-n: 17.9.0(eslint@8.57.0)
-      eslint-plugin-prettier: 5.1.3(eslint-config-prettier@9.1.0)(eslint@8.57.0)(prettier@3.3.2)
+      eslint-plugin-prettier: 5.1.3(eslint-config-prettier@9.1.0)(eslint@8.57.0)(prettier@3.3.3)
       eslint-plugin-qunit: 8.1.1(eslint@8.57.0)
-      prettier: 3.3.2
+      prettier: 3.3.3
     dev: true
 
   /@adfinis/semantic-release-config@5.0.0(@types/node@20.14.9)(typescript@5.5.2):
@@ -7568,7 +7568,7 @@ packages:
       semver: 7.6.2
     dev: true
 
-  /eslint-plugin-prettier@5.1.3(eslint-config-prettier@9.1.0)(eslint@8.57.0)(prettier@3.3.2):
+  /eslint-plugin-prettier@5.1.3(eslint-config-prettier@9.1.0)(eslint@8.57.0)(prettier@3.3.3):
     resolution: {integrity: sha512-C9GCVAs4Eq7ZC/XFQHITLiHJxQngdtraXaM+LoUFoFp/lHNl2Zn8f3WQbe9HvTBBQ9YnKFB0/2Ajdqwo5D1EAw==}
     engines: {node: ^14.18.0 || >=16.0.0}
     peerDependencies:
@@ -7584,7 +7584,7 @@ packages:
     dependencies:
       eslint: 8.57.0
       eslint-config-prettier: 9.1.0(eslint@8.57.0)
-      prettier: 3.3.2
+      prettier: 3.3.3
       prettier-linter-helpers: 1.0.0
       synckit: 0.8.8
     dev: true
@@ -11460,8 +11460,8 @@ packages:
     engines: {node: '>=10.13.0'}
     hasBin: true
 
-  /prettier@3.3.2:
-    resolution: {integrity: sha512-rAVeHYMcv8ATV5d508CFdn+8/pHPpXeIid1DdrPwXnaAdH7cqjVbpJaT5eq4yRAFU/lsbwYwSF/n5iNrdJHPQA==}
+  /prettier@3.3.3:
+    resolution: {integrity: sha512-i2tDNA0O5IrMO757lfrdQZCc2jPNDVntV0m/+4whiDfWaTKfMNgR7Qz0NAeGz/nRqF4m5/6CLzbP4/liHt12Ew==}
     engines: {node: '>=14'}
     hasBin: true
     dev: true
@@ -12902,14 +12902,14 @@ packages:
       stylelint-config-recommended: 14.0.1(stylelint@16.6.1)
     dev: true
 
-  /stylelint-prettier@5.0.0(prettier@3.3.2)(stylelint@16.6.1):
+  /stylelint-prettier@5.0.0(prettier@3.3.3)(stylelint@16.6.1):
     resolution: {integrity: sha512-RHfSlRJIsaVg5Br94gZVdWlz/rBTyQzZflNE6dXvSxt/GthWMY3gEHsWZEBaVGg7GM+XrtVSp4RznFlB7i0oyw==}
     engines: {node: '>=18.12.0'}
     peerDependencies:
       prettier: '>=3.0.0'
       stylelint: '>=16.0.0'
     dependencies:
-      prettier: 3.3.2
+      prettier: 3.3.3
       prettier-linter-helpers: 1.0.0
       stylelint: 16.6.1(typescript@5.5.2)
     dev: true
