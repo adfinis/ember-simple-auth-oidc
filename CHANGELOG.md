@@ -1,3 +1,11 @@
+## [7.0.1](https://github.com/adfinis/ember-simple-auth-oidc/compare/v7.0.0...v7.0.1) (2024-07-26)
+
+
+### Bug Fixes
+
+* **deps:** add missing peer dependencies to ember data ([198d99d](https://github.com/adfinis/ember-simple-auth-oidc/commit/198d99d785699cae0107a5918d4b85aac2ecd4b3))
+* **deps:** fix ember source peer dependency range ([dcf57c1](https://github.com/adfinis/ember-simple-auth-oidc/commit/dcf57c10e6d918dcda6a53e795bd07ca3906e653))
+
 # [7.0.0](https://github.com/adfinis/ember-simple-auth-oidc/compare/v6.0.1...v7.0.0) (2024-06-28)
 
 
