@@ -14,6 +14,9 @@ importers:
       '@babel/core':
         specifier: ^7.24.9
         version: 7.24.9
+      '@ember-data/adapter':
+        specifier: ~4.12.0 || >= 5.0.0
+        version: 5.3.8(@ember-data/legacy-compat@5.3.8(vjy2g7a5gujw6b4lnumktyoic4))(@ember-data/request-utils@5.3.8(@ember/string@4.0.0)(@warp-drive/core-types@0.0.0-beta.11))(@ember-data/store@5.3.8(@ember-data/request-utils@5.3.8(@ember/string@4.0.0)(@warp-drive/core-types@0.0.0-beta.11))(@ember-data/request@5.3.8(@warp-drive/core-types@0.0.0-beta.11))(@ember-data/tracking@5.3.8(@warp-drive/core-types@0.0.0-beta.11)(ember-source@5.10.1(@glimmer/component@1.1.2(@babel/core@7.24.9))(rsvp@4.8.5)(webpack@5.93.0)))(@warp-drive/core-types@0.0.0-beta.11))(@warp-drive/core-types@0.0.0-beta.11)
       '@embroider/macros':
         specifier: ^1.16.5
         version: 1.16.5
