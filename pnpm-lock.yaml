@@ -9,8 +9,8 @@ importers:
   .:
     dependencies:
       '@apollo/client':
-        specifier: ^3.11.1
-        version: 3.11.1(graphql@16.9.0)
+        specifier: ^3.11.4
+        version: 3.11.4(graphql@16.9.0)
       '@babel/core':
         specifier: ^7.24.9
         version: 7.24.9
@@ -225,8 +225,8 @@ packages:
     resolution: {integrity: sha512-30iZtAPgz+LTIYoeivqYo853f02jBYSd5uGnGpkFV0M3xOt9aN73erkgYAmZU43x4VfqcnLxW9Kpg3R5LC4YYw==}
     engines: {node: '>=6.0.0'}
 
-  '@apollo/client@3.11.1':
-    resolution: {integrity: sha512-fVuAi7ufRt2apIEYV18upvykw5JD+CwHAThxZkclby4phWCXtO4LD39Z0sk0+4i+j7oZ+jOofEkO1XGDDomZvQ==}
+  '@apollo/client@3.11.4':
+    resolution: {integrity: sha512-bmgYKkULpym8wt8aXlAZ1heaYo0skLJ5ru0qJ+JCRoo03Pe+yIDbBCnqlDw6Mjj76hFkDw3HwFMgZC2Hxp30Mg==}
     peerDependencies:
       graphql: ^15.0.0 || ^16.0.0
       graphql-ws: ^5.5.5
@@ -7068,7 +7068,7 @@ snapshots:
       '@jridgewell/gen-mapping': 0.3.5
       '@jridgewell/trace-mapping': 0.3.25
 
-  '@apollo/client@3.11.1(graphql@16.9.0)':
+  '@apollo/client@3.11.4(graphql@16.9.0)':
     dependencies:
       '@graphql-typed-document-node/core': 3.2.0(graphql@16.9.0)
       '@wry/caches': 1.0.1
@@ -10553,7 +10553,7 @@ snapshots:
 
   ember-apollo-client@4.1.1(graphql@16.9.0)(webpack@5.93.0):
     dependencies:
-      '@apollo/client': 3.11.1(graphql@16.9.0)
+      '@apollo/client': 3.11.4(graphql@16.9.0)
       '@ember/test-waiters': 3.0.2
       '@embroider/macros': 1.16.5
       '@glimmer/tracking': 1.1.2
