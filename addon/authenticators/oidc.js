@@ -194,7 +194,14 @@ export default class OidcAuthenticator extends BaseAuthenticator {
 
       // Failed refresh
       const isBadRequest = isBadRequestResponse(response);
-      if (isBadRequest) return Promise.reject(data);
+      if (isBadRequest) {
+        this.session.set(
+          "data.nextURL",
+          redirectUri.replace(location.origin, ""),
+        );
+
+        return Promise.reject(data);
+      }
 
       // Store the redirect URI in the session for the restore call
       data.redirectUri = redirectUri;
