@@ -1,3 +1,10 @@
+## [7.0.2](https://github.com/adfinis/ember-simple-auth-oidc/compare/v7.0.1...v7.0.2) (2024-09-27)
+
+
+### Bug Fixes
+
+* **refresh:** set nextURL on failed refresh ([7dee0f8](https://github.com/adfinis/ember-simple-auth-oidc/commit/7dee0f8addf358f828bc076d509c53a91bd8fe81))
+
 ## [7.0.1](https://github.com/adfinis/ember-simple-auth-oidc/compare/v7.0.0...v7.0.1) (2024-07-26)
 
 
