@@ -33,7 +33,7 @@
     "@babel/core": "^7.25.2",
     "@embroider/macros": "^1.16.5",
     "base64-js": "^1.5.1",
-    "ember-auto-import": "^2.8.0",
+    "ember-auto-import": "^2.8.1",
     "ember-cli-babel": "^8.2.0",
     "ember-concurrency": "^4.0.2",
     "ember-fetch": "^8.1.2",
