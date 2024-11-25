@@ -1,3 +1,10 @@
+## [7.0.4](https://github.com/adfinis/ember-simple-auth-oidc/compare/v7.0.3...v7.0.4) (2024-11-25)
+
+
+### Bug Fixes
+
+* **deps:** update dependencies ([3d5eb10](https://github.com/adfinis/ember-simple-auth-oidc/commit/3d5eb1022250b498c16c0fa664859d7650d88695))
+
 ## [7.0.3](https://github.com/adfinis/ember-simple-auth-oidc/compare/v7.0.2...v7.0.3) (2024-09-27)
 
 
