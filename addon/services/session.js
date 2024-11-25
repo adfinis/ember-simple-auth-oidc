@@ -57,7 +57,7 @@ export default class Service extends SessionServiceESA {
           redirectUri: this.redirectUri,
           isRefresh: true,
         });
-      } catch (e) {
+      } catch {
         console.warn("Token is invalid. Re-authentification is required.");
       }
     }
