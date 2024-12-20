@@ -9,8 +9,8 @@ importers:
   .:
     dependencies:
       '@apollo/client':
-        specifier: ^3.11.10
-        version: 3.11.10(graphql@16.9.0)
+        specifier: ^3.12.4
+        version: 3.12.4(graphql@16.9.0)
       '@babel/core':
         specifier: ^7.26.0
         version: 7.26.0
@@ -237,13 +237,13 @@ packages:
     resolution: {integrity: sha512-30iZtAPgz+LTIYoeivqYo853f02jBYSd5uGnGpkFV0M3xOt9aN73erkgYAmZU43x4VfqcnLxW9Kpg3R5LC4YYw==}
     engines: {node: '>=6.0.0'}
 
-  '@apollo/client@3.11.10':
-    resolution: {integrity: sha512-IfGc+X4il0rDqVQBBWdxIKM+ciDCiDzBq9+Bg9z4tJMi87uF6po4v+ddiac1wP0ARgVPsFwEIGxK7jhN4pW8jg==}
+  '@apollo/client@3.12.4':
+    resolution: {integrity: sha512-S/eC9jxEW9Jg1BjD6AZonE1fHxYuvC3gFHop8FRQkUdeK63MmBD5r0DOrN2WlJbwha1MSD6A97OwXwjaujEQpA==}
     peerDependencies:
       graphql: ^15.0.0 || ^16.0.0
       graphql-ws: ^5.5.5
-      react: ^16.8.0 || ^17.0.0 || ^18.0.0 || >=19.0.0-rc <19.0.0
-      react-dom: ^16.8.0 || ^17.0.0 || ^18.0.0 || >=19.0.0-rc <19.0.0
+      react: ^16.8.0 || ^17.0.0 || ^18.0.0 || >=19.0.0-rc
+      react-dom: ^16.8.0 || ^17.0.0 || ^18.0.0 || >=19.0.0-rc
       subscriptions-transport-ws: ^0.9.0 || ^0.11.0
     peerDependenciesMeta:
       graphql-ws:
@@ -1000,7 +1000,7 @@ packages:
     resolution: {integrity: sha512-4qZNh2ZbmKBSwE2jUHYl8QNlfqU9f4ww+z3HO70aJLtFjmnwWrsENi1N9st0mWEpR201UlEiFvF3gmyjv2Hn4g==}
     engines: {node: '>= 18.20.4'}
     peerDependencies:
-      '@ember/string': 4.0.0
+      '@ember/string': ^3.1.1 || ^4.0.0
       '@warp-drive/core-types': 0.0.0-beta.12
       ember-inflector: ^4.0.2 || ^5.0.0
     peerDependenciesMeta:
@@ -7167,7 +7167,7 @@ snapshots:
       '@jridgewell/gen-mapping': 0.3.5
       '@jridgewell/trace-mapping': 0.3.25
 
-  '@apollo/client@3.11.10(graphql@16.9.0)':
+  '@apollo/client@3.12.4(graphql@16.9.0)':
     dependencies:
       '@graphql-typed-document-node/core': 3.2.0(graphql@16.9.0)
       '@wry/caches': 1.0.1
@@ -10581,7 +10581,7 @@ snapshots:
 
   ember-apollo-client@4.1.1(graphql@16.9.0)(webpack@5.96.1):
     dependencies:
-      '@apollo/client': 3.11.10(graphql@16.9.0)
+      '@apollo/client': 3.12.4(graphql@16.9.0)
       '@ember/test-waiters': 3.0.2
       '@embroider/macros': 1.16.9
       '@glimmer/tracking': 1.1.2
