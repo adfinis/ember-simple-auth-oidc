@@ -1,5 +1,5 @@
 import { service } from "@ember/service";
-import { enqueueTask } from "ember-concurrency";
+import { task } from "ember-concurrency";
 import SessionServiceESA from "ember-simple-auth/services/session";
 
 export default class Service extends SessionServiceESA {
@@ -43,14 +43,13 @@ export default class Service extends SessionServiceESA {
     return headers;
   }
 
-  @enqueueTask
-  *refreshAuthentication() {
+  refreshAuthentication = task({ enqueue: true }, async () => {
     const expireTime = this.data.authenticated.expireTime;
     const isExpired = expireTime && expireTime <= new Date().getTime();
 
     if (this.isAuthenticated && isExpired) {
       try {
-        return yield this.session.authenticate("authenticator:oidc", {
+        return await this.session.authenticate("authenticator:oidc", {
           redirectUri: this.redirectUri,
           isRefresh: true,
         });
@@ -58,7 +57,7 @@ export default class Service extends SessionServiceESA {
         console.warn("Token is invalid. Re-authentification is required.");
       }
     }
-  }
+  });
 
   async requireAuthentication(transition, routeOrCallback) {
     await this.refreshAuthentication.perform();

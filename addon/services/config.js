@@ -1,7 +1,7 @@
 import { getOwner } from "@ember/application";
 import Service from "@ember/service";
 import { tracked } from "@glimmer/tracking";
-import { lastValue, task } from "ember-concurrency";
+import { task } from "ember-concurrency";
 import { cached } from "tracked-toolbox";
 
 const defaultConfig = {
@@ -97,11 +97,14 @@ export default class ConfigurationService extends Service {
     }
   }
 
+  get fetchedConfig() {
+    return this._fetchAuthConfiguration.lastSuccessful?.value;
+  }
+
   /**
    * Tries to fetch the OIDC provider configuration from the specified host/realm.
    * SPEC: https://openid.net/specs/openid-connect-discovery-1_0.html#ProviderConfig
    */
-  @lastValue("_fetchAuthConfiguration") fetchedConfig;
   _fetchAuthConfiguration = task({ drop: true }, async () => {
     if (this._fetchAuthConfiguration.lastSuccessful) {
       return this.fetchedConfig;
