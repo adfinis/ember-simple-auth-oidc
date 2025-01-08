@@ -1,17 +1,24 @@
 import { later } from "@ember/runloop";
 import { inject as service } from "@ember/service";
-import {
-  isServerErrorResponse,
-  isAbortError,
-  isBadRequestResponse,
-} from "ember-fetch/errors";
+import { waitForPromise } from "@ember/test-waiters";
 import BaseAuthenticator from "ember-simple-auth/authenticators/base";
-import fetch from "fetch";
 import { resolve } from "rsvp";
 import { TrackedObject } from "tracked-built-ins";
 
 import config from "ember-simple-auth-oidc/config";
 import getAbsoluteUrl from "ember-simple-auth-oidc/utils/absolute-url";
+
+function isServerErrorResponse(response) {
+  return response.status >= 500 && response.status < 600;
+}
+
+function isAbortError(error) {
+  return error.name === "AbortError";
+}
+
+function isBadRequestResponse(response) {
+  return response.status === 400;
+}
 
 export default class OidcAuthenticator extends BaseAuthenticator {
   @service router;
@@ -57,16 +64,15 @@ export default class OidcAuthenticator extends BaseAuthenticator {
       .map((k) => `${k}=${encodeURIComponent(bodyObject[k])}`)
       .join("&");
 
-    const response = await fetch(
-      getAbsoluteUrl(this.config.tokenEndpoint, this.config.host),
-      {
+    const response = await waitForPromise(
+      fetch(getAbsoluteUrl(this.config.tokenEndpoint, this.config.host), {
         method: "POST",
         headers: {
           Accept: "application/json",
           "Content-Type": "application/x-www-form-urlencoded",
         },
         body,
-      },
+      }),
     );
 
     const isServerError = isServerErrorResponse(response);
@@ -176,16 +182,15 @@ export default class OidcAuthenticator extends BaseAuthenticator {
         .map((k) => `${k}=${encodeURIComponent(bodyObject[k])}`)
         .join("&");
 
-      const response = await fetch(
-        getAbsoluteUrl(this.config.tokenEndpoint, this.config.host),
-        {
+      const response = await waitForPromise(
+        fetch(getAbsoluteUrl(this.config.tokenEndpoint, this.config.host), {
           method: "POST",
           headers: {
             Accept: "application/json",
             "Content-Type": "application/x-www-form-urlencoded",
           },
           body,
-        },
+        }),
       );
       isServerError = isServerErrorResponse(response);
       if (isServerError) throw new Error(response.message);
@@ -227,14 +232,13 @@ export default class OidcAuthenticator extends BaseAuthenticator {
    * @returns {Object} Object containing the user information
    */
   async _getUserinfo(accessToken) {
-    const response = await fetch(
-      getAbsoluteUrl(this.config.userinfoEndpoint, this.config.host),
-      {
+    const response = await waitForPromise(
+      fetch(getAbsoluteUrl(this.config.userinfoEndpoint, this.config.host), {
         headers: {
           Authorization: `${this.config.authPrefix} ${accessToken}`,
           Accept: "application/json",
         },
-      },
+      }),
     );
 
     const userinfo = await response.json();
