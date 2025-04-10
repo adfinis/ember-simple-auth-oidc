@@ -37,7 +37,7 @@
     "ember-cli-babel": "^8.2.0",
     "ember-concurrency": "^4.0.2",
     "ember-fetch": "^8.1.2",
-    "ember-simple-auth": "^6.0.0",
+    "ember-simple-auth": "^8.0.0",
     "js-sha256": "^0.11.0",
     "tracked-built-ins": "^3.3.0",
     "uuid": "^11.0.3"
