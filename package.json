@@ -83,7 +83,7 @@
     "graphql": "16.9.0",
     "graphql-tag": "2.12.6",
     "husky": "9.1.7",
-    "lint-staged": "15.2.10",
+    "lint-staged": "16.0.0",
     "loader.js": "4.7.0",
     "miragejs": "0.1.48",
     "prettier": "3.5.3",
