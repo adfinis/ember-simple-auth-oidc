@@ -42,8 +42,8 @@ importers:
         specifier: ^0.11.0
         version: 0.11.0
       tracked-built-ins:
-        specifier: ^3.3.0
-        version: 3.3.0
+        specifier: ^4.0.0
+        version: 4.0.0(@babel/core@7.26.0)
       uuid:
         specifier: ^11.0.3
         version: 11.0.3
@@ -6918,8 +6918,8 @@ packages:
   tr46@0.0.3:
     resolution: {integrity: sha512-N3WMsuqV66lT30CrXNbEjx4GEwlow3v6rr4mCcv6prnfwhS01rkgyFdjPNBYd9br7LpXV1+Emh01fHnq2Gdgrw==}
 
-  tracked-built-ins@3.3.0:
-    resolution: {integrity: sha512-ewKFrW/AQs05oLPM5isOUb/1aOwBRfHfmF408CCzTk21FLAhKrKVOP5Q5ebX+zCT4kvg81PGBGwrBiEGND1nWA==}
+  tracked-built-ins@4.0.0:
+    resolution: {integrity: sha512-0Jl43A1SDZd+yYCJvXfgDSn4Wk/zcawkyFTBPqOETU5UJRngnVEnQ8oOjawqPRg6qja3sKjIQ8z6X9xJzcUTUA==}
 
   traverse@0.6.8:
     resolution: {integrity: sha512-aXJDbk6SnumuaZSANd21XAo15ucCDE38H4fkqiGsc3MhCK+wOlZvLP9cB/TvpHT0mOyWgC4Z8EwRlzqYSUzdsA==}
@@ -11251,7 +11251,7 @@ snapshots:
       fs-tree-diff: 2.0.1
       hash-for-dep: 1.5.1
       heimdalljs-logger: 0.1.10
-      json-stable-stringify: 1.1.1
+      json-stable-stringify: 1.2.1
       semver: 7.7.1
       silent-error: 1.1.1
       strip-bom: 4.0.0
@@ -15760,11 +15760,13 @@ snapshots:
 
   tr46@0.0.3: {}
 
-  tracked-built-ins@3.3.0:
+  tracked-built-ins@4.0.0(@babel/core@7.26.0):
     dependencies:
       '@embroider/addon-shim': 1.9.0
+      decorator-transforms: 2.3.0(@babel/core@7.26.0)
       ember-tracked-storage-polyfill: 1.0.0
     transitivePeerDependencies:
+      - '@babel/core'
       - supports-color
 
   traverse@0.6.8: {}
