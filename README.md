@@ -117,10 +117,12 @@ shows an example of a custom fetch service with proper authentication handling:
 import Service, { inject as service } from "@ember/service";
 import { handleUnauthorized } from "ember-simple-auth-oidc";
 import fetch from "fetch";
+import { waitFor } from "@ember/test-waiters";
 
 export default class FetchService extends Service {
   @service session;
 
+  @waitFor
   async fetch(url) {
     await this.session.refreshAuthentication.perform();
 
@@ -187,56 +189,56 @@ module.exports = function (environment) {
 
 Here is a complete list of all possible config options:
 
-**host** `<String>`  
+**host** `<String>`
 A relative or absolute URI of the authorization server.
 
-**clientId** `<String>`  
+**clientId** `<String>`
 The oidc client identifier valid at the authorization server.
 
-**authEndpoint** `<String>`  
+**authEndpoint** `<String>`
 Authorization endpoint at the authorization server. This can be a path which
 will be appended to `host` or an absolute URL.
 
-**tokenEndpoint** `<String>`  
+**tokenEndpoint** `<String>`
 Token endpoint at the authorization server. This can be a path which will be
 appended to `host` or an absolute URL.
 
-**endSessionEndpoint** `<String>` (optional)  
+**endSessionEndpoint** `<String>` (optional)
 End session endpoint endpoint at the authorization server. This can be a path
 which will be appended to `host` or an absolute URL.
 
-**userinfoEndpoint** `<String>`  
+**userinfoEndpoint** `<String>`
 Userinfo endpoint endpoint at the authorization server. This can be a path
 which will be appended to `host` or an absolute URL.
 
-**afterLogoutUri** `<String>` (optional)  
+**afterLogoutUri** `<String>` (optional)
 A relative or absolute URI to which will be redirected after logout / end session.
 
-**scope** `<String>` (optional)  
+**scope** `<String>` (optional)
 The oidc scope value. Default is `"openid"`.
 
-**expiresIn** `<Number>` (optional)  
+**expiresIn** `<Number>` (optional)
 Milliseconds after which the token expires. This is only a fallback value if the authorization server does not return a `expires_in` value. Default is `3600000` (1h).
 
-**refreshLeeway** `<Number>` (optional)  
+**refreshLeeway** `<Number>` (optional)
 Milliseconds before expire time at which the token is refreshed. Default is `30000` (30s).
 
-**tokenPropertyName** `<String>` (optional)  
+**tokenPropertyName** `<String>` (optional)
 Name of the property which holds the token in a successful authenticate request. Default is `"access_token"`.
 
-**authHeaderName** `<String>` (optional)  
+**authHeaderName** `<String>` (optional)
 Name of the authentication header holding the token used in requests. Default is `"Authorization"`.
 
-**authPrefix** `<String>` (optional)  
+**authPrefix** `<String>` (optional)
 Prefix of the authentication token. Default is `"Bearer"`.
 
-**loginHintName** `<String>` (optional)  
+**loginHintName** `<String>` (optional)
 Name of the `login_hint` query paramter which is being forwarded to the authorization server if it is present. This option allows overriding the default name `login_hint`.
 
-**amountOfRetries** `<Number>` (optional)  
+**amountOfRetries** `<Number>` (optional)
 Amount of retries should be made if the request to fetch a new token fails. Default is `3`.
 
-**retryTimeout** `<Number>` (optional)  
+**retryTimeout** `<Number>` (optional)
 Timeout in milliseconds between each retry if a token refresh should fail. Default is `3000`.
 
 **enablePkce** `<Boolean>` (optional)

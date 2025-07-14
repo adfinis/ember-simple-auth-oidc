@@ -1,5 +1,6 @@
 import { later } from "@ember/runloop";
 import { inject as service } from "@ember/service";
+import { waitFor } from "@ember/test-waiters";
 import BaseAuthenticator from "ember-simple-auth/authenticators/base";
 import { resolve } from "rsvp";
 import { TrackedObject } from "tracked-built-ins";
@@ -43,6 +44,7 @@ export default class OidcAuthenticator extends BaseAuthenticator {
    * @param {String} options.code The authentication code
    * @returns {Object} The parsed response data
    */
+  @waitFor
   async authenticate({ code, redirectUri, codeVerifier, isRefresh }) {
     if (!this.config.tokenEndpoint || !this.config.userinfoEndpoint) {
       throw new Error(
@@ -178,6 +180,7 @@ export default class OidcAuthenticator extends BaseAuthenticator {
    * @param {String} refresh_token The refresh token
    * @returns {Object} The parsed response data
    */
+  @waitFor
   async _refresh(refresh_token, redirectUri, retryCount = 0) {
     let isServerError = false;
     try {
@@ -241,6 +244,7 @@ export default class OidcAuthenticator extends BaseAuthenticator {
    * @param {String} accessToken The raw access token
    * @returns {Object} Object containing the user information
    */
+  @waitFor
   async _getUserinfo(accessToken) {
     const response = await fetch(
       getAbsoluteUrl(this.config.userinfoEndpoint, this.config.host),
