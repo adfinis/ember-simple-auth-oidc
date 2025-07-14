@@ -116,7 +116,6 @@ shows an example of a custom fetch service with proper authentication handling:
 ```js
 import Service, { inject as service } from "@ember/service";
 import { handleUnauthorized } from "ember-simple-auth-oidc";
-import fetch from "fetch";
 
 export default class FetchService extends Service {
   @service session;

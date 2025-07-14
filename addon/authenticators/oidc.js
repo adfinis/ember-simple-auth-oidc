@@ -1,17 +1,16 @@
 import { later } from "@ember/runloop";
 import { inject as service } from "@ember/service";
-import {
-  isServerErrorResponse,
-  isAbortError,
-  isBadRequestResponse,
-} from "ember-fetch/errors";
 import BaseAuthenticator from "ember-simple-auth/authenticators/base";
-import fetch from "fetch";
 import { resolve } from "rsvp";
 import { TrackedObject } from "tracked-built-ins";
 
 import config from "ember-simple-auth-oidc/config";
 import getAbsoluteUrl from "ember-simple-auth-oidc/utils/absolute-url";
+import {
+  isServerErrorResponse,
+  isAbortError,
+  isBadRequestResponse,
+} from "ember-simple-auth-oidc/utils/errors";
 
 export default class OidcAuthenticator extends BaseAuthenticator {
   @service router;

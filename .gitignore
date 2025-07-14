@@ -13,6 +13,8 @@
 /npm-debug.log*
 /testem.log
 /yarn-error.log
+/.nvmrc
+/.tool-versions
 
 # ember-try
 /.node_modules.ember-try/
