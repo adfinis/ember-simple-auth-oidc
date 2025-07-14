@@ -1,17 +1,32 @@
 import { later } from "@ember/runloop";
 import { inject as service } from "@ember/service";
-import {
-  isServerErrorResponse,
-  isAbortError,
-  isBadRequestResponse,
-} from "ember-fetch/errors";
 import BaseAuthenticator from "ember-simple-auth/authenticators/base";
-import fetch from "fetch";
 import { resolve } from "rsvp";
 import { TrackedObject } from "tracked-built-ins";
 
 import config from "ember-simple-auth-oidc/config";
 import getAbsoluteUrl from "ember-simple-auth-oidc/utils/absolute-url";
+
+/**
+ * Checks if the given response represents a bad request error
+ */
+export function isBadRequestResponse(response) {
+  return response.status === 400;
+}
+
+/**
+ * Checks if the given error is an "abort" error
+ */
+export function isAbortError(error) {
+  return error.name === "AbortError";
+}
+
+/**
+ * Checks if the given response represents a server error
+ */
+export function isServerErrorResponse(response) {
+  return response.status >= 500 && response.status < 600;
+}
 
 export default class OidcAuthenticator extends BaseAuthenticator {
   @service router;
