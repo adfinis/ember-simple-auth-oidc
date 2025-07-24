@@ -1,6 +1,5 @@
 import { later } from "@ember/runloop";
 import { inject as service } from "@ember/service";
-import { camelize } from "@ember/string";
 import { lastValue, task } from "ember-concurrency";
 import BaseAuthenticator from "ember-simple-auth/authenticators/base";
 import { resolve } from "rsvp";
@@ -14,13 +13,12 @@ import {
   isBadRequestResponse,
 } from "ember-simple-auth-oidc/utils/errors";
 
-const camelizeObjectKeys = (obj) => {
-  Object.keys(obj).forEach((key) => {
-    obj[camelize(key)] = obj[key];
-    delete obj[key];
-  });
-  return obj;
-};
+const camelize = (s) => s.replace(/_./g, (x) => x[1].toUpperCase());
+
+const camelizeObjectKeys = (obj) =>
+  Object.entries(obj).reduce((newObj, [key, value]) => {
+    return (newObj[camelize(key)] = value);
+  }, {});
 
 export default class OidcAuthenticator extends BaseAuthenticator {
   @service router;
