@@ -1,3 +1,15 @@
+# [7.1.0](https://github.com/adfinis/ember-simple-auth-oidc/compare/v7.0.4...v7.1.0) (2025-07-24)
+
+
+### Bug Fixes
+
+* get floating dependencies test to pass ([c977228](https://github.com/adfinis/ember-simple-auth-oidc/commit/c977228309f0e79c7c52623090bc0c2e06c618c6))
+
+
+### Features
+
+* autodiscover provider configuration ([4afce7d](https://github.com/adfinis/ember-simple-auth-oidc/commit/4afce7d194162f1db85f25e57d78262a3c8ebc34))
+
 ## [7.0.4](https://github.com/adfinis/ember-simple-auth-oidc/compare/v7.0.3...v7.0.4) (2024-11-25)
 
 

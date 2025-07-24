@@ -1,6 +1,6 @@
 {
   "name": "ember-simple-auth-oidc",
-  "version": "7.0.4",
+  "version": "7.1.0",
   "description": "A Ember Simple Auth addon which implements the OpenID Connect Authorization Code Flow.",
   "keywords": [
     "ember-addon"
