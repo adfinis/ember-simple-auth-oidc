@@ -3,17 +3,16 @@ import Route from "@ember/routing/route";
 import { inject as service } from "@ember/service";
 import { v4 } from "uuid";
 
-import config from "ember-simple-auth-oidc/config";
 import getAbsoluteUrl from "ember-simple-auth-oidc/utils/absolute-url";
 import {
   generatePkceChallenge,
   generateCodeVerifier,
 } from "ember-simple-auth-oidc/utils/pkce";
+
 export default class OIDCAuthenticationRoute extends Route {
   @service session;
   @service router;
-
-  @config config;
+  @service config;
 
   queryParams = {
     code: { refreshModel: false },
@@ -30,7 +29,9 @@ export default class OIDCAuthenticationRoute extends Route {
     location.replace(url);
   }
 
-  beforeModel(transition) {
+  async beforeModel(transition) {
+    await this.config.loadConfig();
+
     if (transition.from) {
       this.session.prohibitAuthentication(transition.from.name);
     }
@@ -146,7 +147,7 @@ export default class OIDCAuthenticationRoute extends Route {
     }
 
     // forward `login_hint` query param if present
-    const key = this.config.loginHintName || "login_hint";
+    const key = this.config.configuration.loginHintName || "login_hint";
 
     let search = [
       `client_id=${this.config.clientId}`,
@@ -168,9 +169,7 @@ export default class OIDCAuthenticationRoute extends Route {
     search = search.filter(Boolean).join("&");
 
     this._redirectToUrl(
-      `${getAbsoluteUrl(this.config.host)}${
-        this.config.authEndpoint
-      }?${search}`,
+      `${getAbsoluteUrl(this.config.authEndpoint, this.config.host)}?${search}`,
     );
   }
 }

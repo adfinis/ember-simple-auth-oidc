@@ -3,17 +3,15 @@ import setupMirage from "ember-cli-mirage/test-support/setup-mirage";
 import { setupTest } from "ember-qunit";
 import { module, test } from "qunit";
 
-import { getConfig } from "ember-simple-auth-oidc/config";
-
 module("Unit | Route | oidc-authentication", function (hooks) {
   setupTest(hooks);
   setupMirage(hooks);
 
   hooks.beforeEach(function () {
-    this.config = getConfig(this.owner);
+    this.config = this.owner.lookup("service:config");
   });
 
-  test("it can handle already authenticated requests", function (assert) {
+  test("it can handle already authenticated requests", async function (assert) {
     const router = this.owner.lookup("route:oidc-authentication");
     router.urlFor = () => "/test";
 
@@ -24,7 +22,7 @@ module("Unit | Route | oidc-authentication", function (hooks) {
       assert.step("prohibitAuthentication");
     };
 
-    route.beforeModel({ from: { name: "test" } });
+    await route.beforeModel({ from: { name: "test" } });
     assert.verifySteps(["prohibitAuthentication"]);
   });
 

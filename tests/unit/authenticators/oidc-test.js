@@ -3,8 +3,6 @@ import setupMirage from "ember-cli-mirage/test-support/setup-mirage";
 import { setupTest } from "ember-qunit";
 import { module, test } from "qunit";
 
-import { getConfig } from "ember-simple-auth-oidc/config";
-
 const getTokenBody = (expired) => {
   const time = expired ? -30 : 120;
   return btoa(
@@ -64,7 +62,8 @@ module("Unit | Authenticator | OIDC", function (hooks) {
   });
 
   test("it can make a single logout", async function (assert) {
-    const { endSessionEndpoint, afterLogoutUri } = getConfig(this.owner);
+    const { endSessionEndpoint, afterLogoutUri } =
+      this.owner.lookup("service:config");
     const subject = this.owner.lookup("authenticator:oidc");
 
     subject._redirectToUrl = (url) => {

@@ -16,10 +16,10 @@ export default function makeServer(config) {
       this.get(`${REALM_PATH}/.well-known/openid-configuration`, () => {
         const config = {
           issuer: this.urlPrefix,
-          authorization_endpoint: `${this.urlPrefix}/connect/authorize`,
+          authorization_endpoint: `${this.urlPrefix}${REALM_PATH}/protocol/openid-connect/auth`,
           token_endpoint: `${this.urlPrefix}${REALM_PATH}/protocol/openid-connect/token`,
           userinfo_endpoint: `${this.urlPrefix}${REALM_PATH}/protocol/openid-connect/userinfo`,
-          end_session_endpoint: `${this.urlPrefix}/connect/end_session`,
+          end_session_endpoint: `${this.urlPrefix}${REALM_PATH}/protocol/openid-connect/logout`,
           jwks_uri: `${this.urlPrefix}/jwks.json`,
           registration_endpoint: `${this.urlPrefix}/connect/register`,
         };
