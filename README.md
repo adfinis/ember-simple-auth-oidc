@@ -185,6 +185,12 @@ module.exports = function (environment) {
 };
 ```
 
+### Autodiscovery of configuration via .well-known
+
+Further there is the possibilty to user the `.well-known` endpoint of your authentication backend (specified [in the OpenID provider configuration chapter](https://openid.net/specs/openid-connect-discovery-1_0.html#ProviderConfig). For this to work you must **at least provide a valid `host` configuration value.**
+
+### Options
+
 Here is a complete list of all possible config options:
 
 **host** `<String>`  

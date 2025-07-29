@@ -1,11 +1,9 @@
 import { later } from "@ember/runloop";
 import { inject as service } from "@ember/service";
-import { lastValue, task } from "ember-concurrency";
 import BaseAuthenticator from "ember-simple-auth/authenticators/base";
 import { resolve } from "rsvp";
 import { TrackedObject } from "tracked-built-ins";
 
-import config from "ember-simple-auth-oidc/config";
 import getAbsoluteUrl from "ember-simple-auth-oidc/utils/absolute-url";
 import {
   isServerErrorResponse,
@@ -13,45 +11,10 @@ import {
   isBadRequestResponse,
 } from "ember-simple-auth-oidc/utils/errors";
 
-const camelize = (s) => s.replace(/_./g, (x) => x[1].toUpperCase());
-
-const camelizeObjectKeys = (obj) =>
-  Object.entries(obj).reduce((newObj, [key, value]) => {
-    return (newObj[camelize(key)] = value);
-  }, {});
-
 export default class OidcAuthenticator extends BaseAuthenticator {
   @service router;
   @service session;
-
-  @config config;
-
-  get configuration() {
-    return { ...this.config, ...this.fetchedConfig };
-  }
-
-  get hasEndpointsConfigured() {
-    return (
-      this.configuration.tokenEndpoint && this.configuration.userinfoEndpoint
-    );
-  }
-
-  /**
-   * Tries to fetch the OIDC provider configuration from the specified host/realm.
-   * SPEC: https://openid.net/specs/openid-connect-discovery-1_0.html#ProviderConfig
-   */
-  @lastValue("_fetchAuthConfiguration") fetchedConfig;
-  _fetchAuthConfiguration = task(async () => {
-    if (!this.config.host) {
-      throw new Error("Please define a OIDC host.");
-    }
-    const response = await fetch(
-      `${this.config.host}/.well-known/openid-configuration`,
-    );
-    const json = await response.json();
-
-    return camelizeObjectKeys(json.data);
-  });
+  @service config;
 
   /**
    * Authenticate the client with the given authentication code. The
@@ -63,14 +26,10 @@ export default class OidcAuthenticator extends BaseAuthenticator {
    * @returns {Object} The parsed response data
    */
   async authenticate(options) {
-    if (!this.hasEndpointsConfigured) {
-      await this._fetchAuthConfiguration.perform();
-
-      if (!this.hasEndpointsConfigured) {
-        throw new Error(
-          "Please define all OIDC endpoints (auth, token, userinfo)",
-        );
-      }
+    if (!this.config.hasEndpointsConfigured) {
+      throw new Error(
+        "Please define all OIDC endpoints (auth, token, userinfo)",
+      );
     }
 
     const { isRefresh = false, redirectUri, customParams = {} } = options;
@@ -88,7 +47,7 @@ export default class OidcAuthenticator extends BaseAuthenticator {
     const body = this._buildBodyQuery(options);
 
     const response = await fetch(
-      getAbsoluteUrl(this.configuration.tokenEndpoint, this.config.host),
+      getAbsoluteUrl(this.config.tokenEndpoint, this.config.host),
       {
         method: "POST",
         headers: {
@@ -132,16 +91,17 @@ export default class OidcAuthenticator extends BaseAuthenticator {
    * @param {String} idToken The id_token of the session to invalidate
    */
   singleLogout(idToken) {
-    if (!this.configuration.endSessionEndpoint) {
+    if (!this.config.endSessionEndpoint) {
       return;
     }
 
     const params = [];
 
-    if (this.configuration.afterLogoutUri) {
+    if (this.config.afterLogoutUri) {
       params.push(
         `post_logout_redirect_uri=${getAbsoluteUrl(
-          this.configuration.afterLogoutUri,
+          this.config.afterLogoutUri,
+          this.config.host,
         )}`,
       );
     }
@@ -152,8 +112,8 @@ export default class OidcAuthenticator extends BaseAuthenticator {
 
     this._redirectToUrl(
       `${getAbsoluteUrl(
-        this.configuration.endSessionEndpoint,
-        this.configuration.host,
+        this.config.endSessionEndpoint,
+        this.config.host,
       )}?${params.join("&")}`,
     );
   }
@@ -209,7 +169,7 @@ export default class OidcAuthenticator extends BaseAuthenticator {
       });
 
       const response = await fetch(
-        getAbsoluteUrl(this.configuration.tokenEndpoint, this.config.host),
+        getAbsoluteUrl(this.config.tokenEndpoint, this.config.host),
         {
           method: "POST",
           headers: {
@@ -235,7 +195,7 @@ export default class OidcAuthenticator extends BaseAuthenticator {
     } catch (e) {
       if (
         (isServerError || isAbortError(e)) &&
-        retryCount < this.configuration.amountOfRetries - 1
+        retryCount < this.config.amountOfRetries - 1
       ) {
         return new Promise((resolve) => {
           later(
@@ -244,7 +204,7 @@ export default class OidcAuthenticator extends BaseAuthenticator {
               resolve(
                 this._refresh(refresh_token, redirectUri, retryCount + 1),
               ),
-            this.configuration.retryTimeout,
+            this.config.retryTimeout,
           );
         });
       }
@@ -260,10 +220,10 @@ export default class OidcAuthenticator extends BaseAuthenticator {
    */
   async _getUserinfo(accessToken) {
     const response = await fetch(
-      getAbsoluteUrl(this.configuration.userinfoEndpoint, this.config.host),
+      getAbsoluteUrl(this.config.userinfoEndpoint, this.config.host),
       {
         headers: {
-          Authorization: `${this.configuration.authPrefix} ${accessToken}`,
+          Authorization: `${this.config.authPrefix} ${accessToken}`,
           Accept: "application/json",
         },
       },
@@ -295,11 +255,9 @@ export default class OidcAuthenticator extends BaseAuthenticator {
 
     const expireInMilliseconds = expires_in
       ? expires_in * 1000
-      : this.configuration.expiresIn;
+      : this.config.expiresIn;
     const expireTime =
-      new Date().getTime() +
-      expireInMilliseconds -
-      this.configuration.refreshLeeway;
+      new Date().getTime() + expireInMilliseconds - this.config.refreshLeeway;
 
     return new TrackedObject({
       access_token,
@@ -327,14 +285,14 @@ export default class OidcAuthenticator extends BaseAuthenticator {
   }) {
     const bodyObject = {
       redirect_uri: redirectUri,
-      client_id: this.configuration.clientId,
+      client_id: this.config.clientId,
       grant_type: isRefresh ? "refresh_token" : "authorization_code",
       ...customParams,
     };
 
     if (!isRefresh && code) {
       bodyObject.code = code;
-      if (this.configuration.enablePkce) {
+      if (this.config.enablePkce) {
         bodyObject.code_verifier = codeVerifier;
       }
     }

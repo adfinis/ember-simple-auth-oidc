@@ -2,12 +2,13 @@ import { getOwner } from "@ember/application";
 import { debounce } from "@ember/runloop";
 import { isTesting, macroCondition } from "@embroider/macros";
 
-import { getConfig } from "ember-simple-auth-oidc/config";
 import getAbsoluteUrl from "ember-simple-auth-oidc/utils/absolute-url";
 
 const replaceUri = (session) => {
   location.replace(
-    getAbsoluteUrl(getConfig(getOwner(session)).afterLogoutUri || ""),
+    getAbsoluteUrl(
+      getOwner(session).lookup("service:config").afterLogoutUri || "",
+    ),
   );
 };
 
@@ -28,7 +29,8 @@ export default function handleUnauthorized(session) {
       this,
       replaceUri,
       session,
-      getConfig(getOwner(session)).unauthorizedRequestRedirectTimeout,
+      getOwner(session).lookup("service:config")
+        .unauthorizedRequestRedirectTimeout,
     );
   }
 }
