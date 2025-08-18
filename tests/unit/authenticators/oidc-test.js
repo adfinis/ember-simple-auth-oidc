@@ -77,4 +77,29 @@ module("Unit | Authenticator | OIDC", function (hooks) {
 
     subject.singleLogout("myIdToken");
   });
+
+  test("it supports sending custom parameters", function (assert) {
+    const bodyOptions = {
+      code: "test-code",
+      codeVerifier: "test-verifier",
+      redirectUri: "test/redirect",
+      isRefresh: true,
+      refresh_token: "test-refresh-token",
+      customParams: { foo: "bar" },
+    };
+
+    const subject = this.owner.lookup("authenticator:oidc");
+    const bodyWithRefresh = subject._buildBodyQuery(bodyOptions);
+    assert.strictEqual(
+      bodyWithRefresh,
+      "redirect_uri=test%2Fredirect&client_id=test-client&grant_type=refresh_token&foo=bar&refresh_token=test-refresh-token",
+    );
+
+    bodyOptions.isRefresh = false;
+    const bodyWithoutRefresh = subject._buildBodyQuery(bodyOptions);
+    assert.strictEqual(
+      bodyWithoutRefresh,
+      "redirect_uri=test%2Fredirect&client_id=test-client&grant_type=authorization_code&foo=bar&code=test-code",
+    );
+  });
 });
