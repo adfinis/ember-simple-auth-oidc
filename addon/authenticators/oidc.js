@@ -62,7 +62,7 @@ export default class OidcAuthenticator extends BaseAuthenticator {
    * @param {String} options.code The authentication code
    * @returns {Object} The parsed response data
    */
-  async authenticate({ code, redirectUri, codeVerifier, isRefresh }) {
+  async authenticate(options) {
     if (!this.hasEndpointsConfigured) {
       await this._fetchAuthConfiguration.perform();
 
@@ -73,27 +73,19 @@ export default class OidcAuthenticator extends BaseAuthenticator {
       }
     }
 
+    const { isRefresh = false, redirectUri, customParams = {} } = options;
+
     if (isRefresh) {
+      const DEFAULT_RETRY_COUNT = 0;
       return await this._refresh(
         this.session.data.authenticated.refresh_token,
         redirectUri,
+        DEFAULT_RETRY_COUNT,
+        customParams,
       );
     }
 
-    const bodyObject = {
-      code,
-      client_id: this.configuration.clientId,
-      grant_type: "authorization_code",
-      redirect_uri: redirectUri,
-    };
-
-    if (this.configuration.enablePkce) {
-      bodyObject.code_verifier = codeVerifier;
-    }
-
-    const body = Object.keys(bodyObject)
-      .map((k) => `${k}=${encodeURIComponent(bodyObject[k])}`)
-      .join("&");
+    const body = this._buildBodyQuery(options);
 
     const response = await fetch(
       getAbsoluteUrl(this.configuration.tokenEndpoint, this.config.host),
@@ -201,18 +193,20 @@ export default class OidcAuthenticator extends BaseAuthenticator {
    * @param {String} refresh_token The refresh token
    * @returns {Object} The parsed response data
    */
-  async _refresh(refresh_token, redirectUri, retryCount = 0) {
+  async _refresh(
+    refresh_token,
+    redirectUri,
+    retryCount = 0,
+    customParams = {},
+  ) {
     let isServerError = false;
     try {
-      const bodyObject = {
+      const body = this._buildBodyQuery({
+        redirectUri,
         refresh_token,
-        client_id: this.configuration.clientId,
-        grant_type: "refresh_token",
-        redirect_uri: redirectUri,
-      };
-      const body = Object.keys(bodyObject)
-        .map((k) => `${k}=${encodeURIComponent(bodyObject[k])}`)
-        .join("&");
+        isRefresh: true,
+        customParams,
+      });
 
       const response = await fetch(
         getAbsoluteUrl(this.configuration.tokenEndpoint, this.config.host),
@@ -315,5 +309,44 @@ export default class OidcAuthenticator extends BaseAuthenticator {
       expireTime,
       redirectUri,
     });
+  }
+
+  /**
+   * Builds query parameters string for the authorize or refresh request
+   *
+   * @param {*} options
+   * @returns string
+   */
+  _buildBodyQuery({
+    code,
+    redirectUri,
+    codeVerifier,
+    isRefresh = false,
+    refresh_token,
+    customParams = {},
+  }) {
+    const bodyObject = {
+      redirect_uri: redirectUri,
+      client_id: this.configuration.clientId,
+      grant_type: isRefresh ? "refresh_token" : "authorization_code",
+      ...customParams,
+    };
+
+    if (!isRefresh && code) {
+      bodyObject.code = code;
+      if (this.configuration.enablePkce) {
+        bodyObject.code_verifier = codeVerifier;
+      }
+    }
+
+    if (isRefresh && refresh_token) {
+      bodyObject.refresh_token = refresh_token;
+    }
+
+    const bodyQuery = Object.keys(bodyObject)
+      .map((k) => `${k}=${encodeURIComponent(bodyObject[k])}`)
+      .join("&");
+
+    return bodyQuery;
   }
 }
