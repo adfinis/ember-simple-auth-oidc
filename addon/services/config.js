@@ -113,8 +113,8 @@ export default class ConfigurationService extends Service {
       );
     }
 
-    const json = await response.json();
+    const config = await response.json();
 
-    return applyAliases(camelizeObjectKeys(json.data));
+    return applyAliases(camelizeObjectKeys(config));
   });
 }
