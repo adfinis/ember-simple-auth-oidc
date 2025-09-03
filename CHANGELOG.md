@@ -1,3 +1,17 @@
+# [7.2.0](https://github.com/adfinis/ember-simple-auth-oidc/compare/v7.1.0...v7.2.0) (2025-09-03)
+
+
+### Bug Fixes
+
+* autodiscovery of configuration via well-known endpoint ([c7be39d](https://github.com/adfinis/ember-simple-auth-oidc/commit/c7be39d7cbbfd1295db0290232ec07b6f5016649))
+* **autodiscovery:** await fetching config in beforeModel and afterModel ([f31c48e](https://github.com/adfinis/ember-simple-auth-oidc/commit/f31c48e245691b1fae2507ac4c629bca65127458))
+* **autodiscovery:** config shouldn't be wrapped ([406441e](https://github.com/adfinis/ember-simple-auth-oidc/commit/406441e04e51e9c4fa0af8ccbc3cb956450361b1))
+
+
+### Features
+
+* add support for custom parameters ([a31566b](https://github.com/adfinis/ember-simple-auth-oidc/commit/a31566ba453c4ed40daa1c5175a51bf7882262e5))
+
 # [7.1.0](https://github.com/adfinis/ember-simple-auth-oidc/compare/v7.0.4...v7.1.0) (2025-07-24)
 
 
