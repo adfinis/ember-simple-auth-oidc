@@ -67,7 +67,9 @@ export default class OIDCAuthenticationRoute extends Route {
    * @param {String} transition.to.queryParams.state The state given by the identity provider
    */
   async afterModel(_, transition) {
-    if (!this.config.authEndpoint) {
+    await this.config.loadConfig();
+
+    if (!this.config.hasEndpointsConfigured) {
       throw new Error(
         "Please define all OIDC endpoints (auth, token, logout, userinfo)",
       );

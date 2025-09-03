@@ -30,10 +30,10 @@ module("Unit | Service | config", function (hooks) {
 
   test("alias configuration keys", function (assert) {
     const aliased = applyAliases({
-      authEndpoint: "auth",
+      authorizationEndpoint: "auth",
     });
 
-    assert.strictEqual(aliased.authorizationEndpoint, "auth");
+    assert.strictEqual(aliased.authEndpoint, "auth");
   });
 
   test("fetch configuration if necessary keys are not given", async function (assert) {
