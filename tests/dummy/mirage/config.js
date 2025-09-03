@@ -23,13 +23,7 @@ export default function makeServer(config) {
           jwks_uri: `${this.urlPrefix}/jwks.json`,
           registration_endpoint: `${this.urlPrefix}/connect/register`,
         };
-        return new Response(
-          200,
-          {},
-          {
-            data: config,
-          },
-        );
+        return new Response(200, {}, config);
       });
       this.post(`${REALM_PATH}/protocol/openid-connect/token`, {
         access_token: "access.token",
