@@ -20,6 +20,7 @@ module.exports = function (environment) {
       loginHintName: "custom_login_hint",
       expiresIn: 60000, // Short expire time (60s) for testing purpose
       refreshLeeway: 1000,
+      forceAutodiscovery: false,
     },
 
     EmberENV: {

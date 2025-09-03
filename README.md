@@ -189,6 +189,8 @@ module.exports = function (environment) {
 
 Further there is the possibilty to user the `.well-known` endpoint of your authentication backend (specified [in the OpenID provider configuration chapter](https://openid.net/specs/openid-connect-discovery-1_0.html#ProviderConfig). For this to work you must **at least provide a valid `host` configuration value.**
 
+To enforce the autodiscovery, but also providing some keys (autodiscovery will overwrite duplicate keys), set `forceAutodiscovery: true`.
+
 ### Options
 
 Here is a complete list of all possible config options:

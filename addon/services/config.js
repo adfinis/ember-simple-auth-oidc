@@ -25,7 +25,8 @@ const defaultConfig = {
 };
 
 const aliases = {
-  authEndpoint: "authorizationEndpoint",
+  // "originalKey": "aliasKey"
+  authorizationEndpoint: "authEndpoint",
 };
 
 export const applyAliases = (config) => {
@@ -50,12 +51,8 @@ export default class ConfigurationService extends Service {
   constructor(...args) {
     super(...args);
 
-    const envConfig =
-      getOwner(this).resolveRegistration("config:environment")[
-        "ember-simple-auth-oidc"
-      ];
-    if (envConfig) {
-      this.resolvedConfig = applyAliases(camelizeObjectKeys(envConfig));
+    if (this.environment) {
+      this.resolvedConfig = applyAliases(camelizeObjectKeys(this.environment));
     }
 
     this.configKeys.forEach((key) => {
@@ -65,6 +62,12 @@ export default class ConfigurationService extends Service {
         },
       });
     });
+  }
+
+  get environment() {
+    return getOwner(this).resolveRegistration("config:environment")[
+      "ember-simple-auth-oidc"
+    ];
   }
 
   @cached
@@ -85,8 +88,12 @@ export default class ConfigurationService extends Service {
   }
 
   async loadConfig() {
-    if (!this.hasEndpointsConfigured) {
-      await this._fetchAuthConfiguration.perform();
+    if (this.environment.forceAutodiscovery || !this.hasEndpointsConfigured) {
+      if (this._fetchAuthConfiguration.isRunning) {
+        await this._fetchAuthConfiguration.last;
+      } else {
+        await this._fetchAuthConfiguration.perform();
+      }
     }
   }
 
@@ -95,7 +102,7 @@ export default class ConfigurationService extends Service {
    * SPEC: https://openid.net/specs/openid-connect-discovery-1_0.html#ProviderConfig
    */
   @lastValue("_fetchAuthConfiguration") fetchedConfig;
-  _fetchAuthConfiguration = task(async () => {
+  _fetchAuthConfiguration = task({ drop: true }, async () => {
     if (this._fetchAuthConfiguration.lastSuccessful) {
       return this.fetchedConfig;
     }
