@@ -101,7 +101,6 @@ export default class OidcAuthenticator extends BaseAuthenticator {
       params.push(
         `post_logout_redirect_uri=${getAbsoluteUrl(
           this.config.afterLogoutUri,
-          this.config.host,
         )}`,
       );
     }

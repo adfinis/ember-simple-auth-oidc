@@ -22,6 +22,7 @@ const defaultConfig = {
   retryTimeout: 3000,
   enablePkce: false,
   unauthorizedRequestRedirectTimeout: 1000,
+  audience: null,
 };
 
 const aliases = {

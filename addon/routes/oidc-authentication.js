@@ -168,6 +168,10 @@ export default class OIDCAuthenticationRoute extends Route {
       search.push("code_challenge_method=S256");
     }
 
+    if (this.config.audience) {
+      search.push(`audience=${this.config.audience}`);
+    }
+
     search = search.filter(Boolean).join("&");
 
     this._redirectToUrl(
