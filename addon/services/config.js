@@ -31,7 +31,11 @@ const aliases = {
 
 export const applyAliases = (config) => {
   Object.entries(aliases).forEach(([key, alias]) => {
-    config[alias] = config[key];
+    const value = config[key];
+
+    if (value && !config[alias]) {
+      config[alias] = value;
+    }
   });
 
   return config;
