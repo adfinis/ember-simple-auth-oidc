@@ -69,6 +69,8 @@ jobs:
           - ember-canary
           - embroider-safe
           - embroider-optimized
+          - esa-6
+          - esa-7
 
     steps:
       - uses: actions/checkout@v5

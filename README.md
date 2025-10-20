@@ -19,7 +19,7 @@ Note: The addon uses [Proxy](https://developer.mozilla.org/en-US/docs/Web/JavaSc
 in its implementation, if IE browser support is necessary, a polyfill needs to be provided.
 
 ```bash
-$ ember install ember-simple-auth-oidc
+$ ember install ember-simple-auth-oidc ember-simple-auth
 ```
 
 If you're upgrading from 3.x to 4.x see the [upgrade guide](docs/migration-v4.md).
