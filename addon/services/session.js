@@ -1,4 +1,4 @@
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
 import { enqueueTask } from "ember-concurrency";
 import SessionServiceESA from "ember-simple-auth/services/session";
 

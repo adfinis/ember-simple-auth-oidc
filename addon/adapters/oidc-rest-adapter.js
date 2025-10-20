@@ -1,4 +1,4 @@
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
 import RESTAdapter from "@ember-data/adapter/rest";
 import { handleUnauthorized } from "ember-simple-auth-oidc";
 

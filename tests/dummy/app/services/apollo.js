@@ -1,4 +1,4 @@
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
 import ApolloService from "ember-apollo-client/services/apollo";
 import { apolloMiddleware } from "ember-simple-auth-oidc";
 

@@ -1,6 +1,6 @@
 import { assert } from "@ember/debug";
 import Route from "@ember/routing/route";
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
 import { v4 } from "uuid";
 
 import getAbsoluteUrl from "ember-simple-auth-oidc/utils/absolute-url";
