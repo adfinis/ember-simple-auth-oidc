@@ -21,6 +21,7 @@ module.exports = function (environment) {
       expiresIn: 60000, // Short expire time (60s) for testing purpose
       refreshLeeway: 1000,
       forceAutodiscovery: false,
+      authEndpointParameters: { acr_values: "1,2" },
     },
 
     EmberENV: {
