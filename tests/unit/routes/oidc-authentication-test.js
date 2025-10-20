@@ -35,10 +35,12 @@ module("Unit | Route | oidc-authentication", function (hooks) {
     set(route.session, "data.authenticated", {});
     set(route.session, "attemptedTransition", { to: {} });
     route._redirectToUrl = (url) => {
+      url = decodeURIComponent(url);
       assert.ok(url.includes(this.config.authEndpoint));
       assert.ok(url.includes(`client_id=${this.config.clientId}`));
       const { protocol, host } = location;
       assert.ok(url.includes(`redirect_uri=${protocol}//${host}/test`));
+      assert.ok(url.includes("acr_values=1,2"));
     };
 
     route.afterModel(null, { to: { queryParams: {} } });

@@ -8,6 +8,7 @@ const defaultConfig = {
   host: "http://localhost:4200",
   clientId: "client",
   authEndpoint: null,
+  authEndpointParameters: {},
   tokenEndpoint: null,
   endSessionEndpoint: null,
   afterLogoutUri: null,
@@ -22,6 +23,7 @@ const defaultConfig = {
   retryTimeout: 3000,
   enablePkce: false,
   unauthorizedRequestRedirectTimeout: 1000,
+  loginHintName: "login_hint",
 };
 
 const aliases = {

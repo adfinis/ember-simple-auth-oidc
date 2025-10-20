@@ -205,6 +205,10 @@ The oidc client identifier valid at the authorization server.
 Authorization endpoint at the authorization server. This can be a path which
 will be appended to `host` or an absolute URL.
 
+**authEndpointParameters** `Object`
+Additional query parameters (e.g. `acr_values` or `audience`) that will be
+passed on to the `authEndpoint`. Default is an empty object.
+
 **tokenEndpoint** `<String>`  
 Token endpoint at the authorization server. This can be a path which will be
 appended to `host` or an absolute URL.

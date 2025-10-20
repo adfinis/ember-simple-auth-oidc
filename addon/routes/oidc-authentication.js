@@ -148,30 +148,32 @@ export default class OIDCAuthenticationRoute extends Route {
       this.session.set("data.nextURL", url);
     }
 
-    // forward `login_hint` query param if present
-    const key = this.config.configuration.loginHintName || "login_hint";
+    const search = new URLSearchParams({
+      client_id: this.config.clientId,
+      redirect_uri: this.redirectUri,
+      response_type: "code",
+      state,
+      scope: this.config.scope,
+      ...this.config.configuration.authEndpointParameters,
+    });
 
-    let search = [
-      `client_id=${this.config.clientId}`,
-      `redirect_uri=${this.redirectUri}`,
-      `response_type=code`,
-      `state=${state}`,
-      `scope=${this.config.scope}`,
-      queryParams[key] ? `${key}=${queryParams[key]}` : null,
-    ];
+    // forward `login_hint` query param if present
+    const loginHint = queryParams[this.config.configuration.loginHintName];
+
+    if (loginHint) {
+      search.set(this.config.configuration.loginHintName, loginHint);
+    }
 
     if (this.config.enablePkce) {
       const pkceChallenge = generatePkceChallenge(
         this.session.data.pkceCodeVerifier,
       );
-      search.push(`code_challenge=${pkceChallenge}`);
-      search.push("code_challenge_method=S256");
+      search.set("code_challenge", pkceChallenge);
+      search.set("code_challenge_method", "S256");
     }
 
-    search = search.filter(Boolean).join("&");
-
     this._redirectToUrl(
-      `${getAbsoluteUrl(this.config.authEndpoint, this.config.host)}?${search}`,
+      `${getAbsoluteUrl(this.config.authEndpoint, this.config.host)}?${search.toString()}`,
     );
   }
 }
