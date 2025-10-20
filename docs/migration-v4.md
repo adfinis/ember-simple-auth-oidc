@@ -27,7 +27,7 @@ the access token before accessing the authenticated route.
 
   import Route from "@ember/routing/route";
 - import AuthenticatedRouteMixin from "ember-simple-auth/mixins/authenticated-route-mixin";
-+ import { inject as service } from "@ember/service";
++ import { service } from "@ember/service";
 
 - export default class ProtectedRoute extends Route.extend(
 -   AuthenticatedRouteMixin
@@ -92,7 +92,7 @@ adapter's headers. The provided adapters contain the necessary logic to handle
 
 - import JSONAPIAdapter from "@ember-data/adapter/json-api";
 - import OIDCAdapterMixin from "ember-simple-auth-oidc/mixins/oidc-adapter-mixin";
-+ import { inject as service } from "@ember/service";
++ import { service } from "@ember/service";
 + import OIDCJSONAPIAdapter from "ember-simple-auth-oidc/adapters/oidc-json-api-adapter";
 
 - export default class ApplicationAdapter extends JSONAPIAdapter.extend(

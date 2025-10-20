@@ -52,7 +52,7 @@ causing redirect loops).
 // app/routes/protected.js
 
 import Route from "@ember/routing/route";
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
 
 export default class ProtectedRoute extends Route {
   @service session;
@@ -74,7 +74,7 @@ header included.
 ```js
 // app/adapters/application.js
 
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
 import OIDCJSONAPIAdapter from "ember-simple-auth-oidc/adapters/oidc-json-api-adapter";
 
 export default class ApplicationAdapter extends OIDCJSONAPIAdapter {
@@ -93,7 +93,7 @@ Simply, wrap the http link in `apolloMiddleware` like so:
 ```js
 // app/services/apollo.js
 
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
 import ApolloService from "ember-apollo-client/services/apollo";
 import { apolloMiddleware } from "ember-simple-auth-oidc";
 
@@ -115,7 +115,7 @@ services as well, you can use the `handleUnauthorized` function and the
 shows an example of a custom fetch service with proper authentication handling:
 
 ```js
-import Service, { inject as service } from "@ember/service";
+import Service, { service } from "@ember/service";
 import { handleUnauthorized } from "ember-simple-auth-oidc";
 
 export default class FetchService extends Service {
