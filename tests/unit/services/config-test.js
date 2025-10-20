@@ -29,11 +29,15 @@ module("Unit | Service | config", function (hooks) {
   });
 
   test("alias configuration keys", function (assert) {
-    const aliased = applyAliases({
+    const aliased1 = applyAliases({
       authorizationEndpoint: "auth",
     });
+    const aliased2 = applyAliases({
+      authEndpoint: "auth",
+    });
 
-    assert.strictEqual(aliased.authEndpoint, "auth");
+    assert.strictEqual(aliased1.authEndpoint, "auth");
+    assert.strictEqual(aliased2.authEndpoint, "auth");
   });
 
   test("fetch configuration if necessary keys are not given", async function (assert) {
