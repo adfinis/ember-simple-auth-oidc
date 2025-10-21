@@ -1,3 +1,10 @@
+## [7.3.1](https://github.com/adfinis/ember-simple-auth-oidc/compare/v7.3.0...v7.3.1) (2025-10-21)
+
+
+### Bug Fixes
+
+* **config:** rename config service to avoid naming collisions ([cd832c9](https://github.com/adfinis/ember-simple-auth-oidc/commit/cd832c9ba9e0d279a38901198d46302b7f4edfab))
+
 # [7.3.0](https://github.com/adfinis/ember-simple-auth-oidc/compare/v7.2.0...v7.3.0) (2025-10-21)
 
 
