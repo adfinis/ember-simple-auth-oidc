@@ -31,7 +31,6 @@
     "prepare": "husky"
   },
   "dependencies": {
-    "@apollo/client": "^3.13.0",
     "@babel/core": "^7.26.0",
     "@embroider/macros": "^1.16.11",
     "base64-js": "^1.5.1",
@@ -44,6 +43,7 @@
     "uuid": "^11.0.5 || ^12.0.0 || ^13.0.0"
   },
   "devDependencies": {
+    "@apollo/client": "3.14.0",
     "@adfinis/eslint-config": "3.0.2",
     "@adfinis/semantic-release-config": "5.0.0",
     "@babel/eslint-parser": "7.28.4",
@@ -104,11 +104,17 @@
     "webpack": "5.102.1"
   },
   "peerDependencies": {
+    "@apollo/client": "^3.13.0",
     "@ember-data/adapter": "~4.12.0 || >= 5.0.0 <= 5.3.11",
     "@embroider/macros": ">= 1.0.0",
     "ember-data": "~4.12.0 || >= 5.0.0 <= 5.3.11",
     "ember-simple-auth": ">= 6.0.0",
     "ember-source": ">= 4.12.0"
+  },
+  "peerDependenciesMeta": {
+    "@apollo/client": {
+      "optional": true
+    }
   },
   "packageManager": "pnpm@10.18.3",
   "engines": {
