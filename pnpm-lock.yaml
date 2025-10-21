@@ -36,10 +36,10 @@ importers:
         specifier: ^0.11.0
         version: 0.11.1
       tracked-built-ins:
-        specifier: ^3.3.0
-        version: 3.4.0(@babel/core@7.28.4)
+        specifier: ^3.3.0 || ^4.0.0
+        version: 4.0.0(@babel/core@7.28.4)
       tracked-toolbox:
-        specifier: 2.0.0
+        specifier: ^2.0.0
         version: 2.0.0(@babel/core@7.28.4)(ember-source@6.8.0(@glimmer/component@2.0.0)(rsvp@4.8.5))
       uuid:
         specifier: ^11.0.5 || ^12.0.0 || ^13.0.0
@@ -7017,8 +7017,8 @@ packages:
   tr46@0.0.3:
     resolution: {integrity: sha512-N3WMsuqV66lT30CrXNbEjx4GEwlow3v6rr4mCcv6prnfwhS01rkgyFdjPNBYd9br7LpXV1+Emh01fHnq2Gdgrw==}
 
-  tracked-built-ins@3.4.0:
-    resolution: {integrity: sha512-aRwWQXC3VkY50oYxS7wKZiavkjf3uaN+UYUH30D5gxUqbxDN2LnNsfWyDfckmxHUGw4gJDH5lpRS0jX/tim0vw==}
+  tracked-built-ins@4.0.0:
+    resolution: {integrity: sha512-0Jl43A1SDZd+yYCJvXfgDSn4Wk/zcawkyFTBPqOETU5UJRngnVEnQ8oOjawqPRg6qja3sKjIQ8z6X9xJzcUTUA==}
 
   tracked-toolbox@2.0.0:
     resolution: {integrity: sha512-adZtX+RGN6F+pWs/5JqVuDxLhuia4uhqmQp+UlUaxpykWjDFETtAdQR+LdDJiFPXFAXnS6FBqn/tnSLJQCm3Yw==}
@@ -9543,7 +9543,7 @@ snapshots:
 
   '@types/glob@9.0.0':
     dependencies:
-      glob: 8.1.0
+      glob: 9.3.5
 
   '@types/http-errors@2.0.5': {}
 
@@ -15893,7 +15893,7 @@ snapshots:
 
   tr46@0.0.3: {}
 
-  tracked-built-ins@3.4.0(@babel/core@7.28.4):
+  tracked-built-ins@4.0.0(@babel/core@7.28.4):
     dependencies:
       '@embroider/addon-shim': 1.10.0
       decorator-transforms: 2.3.0(@babel/core@7.28.4)
