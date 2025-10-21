@@ -1,6 +1,6 @@
 import { later } from "@ember/runloop";
 import { service } from "@ember/service";
-import { waitForPromise } from "@ember/test-waiters";
+import { waitForFetch } from "@ember/test-waiters";
 import BaseAuthenticator from "ember-simple-auth/authenticators/base";
 import { resolve } from "rsvp";
 import { TrackedObject } from "tracked-built-ins";
@@ -47,7 +47,7 @@ export default class OidcAuthenticator extends BaseAuthenticator {
 
     const body = this._buildBodyQuery(options);
 
-    const response = await waitForPromise(
+    const response = await waitForFetch(
       fetch(getAbsoluteUrl(this.config.tokenEndpoint, this.config.host), {
         method: "POST",
         headers: {
@@ -167,7 +167,7 @@ export default class OidcAuthenticator extends BaseAuthenticator {
         customParams,
       });
 
-      const response = await waitForPromise(
+      const response = await waitForFetch(
         fetch(getAbsoluteUrl(this.config.tokenEndpoint, this.config.host), {
           method: "POST",
           headers: {
@@ -217,7 +217,7 @@ export default class OidcAuthenticator extends BaseAuthenticator {
    * @returns {Object} Object containing the user information
    */
   async _getUserinfo(accessToken) {
-    const response = await waitForPromise(
+    const response = await waitForFetch(
       fetch(getAbsoluteUrl(this.config.userinfoEndpoint, this.config.host), {
         headers: {
           Authorization: `${this.config.authPrefix} ${accessToken}`,
