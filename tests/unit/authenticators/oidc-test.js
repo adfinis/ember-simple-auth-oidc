@@ -76,8 +76,9 @@ module("Unit | Authenticator | OIDC", function (hooks) {
     });
 
     test("it can make a single logout", async function (assert) {
-      const { endSessionEndpoint, afterLogoutUri } =
-        this.owner.lookup("service:config");
+      const { endSessionEndpoint, afterLogoutUri } = this.owner.lookup(
+        "service:esa-oidc-config",
+      );
       const subject = this.owner.lookup("authenticator:oidc");
       const { protocol, host } = location;
 

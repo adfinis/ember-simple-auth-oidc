@@ -8,7 +8,7 @@ module("Unit | Route | oidc-authentication", function (hooks) {
   setupMirage(hooks);
 
   hooks.beforeEach(function () {
-    this.config = this.owner.lookup("service:config");
+    this.config = this.owner.lookup("service:esa-oidc-config");
   });
 
   test("it can handle already authenticated requests", async function (assert) {

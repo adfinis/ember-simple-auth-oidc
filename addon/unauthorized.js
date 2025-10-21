@@ -7,7 +7,7 @@ import getAbsoluteUrl from "ember-simple-auth-oidc/utils/absolute-url";
 const replaceUri = (session) => {
   location.replace(
     getAbsoluteUrl(
-      getOwner(session).lookup("service:config").afterLogoutUri || "",
+      getOwner(session).lookup("service:esa-oidc-config").afterLogoutUri || "",
     ),
   );
 };
@@ -29,7 +29,7 @@ export default function handleUnauthorized(session) {
       this,
       replaceUri,
       session,
-      getOwner(session).lookup("service:config")
+      getOwner(session).lookup("service:esa-oidc-config")
         .unauthorizedRequestRedirectTimeout,
     );
   }

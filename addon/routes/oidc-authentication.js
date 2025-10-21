@@ -12,7 +12,7 @@ import {
 export default class OIDCAuthenticationRoute extends Route {
   @service session;
   @service router;
-  @service config;
+  @service("esa-oidc-config") config;
 
   queryParams = {
     code: { refreshModel: false },
@@ -154,14 +154,14 @@ export default class OIDCAuthenticationRoute extends Route {
       response_type: "code",
       state,
       scope: this.config.scope,
-      ...this.config.configuration.authEndpointParameters,
+      ...this.config.authEndpointParameters,
     });
 
     // forward `login_hint` query param if present
-    const loginHint = queryParams[this.config.configuration.loginHintName];
+    const loginHint = queryParams[this.config.loginHintName];
 
     if (loginHint) {
-      search.set(this.config.configuration.loginHintName, loginHint);
+      search.set(this.config.loginHintName, loginHint);
     }
 
     if (this.config.enablePkce) {

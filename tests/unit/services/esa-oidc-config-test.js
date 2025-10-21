@@ -5,7 +5,7 @@ import { module, test } from "qunit";
 import {
   applyAliases,
   camelizeObjectKeys,
-} from "ember-simple-auth-oidc/services/config";
+} from "ember-simple-auth-oidc/services/esa-oidc-config";
 
 module("Unit | Service | config", function (hooks) {
   setupTest(hooks);
@@ -41,7 +41,7 @@ module("Unit | Service | config", function (hooks) {
   });
 
   test("fetch configuration if necessary keys are not given", async function (assert) {
-    const configService = this.owner.lookup("service:config");
+    const configService = this.owner.lookup("service:esa-oidc-config");
     configService.resolvedConfig.tokenEndpoint = null;
 
     const wellKnownUrl = `${configService.host}/.well-known/openid-configuration`;

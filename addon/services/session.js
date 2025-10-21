@@ -4,7 +4,7 @@ import SessionServiceESA from "ember-simple-auth/services/session";
 
 export default class Service extends SessionServiceESA {
   @service router;
-  @service config;
+  @service("esa-oidc-config") config;
 
   singleLogout() {
     const session = this.session; // InternalSession
