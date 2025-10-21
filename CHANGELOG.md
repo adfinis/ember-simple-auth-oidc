@@ -1,3 +1,16 @@
+# [7.3.0](https://github.com/adfinis/ember-simple-auth-oidc/compare/v7.2.0...v7.3.0) (2025-10-21)
+
+
+### Bug Fixes
+
+* **config:** fix configuration of `authEndpoint` ([4de1823](https://github.com/adfinis/ember-simple-auth-oidc/commit/4de1823d607feccd6c61056a476591a89d273fda)), closes [#1122](https://github.com/adfinis/ember-simple-auth-oidc/issues/1122)
+* **logout:** fix usage of relative URLs for `afterLogoutUri` config ([3db5aec](https://github.com/adfinis/ember-simple-auth-oidc/commit/3db5aecdb4c3807092ec1be55627bb9b7de8aa38)), closes [#1128](https://github.com/adfinis/ember-simple-auth-oidc/issues/1128)
+
+
+### Features
+
+* **config:** add possibility to pass custom query parameters to auth ([83400d4](https://github.com/adfinis/ember-simple-auth-oidc/commit/83400d4980fb3985815023872115b6393a8bf6b1)), closes [#1124](https://github.com/adfinis/ember-simple-auth-oidc/issues/1124) [#1128](https://github.com/adfinis/ember-simple-auth-oidc/issues/1128)
+
 # [7.2.0](https://github.com/adfinis/ember-simple-auth-oidc/compare/v7.1.0...v7.2.0) (2025-09-03)
 
 
