@@ -16,7 +16,7 @@ module.exports = function (environment) {
       tokenEndpoint: "/protocol/openid-connect/token",
       endSessionEndpoint: "/protocol/openid-connect/logout",
       userinfoEndpoint: "/protocol/openid-connect/userinfo",
-      afterLogoutUri: "http://localhost:4200",
+      afterLogoutUri: "/",
       loginHintName: "custom_login_hint",
       expiresIn: 60000, // Short expire time (60s) for testing purpose
       refreshLeeway: 1000,

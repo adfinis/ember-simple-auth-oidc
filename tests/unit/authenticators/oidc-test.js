@@ -61,20 +61,38 @@ module("Unit | Authenticator | OIDC", function (hooks) {
     assert.ok(data.expireTime, "Returns the time at which the token expires");
   });
 
-  test("it can make a single logout", async function (assert) {
-    const { endSessionEndpoint, afterLogoutUri } =
-      this.owner.lookup("service:config");
-    const subject = this.owner.lookup("authenticator:oidc");
+  module("single logout", function (hooks) {
+    hooks.beforeEach(function () {
+      this.env =
+        this.owner.resolveRegistration("config:environment")[
+          "ember-simple-auth-oidc"
+        ];
+      this._originalHost = this.env.host;
+      this.env.host = "https://some-other-domain.com";
+    });
 
-    subject._redirectToUrl = (url) => {
-      assert.ok(new RegExp(endSessionEndpoint).test(url));
-      assert.ok(
-        new RegExp(`post_logout_redirect_uri=${afterLogoutUri}`).test(url),
-      );
-      assert.ok(new RegExp("id_token_hint=myIdToken").test(url));
-    };
+    hooks.afterEach(function () {
+      this.env.host = this._originalHost;
+    });
 
-    subject.singleLogout("myIdToken");
+    test("it can make a single logout", async function (assert) {
+      const { endSessionEndpoint, afterLogoutUri } =
+        this.owner.lookup("service:config");
+      const subject = this.owner.lookup("authenticator:oidc");
+      const { protocol, host } = location;
+
+      subject._redirectToUrl = (url) => {
+        assert.ok(new RegExp(endSessionEndpoint).test(url));
+        assert.ok(
+          new RegExp(
+            `post_logout_redirect_uri=${protocol}//${host}${afterLogoutUri}`,
+          ).test(url),
+        );
+        assert.ok(new RegExp("id_token_hint=myIdToken").test(url));
+      };
+
+      subject.singleLogout("myIdToken");
+    });
   });
 
   test("it supports sending custom parameters", function (assert) {
