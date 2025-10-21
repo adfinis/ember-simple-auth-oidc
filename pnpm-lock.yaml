@@ -8,9 +8,6 @@ importers:
 
   .:
     dependencies:
-      '@apollo/client':
-        specifier: ^3.13.0
-        version: 3.14.0(graphql@16.11.0)
       '@babel/core':
         specifier: ^7.26.0
         version: 7.28.4
@@ -54,6 +51,9 @@ importers:
       '@adfinis/semantic-release-config':
         specifier: 5.0.0
         version: 5.0.0(@types/node@24.8.1)(typescript@5.9.3)
+      '@apollo/client':
+        specifier: 3.14.0
+        version: 3.14.0(graphql@16.11.0)
       '@babel/eslint-parser':
         specifier: 7.28.4
         version: 7.28.4(@babel/core@7.28.4)(eslint@9.38.0(jiti@2.6.1))

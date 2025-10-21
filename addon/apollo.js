@@ -1,25 +1,43 @@
-import { setContext } from "@apollo/client/link/context";
-import { onError } from "@apollo/client/link/error";
+import { assert } from "@ember/debug";
+import {
+  dependencySatisfies,
+  macroCondition,
+  importSync,
+} from "@embroider/macros";
 import { handleUnauthorized } from "ember-simple-auth-oidc";
 
-export default function apolloMiddleware(httpLink, session) {
-  const authMiddleware = setContext(async (_, context) => {
-    await session.refreshAuthentication.perform();
+let apolloMiddleware;
 
-    return {
-      ...context,
-      headers: {
-        ...context.headers,
-        ...session.headers,
-      },
-    };
-  });
+if (macroCondition(dependencySatisfies("@apollo/client", "^3.13.0"))) {
+  const { setContext } = importSync("@apollo/client/link/context");
+  const { onError } = importSync("@apollo/client/link/error");
 
-  const authAfterware = onError((error) => {
-    if (error.networkError && error.networkError.statusCode === 401) {
-      handleUnauthorized(session);
-    }
-  });
+  apolloMiddleware = (httpLink, session) => {
+    const authMiddleware = setContext(async (_, context) => {
+      await session.refreshAuthentication.perform();
 
-  return authMiddleware.concat(authAfterware).concat(httpLink);
+      return {
+        ...context,
+        headers: {
+          ...context.headers,
+          ...session.headers,
+        },
+      };
+    });
+
+    const authAfterware = onError((error) => {
+      if (error.networkError && error.networkError.statusCode === 401) {
+        handleUnauthorized(session);
+      }
+    });
+
+    return authMiddleware.concat(authAfterware).concat(httpLink);
+  };
+} else {
+  apolloMiddleware = () =>
+    assert(
+      "@apollo/client ^3.13.0 must be installed in order to use the apollo middleware",
+    );
 }
+
+export default apolloMiddleware;
