@@ -15,7 +15,7 @@ import {
 export default class OidcAuthenticator extends BaseAuthenticator {
   @service router;
   @service session;
-  @service config;
+  @service("esa-oidc-config") config;
 
   /**
    * Authenticate the client with the given authentication code. The

@@ -51,7 +51,7 @@ export const camelizeObjectKeys = (obj) =>
     return newObj;
   }, {});
 
-export default class ConfigurationService extends Service {
+export default class ESAOIDCConfigService extends Service {
   @tracked resolvedConfig;
 
   constructor(...args) {
