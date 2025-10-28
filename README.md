@@ -221,6 +221,9 @@ which will be appended to `host` or an absolute URL.
 Userinfo endpoint endpoint at the authorization server. This can be a path
 which will be appended to `host` or an absolute URL.
 
+**afterLoginUri** `<String>` (optional)  
+A relative or absolute URI to which will be redirected after login or if the user enters the login page while being already authenticated. Default is `"/"`.
+
 **afterLogoutUri** `<String>` (optional)  
 A relative or absolute URI to which will be redirected after logout / end session.
 
