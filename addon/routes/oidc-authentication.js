@@ -32,8 +32,10 @@ export default class OIDCAuthenticationRoute extends Route {
   async beforeModel(transition) {
     await this.config.loadConfig();
 
-    if (transition.from) {
-      this.session.prohibitAuthentication(transition.from.name);
+    if (this.session.isAuthenticated || transition.from) {
+      this.session.prohibitAuthentication(
+        transition.from?.name ?? this.config.afterLoginUri,
+      );
     }
 
     // PKCE Verifier has to be set in session, because we redirect

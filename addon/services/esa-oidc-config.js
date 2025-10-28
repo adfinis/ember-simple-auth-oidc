@@ -11,6 +11,7 @@ const defaultConfig = {
   authEndpointParameters: {},
   tokenEndpoint: null,
   endSessionEndpoint: null,
+  afterLoginUri: "/",
   afterLogoutUri: null,
   userinfoEndpoint: null,
   scope: "openid",
