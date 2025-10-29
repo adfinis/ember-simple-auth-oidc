@@ -1,3 +1,12 @@
+## [7.3.2](https://github.com/adfinis/ember-simple-auth-oidc/compare/v7.3.1...v7.3.2) (2025-10-29)
+
+
+### Bug Fixes
+
+* **deps:** don't depend on @apollo/client ([ad2ebe2](https://github.com/adfinis/ember-simple-auth-oidc/commit/ad2ebe29989e6f685e5e911cc91a3fe0c4be5408)), closes [embroider-build/embroider#1266](https://github.com/embroider-build/embroider/issues/1266) [#685](https://github.com/adfinis/ember-simple-auth-oidc/issues/685) [#597](https://github.com/adfinis/ember-simple-auth-oidc/issues/597)
+* redirect to afterLoginUri on authenticated access of login route ([ee61d88](https://github.com/adfinis/ember-simple-auth-oidc/commit/ee61d884822218828d078eb42b6f1a2078a1ebd1))
+* **requests:** use `waitForFetch` instead of `waitForPromise` ([b9eb2c1](https://github.com/adfinis/ember-simple-auth-oidc/commit/b9eb2c14aed33b0ec47c88f2515bd677ffb83b0a))
+
 ## [7.3.1](https://github.com/adfinis/ember-simple-auth-oidc/compare/v7.3.0...v7.3.1) (2025-10-21)
 
 
