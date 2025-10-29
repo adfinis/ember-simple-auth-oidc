@@ -15,7 +15,7 @@ importers:
         specifier: ~4.12.0 || >= 5.0.0 <= 5.3.11
         version: 5.3.11(@ember-data/legacy-compat@5.3.11(e4c703a220e6eb338892a53145ee87ce))(@ember-data/request-utils@5.3.11(@ember/string@4.0.1)(@warp-drive/core-types@0.0.1)(ember-inflector@5.0.2(@babel/core@7.28.4))(ember-source@6.8.0(@glimmer/component@2.0.0)(rsvp@4.8.5)))(@ember-data/store@5.3.11(@ember-data/request-utils@5.3.11(@ember/string@4.0.1)(@warp-drive/core-types@0.0.1)(ember-inflector@5.0.2(@babel/core@7.28.4))(ember-source@6.8.0(@glimmer/component@2.0.0)(rsvp@4.8.5)))(@ember-data/request@5.3.11(@warp-drive/core-types@0.0.1))(@ember-data/tracking@5.3.11(@warp-drive/core-types@0.0.1)(ember-source@6.8.0(@glimmer/component@2.0.0)(rsvp@4.8.5)))(@warp-drive/core-types@0.0.1)(ember-source@6.8.0(@glimmer/component@2.0.0)(rsvp@4.8.5)))(@warp-drive/core-types@0.0.1)(ember-source@6.8.0(@glimmer/component@2.0.0)(rsvp@4.8.5))
       '@ember/test-waiters':
-        specifier: ^4.0.0
+        specifier: '>= 4.1.1'
         version: 4.1.1
       '@embroider/macros':
         specifier: ^1.16.11
