@@ -43,7 +43,7 @@
     "uuid": "^11.0.5 || ^12.0.0 || ^13.0.0"
   },
   "devDependencies": {
-    "@apollo/client": "3.14.0",
+    "@apollo/client": "4.0.8",
     "@adfinis/eslint-config": "3.0.2",
     "@adfinis/semantic-release-config": "5.0.0",
     "@babel/eslint-parser": "7.28.4",
