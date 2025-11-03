@@ -71,7 +71,6 @@ jobs:
           - embroider-optimized
           - esa-6
           - esa-7
-          - esa-8
 
     steps:
       - uses: actions/checkout@v5

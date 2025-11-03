@@ -89,14 +89,6 @@ module.exports = async function () {
           },
         },
       },
-      {
-        name: "esa-8",
-        npm: {
-          devDependencies: {
-            "ember-simple-auth": "^8.0.0",
-          },
-        },
-      },
     ],
   };
 };
