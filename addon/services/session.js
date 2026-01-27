@@ -43,20 +43,35 @@ export default class Service extends SessionServiceESA {
     return headers;
   }
 
-  refreshAuthentication = task({ enqueue: true }, async () => {
+  get shouldRefresh() {
     const expireTime = this.data.authenticated.expireTime;
     const isExpired = expireTime && expireTime <= new Date().getTime();
 
-    if (this.isAuthenticated && isExpired) {
+    return this.isAuthenticated && isExpired;
+  }
+
+  refreshAuthentication = task({ enqueue: true }, async () => {
+    await this.beforeRefreshAuthentication();
+
+    if (this.shouldRefresh) {
       try {
-        return await this.session.authenticate("authenticator:oidc", {
+        const response = await this.session.authenticate("authenticator:oidc", {
           redirectUri: this.redirectUri,
           isRefresh: true,
         });
-      } catch {
+
+        await this.afterRefreshAuthentication(response);
+
+        return response;
+      } catch (error) {
         console.warn("Token is invalid. Re-authentification is required.");
+        await this.onRefreshAuthenticationError(error);
+
+        return;
       }
     }
+
+    return await this.afterRefreshAuthentication(null);
   });
 
   async requireAuthentication(transition, routeOrCallback) {
@@ -97,4 +112,29 @@ export default class Service extends SessionServiceESA {
    * exact location where the session is invalidated.
    */
   handleInvalidation() {}
+
+  /**
+   * Hook method that can be overridden to add functionality before refreshing.
+   *
+   * @method beforeRefreshAuthentication
+   */
+  async beforeRefreshAuthentication() {}
+
+  /**
+   * Hook method that can be overridden to add functionality after refreshing.
+   *
+   * @method afterRefreshAuthentication
+   * @param {Object} response The response from the server
+   */
+  // eslint-disable-next-line no-unused-vars
+  async afterRefreshAuthentication(response) {}
+
+  /**
+   * Hook method that can be overridden to add functionality when refreshing fails.
+   *
+   * @method onRefreshAuthenticationError
+   * @param {Object} error The error thrown during refreshing
+   */
+  // eslint-disable-next-line no-unused-vars
+  async onRefreshAuthenticationError(error) {}
 }
