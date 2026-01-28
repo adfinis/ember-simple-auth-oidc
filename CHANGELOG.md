@@ -1,3 +1,10 @@
+# [7.4.0](https://github.com/adfinis/ember-simple-auth-oidc/compare/v7.3.2...v7.4.0) (2026-01-28)
+
+
+### Features
+
+* **auth:** add refresh hooks for before, after, and error handling ([ba38cf3](https://github.com/adfinis/ember-simple-auth-oidc/commit/ba38cf3db48439d1fa219fd2accc88474f71bbbe))
+
 ## [7.3.2](https://github.com/adfinis/ember-simple-auth-oidc/compare/v7.3.1...v7.3.2) (2025-10-29)
 
 
