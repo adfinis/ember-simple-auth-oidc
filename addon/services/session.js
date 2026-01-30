@@ -43,7 +43,7 @@ export default class Service extends SessionServiceESA {
     return headers;
   }
 
-  get shouldRefresh() {
+  async shouldRefresh() {
     const expireTime = this.data.authenticated.expireTime;
     const isExpired = expireTime && expireTime <= new Date().getTime();
 
@@ -53,7 +53,7 @@ export default class Service extends SessionServiceESA {
   refreshAuthentication = task({ enqueue: true }, async () => {
     await this.beforeRefreshAuthentication();
 
-    if (this.shouldRefresh) {
+    if (await this.shouldRefresh()) {
       try {
         const response = await this.session.authenticate("authenticator:oidc", {
           redirectUri: this.redirectUri,
