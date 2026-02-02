@@ -1,3 +1,10 @@
+## [7.4.1](https://github.com/adfinis/ember-simple-auth-oidc/compare/v7.4.0...v7.4.1) (2026-02-02)
+
+
+### Bug Fixes
+
+* **auth:** use method instead of getter for refresh check ([5a3a12b](https://github.com/adfinis/ember-simple-auth-oidc/commit/5a3a12baf5fe5469bea1bc5c13fbc2c33a4a2a56))
+
 # [7.4.0](https://github.com/adfinis/ember-simple-auth-oidc/compare/v7.3.2...v7.4.0) (2026-01-28)
 
 
