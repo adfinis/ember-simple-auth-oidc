@@ -1,4 +1,5 @@
-import { later } from "@ember/runloop";
+import { debug } from "@ember/debug";
+import { cancel, later } from "@ember/runloop";
 import { service } from "@ember/service";
 import { waitForFetch } from "@ember/test-waiters";
 import BaseAuthenticator from "ember-simple-auth/authenticators/base";
@@ -11,6 +12,8 @@ import {
   isAbortError,
   isBadRequestResponse,
 } from "ember-simple-auth-oidc/utils/errors";
+
+const REFRESH_JITTER_FALLBACK_MS = 15000;
 
 export default class OidcAuthenticator extends BaseAuthenticator {
   @service router;
@@ -79,6 +82,15 @@ export default class OidcAuthenticator extends BaseAuthenticator {
    * @return {Promise} The invalidate promise
    */
   invalidate() {
+    if (this._upcomingRefresh) {
+      cancel(this._upcomingRefresh);
+      this._upcomingRefresh = null;
+    }
+    this._refreshGeneration = (this._refreshGeneration || 0) + 1;
+    // Clear in-flight dedup state so a stale resolved/rejected promise is
+    // never returned to a caller after the session has been invalidated.
+    this._inflightRefresh = null;
+    this._inflightRefreshToken = null;
     return resolve(true);
   }
 
@@ -133,16 +145,24 @@ export default class OidcAuthenticator extends BaseAuthenticator {
    * @returns {Promise} A promise which resolves with the session data
    */
   async restore(sessionData) {
-    const { refresh_token, expireTime, redirectUri } = sessionData;
+    const { refresh_token, access_token, expireTime, redirectUri } =
+      sessionData;
 
     if (!refresh_token) {
       throw new Error("Refresh token is missing");
     }
 
-    if (expireTime && expireTime <= new Date().getTime()) {
+    // Stash refresh_token so _handleAuthResponse can recover it if the
+    // provider doesn't return one in the refresh response.
+    this._lastRefreshToken = refresh_token;
+
+    const needsRefresh =
+      !access_token || !expireTime || expireTime <= new Date().getTime();
+    if (needsRefresh) {
       return await this._refresh(refresh_token, redirectUri);
     }
 
+    this._scheduleRefresh(expireTime, refresh_token, redirectUri);
     return sessionData;
   }
 
@@ -153,6 +173,33 @@ export default class OidcAuthenticator extends BaseAuthenticator {
    * @returns {Object} The parsed response data
    */
   async _refresh(
+    refresh_token,
+    redirectUri,
+    retryCount = 0,
+    customParams = {},
+  ) {
+    // Deduplicate concurrent refresh calls within the same tab.  If a refresh
+    // is already in-flight for the same token, return the existing promise
+    // instead of firing a second request that would race at the OIDC provider.
+    if (this._inflightRefresh && this._inflightRefreshToken === refresh_token) {
+      return this._inflightRefresh;
+    }
+
+    this._inflightRefreshToken = refresh_token;
+    this._inflightRefresh = this.__doRefresh(
+      refresh_token,
+      redirectUri,
+      retryCount,
+      customParams,
+    ).finally(() => {
+      this._inflightRefresh = null;
+      this._inflightRefreshToken = null;
+    });
+
+    return this._inflightRefresh;
+  }
+
+  async __doRefresh(
     refresh_token,
     redirectUri,
     retryCount = 0,
@@ -248,6 +295,19 @@ export default class OidcAuthenticator extends BaseAuthenticator {
     id_token,
     redirectUri,
   }) {
+    // Some OIDC providers don't return refresh_token on refresh responses.
+    // Preserve the existing one to prevent session corruption.
+    if (!refresh_token) {
+      refresh_token = this._lastRefreshToken;
+    }
+    if (!refresh_token) {
+      throw new Error(
+        "refresh_token is missing from the token response and could not be " +
+          "recovered. The session will be unable to refresh on next restore.",
+      );
+    }
+    this._lastRefreshToken = refresh_token;
+
     const userinfo = await this._getUserinfo(access_token);
 
     const expireInMilliseconds = expires_in
@@ -255,6 +315,8 @@ export default class OidcAuthenticator extends BaseAuthenticator {
       : this.config.expiresIn;
     const expireTime =
       new Date().getTime() + expireInMilliseconds - this.config.refreshLeeway;
+
+    this._scheduleRefresh(expireTime, refresh_token, redirectUri);
 
     return new TrackedObject({
       access_token,
@@ -264,6 +326,85 @@ export default class OidcAuthenticator extends BaseAuthenticator {
       expireTime,
       redirectUri,
     });
+  }
+
+  /**
+   * Return a random jitter in [0, maxJitter) to spread scheduled
+   * refreshes across tabs.  Overridable in tests for determinism.
+   */
+  _refreshJitter() {
+    const maxJitter = this.config.refreshLeeway || REFRESH_JITTER_FALLBACK_MS;
+    return Math.floor(Math.random() * maxJitter);
+  }
+
+  /**
+   * Schedule a token refresh before the access token expires.
+   *
+   * @param {Number} expireTime Timestamp (ms) when the access token expires
+   * @param {String} token The refresh token to use
+   * @param {String} redirectUri The redirect URI for the token endpoint
+   */
+  _scheduleRefresh(expireTime, token, redirectUri) {
+    if (!expireTime || expireTime <= new Date().getTime()) {
+      return;
+    }
+
+    if (this._upcomingRefresh) {
+      cancel(this._upcomingRefresh);
+      this._upcomingRefresh = null;
+    }
+
+    const generation = (this._refreshGeneration =
+      (this._refreshGeneration || 0) + 1);
+
+    // Capture the expireTime we used to schedule this timer.  When the
+    // callback fires we compare it against the session store's current
+    // expireTime — if they differ, another tab already refreshed.
+    // expireTime is the most reliable signal because it changes on every
+    // refresh regardless of whether the OIDC provider rotates refresh tokens.
+    const scheduledExpireTime = expireTime;
+
+    this._upcomingRefresh = later(
+      this,
+      async (refreshToken) => {
+        try {
+          // Multi-tab guard: check if another tab already refreshed.
+          // We compare both expireTime (always changes) and refresh_token
+          // (changes with token rotation).  Either difference means
+          // another tab already refreshed — skip to avoid racing.
+          const currentExpireTime =
+            this.session?.data?.authenticated?.expireTime;
+          const currentRefreshToken =
+            this.session?.data?.authenticated?.refresh_token;
+          const anotherTabRefreshed =
+            (currentExpireTime && currentExpireTime !== scheduledExpireTime) ||
+            (currentRefreshToken && currentRefreshToken !== refreshToken);
+
+          if (anotherTabRefreshed) {
+            debug("Scheduled refresh skipped — another tab already refreshed");
+            if (currentExpireTime && currentExpireTime > new Date().getTime()) {
+              this._scheduleRefresh(
+                currentExpireTime,
+                currentRefreshToken || refreshToken,
+                redirectUri,
+              );
+            }
+            return;
+          }
+
+          const data = await this._refresh(refreshToken, redirectUri);
+          if (this._refreshGeneration !== generation || this.isDestroyed) {
+            return;
+          }
+          this._upcomingRefresh = null;
+          this.trigger("sessionDataUpdated", data);
+        } catch (e) {
+          debug(`Scheduled token refresh failed: ${e}`);
+        }
+      },
+      token,
+      expireTime - new Date().getTime() + this._refreshJitter(),
+    );
   }
 
   /**
